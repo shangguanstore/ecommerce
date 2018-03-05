@@ -1,0 +1,21 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>{$lang.cp_home}{if $ur_here} - {$ur_here} {/if}</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="css/main.css" rel="stylesheet" type="text/css" />
+<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<link href="css/perfect-scrollbar.min.css" rel="stylesheet" type="text/css">
+<link href="css/purebox.css" rel="stylesheet" type="text/css">
+<link href="js/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css">
+<link href="../js/calendar/calendar.min.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="js/spectrum-master/spectrum.css">
+{insert_scripts files="jquery-1.9.1.min.js,../js/jquery.json.js,../js/transport_jquery.js,../js/utils.js,listtable.js,listtable_pb.js,perfect-scrollbar.min.js,dsc_admin2.0.js,jquery-ui/jquery-ui.min.js,jquery.cookie.js,../js/calendar/calendar.min.js,jquery.bgColorSelector.js,jquery.validation.min.js,common.js,../js/jquery.form.js,jquery.nyroModal.js"}
+<!--[if lt IE 9]>
+	<script src="js/css3-mediaqueries.js"></script>
+<![endif]-->
+<script language="JavaScript">
+/*这里把JS用到的所有语言都赋值到这里*/
+{foreach from=$lang.js_languages key=key item=item}
+var {$key} = "{$item}";
+{/foreach}
+</script>

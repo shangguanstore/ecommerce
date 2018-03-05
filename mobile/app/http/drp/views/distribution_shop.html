@@ -1,0 +1,81 @@
+{include file="page_header"}
+
+	<body class=" ">
+		<div id="loading"><img src="{__TPL__}img/loading.gif" /></div>
+		<section class="product-sequence dis-box">
+			<a class="box-flex fl-click active" category="0" a-change fl-click>未{$custom}</a>
+			<a class="box-flex fl-click" category="1">已{$custom}</a>
+		</section>
+		<section class="dis-tit-list m-top04 b-color-f">
+			<div class="aaa">
+			<script id="j-product" type="text/html">
+			<%if totalPage > 0%>
+			<ul class="dis-index-right">
+			<%each category as list%>
+				<li class="padding-all" id="li<%list.id%>">
+					<div class="dis-i-box"><img src="<%list.cat_img%>"><label class="dis-tit1 col-3 f-06 p-a"><%list.name%></label></div>
+					<span onclick="change_drp(<%list.id%>)" id="drp<%list.id%>" class="<%if list.is_drp == 1%>hs-bg<%else%>red-bg<%/if%> color-whie f-03 fr"><%if list.is_drp == 1%>取消{$custom}<%else%>我要{$custom}<%/if%></span>
+				</li>
+			<%/each%>
+			</ul>
+			<%else%>
+			<div class="no-div-message">
+				<i class="iconfont icon-biaoqingleiben"></i>
+				<p>亲，此处没有内容～！</p>
+			</div>
+			<%/if%>
+			</script>
+			</div>
+			<input id="s" type="hidden" value="" name="status">
+		</section>
+<br>
+				<!--引用js-->
+
+		<script type="text/javascript" src="{__PUBLIC__}script/jquery.infinite.js"></script>
+		<script type="text/javascript" src="{__PUBLIC__}script/template.js"></script>
+		<script>
+			function change_drp(id) {
+
+				$.ajax({
+					type: "post",
+					url: "{U('drp/user/ajaxeditcat')}",
+					data: {cat_id: id},
+					dataType: "json",
+					success: function (data) {
+						if($("#drp" + id).hasClass("hs-bg")){
+							$("#drp" + id).removeClass("hs-bg");
+							$("#drp" + id).addClass("red-bg");
+							$("#li" + id).remove('');
+						}else{
+							$("#drp" + id).removeClass("red-bg");
+							$("#drp" + id).addClass("hs-bg");
+							$("#li" + id).remove('');
+						}
+
+
+
+					}
+				});
+
+
+			}
+		</script>
+
+		<script>
+
+			var url = 'index.php?r=drp/user/category';
+			var infinite = $('.aaa').infinite({url: url,template: 'j-product'});
+
+			$(".product-sequence a").click(function (){
+				var status = $(this).attr('category');
+				$("#s").val(status);
+				infinite.onload('status='+status);
+				$(this).addClass("active").siblings().removeClass("active");
+			})
+
+
+		</script>
+
+	</body>
+
+</html>

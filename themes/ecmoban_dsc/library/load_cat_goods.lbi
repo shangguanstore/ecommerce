@@ -1,0 +1,89 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+{$get_adv}
+
+<div class="floor w1200" data-title="{$goods_cat.name}" data-idx="{$goods_cat.floor_sort_order}" id="floor_{$goods_cat.floor_sort_order}">
+    <div class="floor-container">
+        <div class="floor-title">
+            <h2><i class="floor-icon">{$goods_cat.floor_sort_order}F</i><span rev='{$goods_cat.id}'>{$goods_cat.name}</span></h2>
+            <ul class="tab">
+            	<!--{foreach name=foo from=$goods_cat.goods_level2 item=cat name=foo key=key}-->
+                <!-- {if $key < 2}-->
+                <li <!--{if $smarty.foreach.foo.iteration eq 1}-->class="on"<!--{/if}-->>{$cat.name}<i></i></li>
+                <!--{/if}-->
+  				<!--{/foreach}-->
+            </ul>
+        </div>
+        <div class="floor-content">
+            <div class="floor-left">
+                <div class="floor-left-banner">
+                    <div class="bd">
+                    	{$cat_goods_banner}
+                    </div>
+                    <div class="hd"><ul></ul></div>
+                    <i class="flip-icon-top"></i>
+                    <i class="flip-icon-bottom"></i>
+                </div>
+                <div class="banner-nav">
+                    <ul class="oneClass">
+                    	<!--{foreach name=foo from=$goods_cat.goods_level2 item=cat name=foo}-->
+                        <li>
+                            <a href="{$cat.url}" target="_blank" class="oneClass-name">{$cat.name} <i>></i></a>
+                            <div class="twoClass">
+                            	<!--{foreach name=foo from=$cat.cat_id item=child name=foochild}-->
+                                <div class="item"><a href="{$child.url}" target="_blank">{$child.name}</a></div>
+                                <!--{/foreach}-->
+                            </div>
+                        </li>
+                        <!--{/foreach}-->
+                    </ul>
+                    <dl>
+                    	<!--{foreach name=foo from=$goods_cat.goods_level2 item=cat name=foo}-->
+                    	<dd></dd>
+                        <!--{/foreach}-->
+                        <dd></dd>
+                        <dd></dd>
+                        <dd></dd>
+                        <dd></dd>
+                        <dd></dd>
+                        <dd></dd>
+                        <dd></dd>
+                        <dd></dd>
+                        <dd></dd>
+                        <dd></dd>
+                    </dl>
+                </div>
+            
+            </div>
+            <div class="floor-right">
+                <div class="floor-tabs-content">
+                	<!--{foreach from=$goods_cat.goods_level3 item=goods_level3 name=foo key=key}-->
+                    <!-- {if $key < 2}-->
+                    <div class="ecsc-main" <!--{if !$smarty.foreach.foo.first}-->style="display:none"<!--{/if}-->>
+                        <ul class="p-list">
+                        	<!-- {foreach from=$goods_level3.goods item=goods name=foo} -->
+                            <li>
+                                <div class="p-img"><a href="{$goods.url}" target="_blank"><img src="{$goods.goods_thumb}" width="140" height="140"></a></div>
+                                <div class="p-name"><a href="{$goods.url}" title="{$goods.name|escape:html}">{$goods.goods_name|escape:html}</a></div>
+                                <div class="p-price">
+                                	<span class="shop-price">
+                                    	{if $goods.promote_price neq ''}
+                                            {$goods.promote_price}
+                                        {else}
+                                            {$goods.shop_price}
+                                        {/if}
+                                    </span>
+                                    <span class="original-price">{$goods.market_price}</span>
+                                </div>
+                            </li>
+                            <!--{/foreach}-->
+                        </ul>
+                    </div>
+                    <!--{/if}-->
+					<!-- {/foreach} -->
+                </div>
+            </div>
+        </div>
+        {$cat_goods_hot}
+    </div>
+</div>

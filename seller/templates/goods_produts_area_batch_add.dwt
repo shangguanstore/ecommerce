@@ -1,0 +1,142 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+            	{include file ='library/seller_menu_tab.lbi'}
+				{if $full_page eq 1}
+                <div class="info_warp">
+                <form action="goods_produts_warehouse_batch.php?act=upload" method="post" enctype="multipart/form-data" name="theForm" onsubmit="return formValidate()">
+                <table width="100%" class="table_item">
+                <tr>
+                    <td colspan="2"><div class="alert-info">{$lang.use_help}</div></td>
+                </tr>
+                  <tr>
+                    <td class="label">{$lang.file_charset}</td>
+                    <td>
+                        <select name="charset" id="charset" class="select">
+                          {html_options options=$lang_list}
+                        </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="label">{$lang.csv_file}</td>
+                    <td>
+                        <input name="file" type="file" size="40" class="file mt5 mb5px">
+                        <p class="fl bf100"><label class="blue_label ml0">{$lang.notice_file}</label></p>
+                    </td>
+                  </tr>
+                
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td><a class="mr10" href="goods_produts_warehouse_batch.php?act=download&charset=zh_cn">下载批量CSV文件（简体中文）</a></td>
+                  </tr>
+                  
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td class="pt10 pb20">
+                        <input name="submit" type="submit" id="submit" value="{$lang.button_submit}" class="button" />
+                    </td>
+                  </tr>
+                </table>
+                </form>
+                </div>
+				{/if}
+                <div class="list-div" id="listDiv">
+                <table class="ecsc-default-table mt20" id="listTable">
+                    <tr>
+                        {foreach from=$attr_names item=vo}
+                        <th class="tc">{$vo}</th>
+                        {/foreach}
+                        <th class="tc">货号</th>
+                        <th class="tc">库存</th>
+                        <th class="tc">状态</th>
+                    </tr>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>                
+{/if}
+
+
+{if $full_page}
+{include file ='library/seller_footer.lbi'}
+{literal}
+<script language="JavaScript">
+    var elements;
+    onload = function()
+    {
+        // 开始检查订单
+        startCheckOrder();
+    }
+	
+    /**
+     * 检查输入是否完整
+     */
+    function formValidate()
+    {
+        if (elements['file'].value == '')
+        {
+            alert(please_upload_file);
+            return false;
+        }
+        return true;
+    }
+	
+	$(function(){
+		start({$page});
+	});
+	function start(page)
+	{
+        {if $smarty.get.act != 'add'}
+		Ajax.call('goods_produts_area_batch.php?act=ajax_insert', 'page=' + page, start_response, 'POST', 'JSON');
+        {/if}
+	}
+	
+	/**
+	 * 处理反馈信息
+	 * @param: result
+	 * @return
+	 */
+	function start_response(result)
+	{
+		if(result.list.goods_id){
+			var tbl = document.getElementById("listTable"); //获取表格对象
+			var row = tbl.insertRow(-1);
+            var attr_arr=result.list.goods_attr_name.split('|');
+            var attr_num=attr_arr.length;
+            for(var i=0;i<attr_num;i++){
+                cell = row.insertCell(i);
+                cell.align = "center";
+                cell.innerHTML =attr_arr[i];
+            }
+			cell = row.insertCell(attr_num);
+			cell.align = "center";
+			cell.innerHTML = result.list.product_sn;
+			cell = row.insertCell(attr_num+1);
+			cell.align = "center";
+			cell.innerHTML = result.list.product_number;
+            cell = row.insertCell(attr_num+2);
+            cell.align = "center";
+            cell.innerHTML = result.status_lang;
+			
+			if(result.is_stop == 1){
+				start(result.page);
+			}
+		}
+	}
+</script>
+{/literal}
+</body>
+</html>
+{/if}

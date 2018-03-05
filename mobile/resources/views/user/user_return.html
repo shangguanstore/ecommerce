@@ -1,0 +1,316 @@
+{include file="page_header"}
+	<body>
+    <form  name="formReturn" method="post" action="{U('user/order/submit_return')}" enctype="multipart/form-data" class="validform">
+    <input type="hidden" name="return_type" value="{$return_type}">
+    <input name="return_rec_id" value="{$return_rec_id}" type="hidden" />
+    <input name="return_g_id" value="{$return_g_id}" type="hidden" />
+    <input name="return_g_number" value="{$return_g_number}" type="hidden" />
+    <input type="hidden" name="rec_id" value="{$rec_id}" />
+         <div class="con m-b7">
+			<ul class="padding-all user-cont-box b-color-f">
+				<li class="dis-box">
+					<div class="user-return-cont-left"><em>*</em>退换货原因 :</div>
+					<div class="box-flex">
+						<div class="user-return-cont-right position-rel">
+							<select class="select" name="parent_id">
+								{$cause_list}
+							</select>
+							<i class="iconfont icon-more tf-90 ts-5"></i>
+						</div>
+					</div>
+				</li>
+                {if $return_type == 0}
+                <li class="dis-box">
+
+                    <div class="user-return-cont-left"><em>*</em>维修数量 :</div>
+                    <div class="box-flex">
+                        <div class="user-return-cont-right position-rel">
+                            <input type="text" name="maintain_num" nullmsg="维修数量不能为空" datatype="n" errormsg="维修数量为数字">
+                        </div>
+                    </div>
+                </li>
+                {elseif $return_type == 1}
+                <li class="dis-box">
+                    <div class="user-return-cont-left"><em>*</em>退货数量 :</div>
+                    <div class="box-flex">
+                        <div class="user-return-cont-right position-rel">
+                            <input type="text" name="return_num" nullmsg="退货数量不能为空" datatype="n" errormsg="退货数量为数字">
+                        </div>
+                    </div>
+                </li>
+                {else}
+                <li class="dis-box">
+                    <div class="user-return-cont-left"><em>*</em>换货数量 :</div>
+                    <div class="box-flex">
+                        <div class="user-return-cont-right position-rel div-num dis-box fr">
+                                <a class="num-less" data-min-num="1"></a>
+                                <input class="box-flex cart-number active" type="number" name="attr_num" value="1" readonly="" nullmsg="换货数量不能为空" datatype="n" errormsg="换货数量为数字">
+                                <a class="num-plus" data-max-num="{$return_g_number}"></a>
+
+                        </div>
+                    </div>
+                </li>
+                {/if}
+
+                <input type="hidden" name="credentials" value="0">
+                <li class="select-three j-select-all">
+                    <section class="j-get-i-more">
+                        <header class="of-hidden dis-box">
+                            <div class="ect-select box-flex">
+                                <label class="dis-box label-this-all">
+
+                                    <em class="user-return-cont-left box-flex f-05 n-ti-name"> 有质检报告</em>
+                                    <i class="j-select-btn"></i>
+                                </label>
+                            </div>
+                        </header>
+                    </section>
+                </li>
+                <li class="dis-box">
+                    <div class="user-return-cont-left"><em>*</em>退款描述 :</div>
+					<div class="box-flex">
+						<div class="user-return-cont-right position-rel">
+							<textarea rows="3" name="return_brief" datatype="*" tip="请填写退款描述" altercss="user-return-cont-left" nullmsg="请填写退款描述" class="user-return-cont-left">请填写退款描述</textarea>
+						</div>
+					</div>
+				</li>
+
+                <div class="form-group add-img-n-maxbox">
+                    <p class="control-label f-05 pb-1">图片信息</p>
+                    <div class=" ">
+                        <div class="over-n" name="add_img"></div>
+                        <div class="n-add-ts-cont">
+                            <input type='hidden' name='textfield' id='textfield' class='txt' />
+                        </div>
+                    </div>
+                    <li class="user-return-img position-rel text-c m-top12">
+                        <h4 class="m-top08"><i class="iconfont icon-jiahao"></i></h4>
+                        <p class="f-03 col-9">上传凭证</p>
+                    <input type="file" name="file" class="file" id="file" size="28" onchange="document.getElementById('textfield').value=this.value;UpladFile()" />
+                    </li>
+                </div>
+
+                <li class="dis-box">
+                    <div class="user-return-cont-left"><em>*</em>收货人:</div>
+                    <div class="box-flex user-return-cont-right">
+                        <input type="text" name="addressee" placeholder="请输入收货人姓名" datatype="*" nullmsg="请输入收货人姓名" />
+                    </div>
+                </li>
+                <li class="dis-box">
+                    <div class="user-return-cont-left"><em>*</em>手机号码:</div>
+                    <div class="box-flex user-return-cont-right">
+                        <input  type="text" name="mobile" placeholder="请输入联系电话" datatype="m" errormsg="手机号码格式不正确" nullmsg="请填写手机号码">
+                    </div>
+                </li>
+                <li class="dis-box">
+                    <div class="user-return-cont-left">邮箱:</div>
+                    <div class="box-flex user-return-cont-right">
+                        <input  type="text" name="code" placeholder="请输入邮箱" datatype="e" errormsg="请填写正确的邮箱" ignore="ignore">
+                    </div>
+                </li>
+
+                <li class="text-all n-return-box-list dis-box j-filter-city">
+                    <div class="user-return-cont-left"><em>*</em>所在地区:</div>
+                    <div class="box-flex"><span class="show-region text-all-span"> </span>
+                        <span class="t-jiantou fr"><i class="iconfont icon-jiantou tf-180"></i></span></div>
+                </li>
+
+                <li class="dis-box">
+                    <div class="user-return-cont-left"><em>*</em>详细地址 :</div>
+                    <div class="box-flex">
+                        <div class="user-return-cont-right position-rel">
+                            <textarea rows="3" name="return_address" tip="请填写详细地址" altercss="user-return-cont-left" class="user-return-cont-left" datatype="*">请填写详细地址</textarea>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="dis-box">
+                    <div class="user-return-cont-left">留言 :</div>
+                    <div class="box-flex">
+                        <div class="user-return-cont-right position-rel">
+                            <textarea rows="3" name="return_remark" tip="请填写留言" altercss="user-return-cont-left" class="user-return-cont-left">请填写留言</textarea>
+                        </div>
+                    </div>
+                </li>
+			</ul>
+            <div class="filter-city-div ts-5 c-filter-div c-city-div">
+                <section>
+                    <input type="hidden" value="{$province_row.region_id}" id="province_id" name="province_region_id">
+                    <input type="hidden" value="{$city_row.region_id}" id="city_id" name="city_region_id">
+                    <input type="hidden" value="{if $district_row.region_id}{$district_row.region_id}{else}0{/if}" id="district_id" name="district_region_id">
+                    <input type="hidden" value="{$region_id}" id="region_id" name="region_id">
+                </section>
+                <section class="close-filter-div j-close-filter-div">
+                    <div class="close-f-btn">
+                        <i class="iconfont icon-fanhui"></i>
+                        <span>关闭</span>
+                    </div>
+                </section>
+                <section class="con-filter-div">
+                    <aside>
+                        <div class="menu-left j-city-left scrollbar-none" id="sidebar">
+                            <ul >
+                                <!-- 省、直辖市 -->
+                                {foreach $province_list as $province}
+
+                                <li region="{$province.region_id}" {if $goods_region.province == $province.region_id}class="active"{/if} onclick="region.getBbb({$province.region_id}, 2, {$user_id})">{$province.region_name}</li>
+                                {/foreach}
+                            </ul>
+                    </aside>
+                    <section class="menu-right j-city-right">
+                        <div class="select-two j-get-city-one">
+                            {foreach $city_list as $city}
+                            {if $city.district_list}
+
+                            <ul class="padding-all j-sub-menu">
+                                {foreach $city.district_list as $district}
+                                <li class="ect-select">
+                                    <label onclick="region.cccDdd({$district.region_id}, {$city.region_id}, {$user_id})" class="ts-1 {if $goods_region.district == $district.region_id}active{/if}">{$district.region_name}<i class="fr iconfont icon-gou ts-1"></i></label>
+                                </li>
+                                {/foreach}
+                            </ul>
+                            {else}
+                            <a class="select-title padding-all j-menu-select" onclick="region.cccDdd({$district.region_id}, {$city.region_id}, {$user_id})">
+                                <label class="fl">{$city.region_name}</label>
+                                <span class="fr t-jiantou j-t-jiantou" id="j-t-jiantou"><i class="iconfont icon-jiantou tf-180 ts-2"></i></span>
+                            </a>
+                            {/if}
+                            {/foreach}
+                        </div>
+                    </section>
+            </section>
+            </div>
+             <div class="padding-all user-bg m-top12">
+                 <h4 class="f-05 col-6 mb-1"> 服务说明</h4 >
+                 <p class="f-03 col-9">1.附件赠品，退换货时请一并退回。</p>
+                 <p class="f-03 col-9 m-top04">2.关于物流损，请您在收到货时务必仔细检查，如发现商品外包装或商品本身外观存在异常，需当场向派送人员指出，并拒收整个包裹；如您在收到货后发现外观异常，请在收货24小时内提交退换货申请，如超时未申请，将无法受理。</p>
+                 <p class="f-03 col-9 m-top04">3.关于商品实物与网站描述不符；商创保证所出商品均为正品行货，并与时下市场上同样直流商品一致，但因厂家会在没有任何提前通知的情况下更改产品包装，产地或者一些附件，所以我们无法确保您收到的货物与商城图片、产地、附件说明完全一致。</p>
+                 <p class="f-03 col-9 m-top04">4、如果您在使用时对商品质量表示置疑，您可出具相关书面鉴定，我们会按照国家法律规定予以处理。</p>
+             </div>
+            </div>
+            </div>
+		</div>
+		<section class="filter-btn dis-box">
+			<input type="submit" class="btn-submit box-flex click-show-attr add-to-cart" value="提交申请">
+		</section>
+        </form>
+		<!--引用js-->
+    <script type="text/javascript">
+        //表单验证
+        $(".validform").Validform();
+
+        var xhr;
+        function createXMLHttpRequest()
+        {
+            if(window.ActiveXObject)
+            {
+                xhr = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            else if(window.XMLHttpRequest)
+            {
+                xhr = new XMLHttpRequest();
+            }
+        }
+        function UpladFile()
+        {
+            var fileObj = document.getElementById("file").files[0];
+            if(fileObj == undefined){
+                return false;
+            }
+            var rec_id  = $('input[name="rec_id"]').val();
+            var FileController = "{U('user/order/img_return')}";
+            var form = new FormData();
+            form.append("myfile", fileObj);
+            form.append("rec_id", rec_id);
+            createXMLHttpRequest();
+            xhr.onreadystatechange = handleStateChange;
+            xhr.open("post", FileController, true);
+            xhr.send(form);
+        }
+        function handleStateChange()
+        {
+            if(xhr.readyState == 4)
+            {
+                if (xhr.status == 200 || xhr.status == 0)
+                {
+                    var result = xhr.responseText;
+                    var obj =  JSON.parse(result);
+                    var i = '';
+                    var new_img = '';
+
+                    $('div[name="add_img"]').empty();
+                    for (i=0;i<obj.length;i++){
+                        new_img += "<div class='goods-info-img'><img src='" + obj[i].pic + "' width='100%' height='100%' /></div>";
+                        new_img += "<input name='img[]' type='hidden' value='"+obj[i].pic+"'>";
+                    }
+                    new_img += '<a class="apply_goods_return clear_pictures" href="javascript:void(0);">清空图片</a>';
+                    $('div[name="add_img"]').append(new_img);
+                }
+            }
+        }
+        var rec_id = $("input[name='return_rec_id']").val();
+
+        $('div[name=add_img]').on( 'click','.clear_pictures',function(){
+            $.post("{U('clear_pictures')}", {rec_id:rec_id}, function(data){
+                if(data.error == 0){
+                    $('div[name=add_img]').empty();
+                }
+            }, 'json');
+        });
+
+        $('.j-select-btn').click(function(){
+            var cre = $('input[name="credentials"]').val();
+            if(cre == 0){
+                $('input[name="credentials"]').val(1);
+            }else{
+                $('input[name="credentials"]').val(0);
+            }
+        });
+
+        //换货数量
+        var num;
+        var min_num;
+        var max_num;
+        $(".div-num a").click(function () {
+            if ($(this).hasClass("num-less")) {
+                num = parseInt($(this).siblings("input").val());
+                min_num = parseInt($(this).attr("data-min-num"));
+                if (num > min_num) {
+                    num -= 1;
+                    $(this).siblings("input").val(num);
+                } else {
+                    d_messages("不能小于最小数量");
+                    $(this).siblings("input").val(min_num);
+                }
+                return false;
+            }
+            if ($(this).hasClass("num-plus")) {
+                num = parseInt($(this).siblings("input").val());
+                max_num = parseInt($(this).attr("data-max-num"));
+                if (num < max_num) {
+                    num += 1;
+                    $(this).siblings("input").val(num);
+                } else {
+                    d_messages("不能大超过最大数量");
+                    $(this).siblings("input").val(max_num);
+                }
+                return false;
+            }
+        });
+        $('input[name=attr_num]').blur(function(){
+            num = parseInt($(this).val());
+            min_num = parseInt($(this).siblings('a.num-less').attr('data-min-num'));
+            max_num = parseInt($(this).siblings('a.num-plus').attr('data-max-num'));
+            if(num < min_num){
+                d_messages("不能小于最小数量");
+                $(this).val(min_num);
+                return false;
+            }else if(num > max_num){
+                d_messages("不能大超过最大数量");
+                $(this).val(max_num);
+                return false;
+            }
+        });
+    </script>
+	</body>
+</html>

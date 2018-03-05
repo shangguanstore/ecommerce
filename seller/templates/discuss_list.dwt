@@ -1,0 +1,146 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <!--start-->
+                <div class="search-form">
+                  <form action="javascript:searchComment()" name="searchForm">
+                    <div class="fr">
+                        <label>{$lang.search_comment_tlq}</label>
+                        <input type="text" name="keyword" class="text text_2 mr10" />
+                        <label class="submit-border"><input type="submit" class="button" value="{$lang.button_search}" /></label>
+                    </div>
+                  </form>
+                </div>
+
+                <form method="POST" action="discuss_circle.php?act=batch_drop" name="listForm" onsubmit="return confirm_bath()">
+                <!-- start comment list -->
+                <div class="list-div" id="listDiv">
+                {/if}
+
+                <table class="ecsc-default-table">
+                  <thead>
+                  <tr>
+                    <th width="6%">
+                      <div class="first_all">
+                          <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" class="checkbox" />
+                          <a href="javascript:listTable.sort('dis_id'); ">{$lang.record_id}</a>
+                          <div class="img">{$sort_dis_id}</div>
+                      </div>
+                    </th>
+                    <th width="20%"><a href="javascript:listTable.sort('dis_title'); ">{$lang.discuss_title}</a><div class="img">{$sort_add_time}</div></th>
+                    <th width="10%"><a href="javascript:listTable.sort('user_name'); ">{$lang.user_name}</a><div class="img">{$sort_user_name}</div></th>
+                    <th width="10%"><a href="javascript:listTable.sort('dis_type'); ">{$lang.discuss_type}</a><div class="img">{$sort_comment_type}</div></th>
+                    <th width="24%"><a href="javascript:listTable.sort('goods_id'); ">{$lang.discuss_goods}</a><div class="img">{$sort_id_value}</div></th>
+                    <th width="10%"><a href="javascript:listTable.sort('add_time'); ">{$lang.discuss_time}</a><div class="img">{$sort_ip_address}</div></th>
+                    <th width="18%">{$lang.handler}</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {foreach from=$discuss_list item=discuss}
+                  <tr class="bd-line">
+                    <td class="first_td_checkbox">
+                        <div class="first_all">
+                        <input value="{$discuss.dis_id}" name="checkboxes[]" type="checkbox" class="checkbox">
+                        <label for="goods_{$goods.goods_id}">{$discuss.dis_id}</label>
+                        </div>
+                    </td>
+                    <td class="tl"><span class="hidden">{$discuss.dis_title}</span></td>
+                    <td align="center">{if $discuss.user_name}{$discuss.user_name}{else}{$lang.anonymous}{/if}</td>
+                    <td align="center">{if $discuss.dis_type eq 1}{$lang.discuss}{elseif $discuss.dis_type eq 2}{$lang.technology}{else}{/if}</td>
+                    <td class="tl"><span class="activity_name w240"><a href="../goods.php?id={$discuss.goods_id}" target="_blank">{$discuss.goods_name}</a></span></td>
+                    <td align="center">{$discuss.add_time}</td>
+                    <td align="center">
+                      <a href="discuss_circle.php?act=reply&amp;id={$discuss.dis_id}" class="blue">{$lang.view_content}</a> |
+                      <a href="javascript:" onclick="listTable.remove({$discuss.dis_id}, '{$lang.drop_confirm}')" class="blue">{$lang.remove}</a> |
+                      <a href="discuss_circle.php?act=user_reply&amp;id={$discuss.dis_id}" class="blue">{$lang.discuss_user_reply}</a>
+                    </td>
+                  </tr>
+                  {foreachelse}
+                  <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+                  {/foreach}
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                        <td colspan="10" class="td_border">
+                            <div class="shenhe">
+                              <select name="sel_action" class="select mr10">
+                                <option value="remove">{$lang.drop_select}</option>
+                               <!--  <option value="allow">{$lang.allow}</option>
+                                <option value="deny">{$lang.forbid}</option> -->
+                              </select>
+                              <input type="submit" name="drop" id="btnSubmit" value="{$lang.button_submit}" class="button btn_disabled" disabled="true" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr><td colspan="10">{include file="page.dwt"}</td></tr>
+                  </tfoot>
+                  </table>
+                {if $full_page}
+                </div>
+                <!-- end comment list -->
+                </form>					
+                <!--end-->
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<!--start-->
+<script type="text/javascript">
+<!--
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+  cfm = new Object();
+  cfm['allow'] = '{$lang.cfm_allow}';
+  cfm['remove'] = '{$lang.cfm_remove}';
+  cfm['deny'] = '{$lang.cfm_deny}';
+
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+
+  {literal}
+  onload = function()
+  {
+      startCheckOrder();
+  }
+
+  function searchComment()
+  {
+      var keyword = Utils.trim(document.forms['searchForm'].elements['keyword'].value);
+      if (keyword.length > 0)
+      {
+        listTable.filter['keywords'] = keyword;
+        listTable.filter.page = 1;
+        listTable.loadList();
+      }
+      else
+      {
+          document.forms['searchForm'].elements['keyword'].focus();
+      }
+  }
+  {/literal}
+
+  function confirm_bath()
+  {
+    var action = document.forms['listForm'].elements['sel_action'].value;
+
+    return confirm(cfm[action]);
+  }
+//-->
+</script>
+<!--end-->
+</body>
+</html>
+{/if}

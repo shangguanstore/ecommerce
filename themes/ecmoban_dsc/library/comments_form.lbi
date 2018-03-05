@@ -1,0 +1,141 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<div class="form comt-box">
+    <div class="item">
+        <span class="label"><em>*</em>评分：</span>
+        <div class="fl">
+            <span class="commstar" id="p_rate">
+                <a href="javascript:;" class="star1 {if $item.comment.comment_rank == 1}select{/if}">1</a>
+                <a href="javascript:;" class="star2 {if $item.comment.comment_rank == 2}select{/if}">2</a>
+                <a href="javascript:;" class="star3 {if $item.comment.comment_rank == 3}select{/if}">3</a>
+                <a href="javascript:;" class="star4 {if $item.comment.comment_rank == 4}select{/if}">4</a>
+                <a href="javascript:;" class="star5 {if $item.comment.comment_rank == 5}select{/if}">5</a>
+            </span>
+            <input type="hidden" name="comment_rank" value="{$item.comment.comment_rank}"/>
+            <div class="hide scoreerror-err">
+                <span class="comt-error">请打分数</span>
+            </div>
+        </div>
+    </div>
+    <div class="item">
+        <span class="label"><em>*</em>心得：</span>
+        <div class="fl">
+            <div class="summary-cont-box {if $sign eq 0 || $item.comment.goods_tag}summary-cont{/if}">
+            	<!--{if $item.impression_list && !$item.comment.goods_tag && $sign < 2}-->
+                <div class="sumy-tags hide" style="display:block;">
+                    <div class="tags-list">
+                        <div class="tag-item">
+                            <!--{foreach from=$item.impression_list item=impression name=impression}-->
+                            <a class="tag-txt old-tag{if $smarty.foreach.impression.first} tag-txt-selected{/if}" href="javascript:void(0);" data-val="{$impression}" data-recid="{$item.rec_id}">{$impression}</a>
+                            <!--{/foreach}-->
+                            <input type="hidden" name="impression" id="impression" value="{$item.impression_list.0}" />
+                        </div>
+                    </div>
+                </div>  
+                <input type="hidden" name="is_impression" id="is_impression" value="1" />
+                <!--{else}-->
+                <input type="hidden" name="is_impression" id="is_impression" value="0" />
+                <!--{/if}-->
+                {if $item.comment.content eq ''}
+                <div class="sumy-area">
+                    <textarea name="content" class="area area01" cols="30" rows="10" placeholder="屏幕大小合适么？系统用的习惯么？配件质量如何？快写下你的评价，分享给大家吧！"></textarea>
+                    <div class="area-count">最多输入500字</div>
+                </div> 
+                {else}
+                	<!--{if $item.comment.goods_tag}-->
+                <div class="sumy-tags">
+                	<!--{foreach from=$item.comment.goods_tag item=tag}-->
+                	<a class="tag-txt tag-txt-selected" href="javascript:void(0);">{$tag}</a>
+                    <!--{/foreach}-->
+                </div>
+                	<!--{/if}-->
+                <div class="sumy-area-txt">{$item.comment.content}</div>
+                {/if}
+            </div>
+            <div class="mt10 hide content-err">
+                <span class="comt-error"></span>
+            </div>
+        </div>
+    </div>
+    <div class="item">
+        <span class="label">晒单：</span>
+        <div class="fl">
+            <div class="upload-img-box">
+                <div class="img-lists">
+                    <ul class="img-list-ul">
+                        <!-- {foreach from=$item.comment.img_list item=img} -->
+                        <li><img width="60" height="60" alt="" src="{$img.img_thumb}"><div class="del hide"><em value="删除">X</em></div></li>
+                        <!--{/foreach}-->
+                        
+                        <!--{if $item.comment.img_list}-->
+						<script>
+                        $(".img-list-ul li").click(function(){
+                            var src = $(this).find("img").attr("src");
+                            var imgbigBox = $(this).parents(".upload-img-box").find(".img-bigbox");
+                            var height = imgbigBox.find("img").height();
+                            imgbigBox.find("img").attr("src",src);
+                            imgbigBox.find("img").css({"margin-top":(350-height)/2})
+                        });
+                        </script>
+                        <!--{/if}-->
+                    </ul>
+                    <!--{if !$item.comment.img_list}-->
+                    <div class="upload-btn">
+                        <!--<a href="#none" class="SWFUpload" style="position: relative; z-index: 1000;"><b></b></a>
+                        <input type="file" name="SWFUpload"/>-->
+                        <input id="file_upload{$smarty.foreach.foo.iteration}" name="filename" type="file">
+                    </div>
+                    <script>
+                            ecmoban.uploads({buttonId:'file_upload{$smarty.foreach.foo.iteration}', fileObjName: 'filename', type:1, uploader: './comment.php?act=ajax_return_images&order_id={$item.order_id}&goods_id={$item.goods_id}&userId={$user_id}&sessid={$sessid}', btnWidth: 58, btnHeight:58, btnText:'<b></b>'});
+                    </script>
+                    <!--{/if}-->
+                </div>
+                <!--{if !$item.comment.img_list}-->
+                <div class="img-utips">
+                    <span class="num"><em>0</em>/10</span>
+                </div>
+                <!--{/if}-->
+                <div class="clear"></div>
+                <div class="img-bigbox" style="display:<!--{if !$item.comment.img_list}-->none<!--{/if}-->;">
+                    <!--{if $item.comment.img_list}-->
+                    <!-- {foreach from=$item.comment.img_list item=img key=key} -->
+                    {if $key eq 0}
+                    <img data-lazy-img="done" src="{$img.comment_img}" height="350">
+                    {/if}
+                    <!--{/foreach}-->
+                    <!--{else}-->
+                    <img data-lazy-img="done" src="" height="350">
+                    <!--{/if}-->
+                    <!--{if !$item.comment.img_list}-->
+                    <span class="img-del delete_commentImg">删除图片</span>
+                    <!--{/if}-->
+                </div>
+                <input name='order_id' type='hidden' value='{$item.order_id}' />
+                <input name='goods_id' type='hidden' value='{$item.goods_id}' />
+            </div>
+        </div>
+    </div>
+    
+    <!--{if !$item.comment.img_list}-->
+    <div class="item">
+        <span class="label">{$lang.comment_captcha}：</span>
+        <div class="fl">
+        	<div>
+            <input name='rec_id' type='hidden' value='{$item.rec_id}' />
+            <input type="text" name="captcha" value="" class="yzm" />
+            <img src="captcha_verify.php?captcha=is_user_comment&identify={$item.rec_id}&height=28&font_size=14&{$rand}" alt="captcha" onClick="this.src='captcha_verify.php?captcha=is_user_comment&identify={$item.rec_id}&height=30&font_size=14&'+Math.random()" class="captcha">
+        	</div>
+            <div class="mt10 hide captcha-err" style=" width:600px; float:left;">
+                <span class="comt-error"></span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="item">
+        <span class="label">&nbsp;</span>
+        <div class="fl">
+        	<input name='sign' type='hidden' value='{$sign}' />
+          <a href="javascript:void(0);" class="pingjia_form" data-commentid="{if $item.comment.comment_id == ''}0{else}{$item.comment.comment_id}{/if}" style="height:18px;">提交评论</a>
+        </div>
+    </div>
+	<!--{/if}-->
+</div>

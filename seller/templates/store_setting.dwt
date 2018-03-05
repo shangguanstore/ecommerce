@@ -1,0 +1,385 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+		{include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+				{include file ='library/seller_menu_tab.lbi'}
+                <div class="wrapper-list ecsc-form-default">
+                    <form method="post" action="index.php?act=merchants_second" id="my_store_form" enctype="multipart/form-data">
+                        <input type="hidden" name="form_submit" value="ok">
+                        <dl>
+                            <dt>{if $priv_ru}{$lang.steps_shop_name}{else}{$lang.company_name}{/if}：</dt>
+                            <dd><input type="text" name="shop_name" value="{$shop_info.shop_name}" size="40" class="text" /></dd>
+                        </dl>
+                        {if !$priv_ru}
+                        <dl>
+                            <dt>{$lang.settled_shop_name}：</dt>
+                            <dd><input type="text" name="brand_shop_name" value="{$shop_information.shop_name}" disabled="disabled" size="40" class="text" /></dd>
+                        </dl>
+                        <dl>
+                            <dt>{$lang.expect_shop_name}：</dt>
+                            <dd><input type="text" name="ec_rz_shopName" value="{$shop_information.rz_shopName}" disabled="disabled" size="40" class="text" /></dd>
+                        </dl>
+                        <dl class="setup store-logo">
+                            <dt>{$lang.display_shop_name}：</dt>
+                            <dd>
+                                <label class="mr10"><input type="radio" name="check_sellername" value="0" class="checkbox" {if $shop_info.check_sellername eq 0}checked="checked"{/if} />{$lang.settled_brand_shop_name}</label>
+                                <label class="mr10"><input type="radio" name="check_sellername" value="1" class="checkbox" {if $shop_info.check_sellername eq 1}checked="checked"{/if} />{$lang.expect_shop_name}</label>
+                                <label><input type="radio" name="check_sellername" value="2" class="checkbox" {if $shop_info.check_sellername eq 2}checked="checked"{/if} />{$lang.company_name}</label>
+                                {if $shop_info.shopname_audit eq 1}
+                                    &nbsp;&nbsp;<font class="red">{$lang.already_examine}</font>
+                                {else}
+                                    &nbsp;&nbsp;<font class="org">{$lang.stay_examine}</font>
+                                {/if}
+                            </dd>
+                        </dl>
+                        {/if}
+                        <dl>
+                            <dt>{$lang.shop_title}：</dt>
+                            <dd><input type="text" name="shop_title" value="{$shop_info.shop_title}" class="text" /></dd>
+                        </dl>
+                        <dl>
+                            <dt>{$lang.shop_keyword}：</dt>
+                            <dd><input type="text" name="shop_keyword" value="{$shop_info.shop_keyword}" class="text" /></dd>
+                        </dl>
+                        <dl>
+                            <dt>店铺二级域名：</dt>
+                            <dd><input type="text" size="40" value="{$shop_info.domain_name}" name="domain_name" class="text" /></dd>
+                        </dl>
+                        <dl>
+                            <dt>{$lang.shop_country}：</dt>
+                            <dd>
+                                 <select name="shop_country" id="selCountries" onchange="region.changed(this, 1, 'selProvinces')" class="select">
+                                 	<option value=''>{$lang.select_please}</option>
+                                   	{foreach from=$countries item=region}
+                                   		<option value="{$region.region_id}" {if $region.region_id eq $shop_info.country}selected{/if}>{$region.region_name}</option>
+                                   	{/foreach}
+                                 </select> 
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>{$lang.shop_province}：</dt>
+                            <dd>
+                                 <select name="shop_province" id="selProvinces" onchange="region.changed(this, 2, 'selCities')" class="select">
+                                   <option value=''>{$lang.select_please}</option>
+                                     {foreach from=$provinces item=region}
+                                       <option value="{$region.region_id}" {if $region.region_id eq $shop_info.province}selected{/if}> {$region.region_name}</option>
+                                     {/foreach}
+                                 </select>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>{$lang.shop_city}：</dt>
+                            <dd>
+                                <select name="shop_city" id="selCities" onchange="region.changed(this, 3, 'selDistricts')" class="select">
+                                  <option value=''>{$lang.select_please}</option>
+                                    {foreach from=$cities item=region}
+                                      <option value="{$region.region_id}" {if $region.region_id eq $shop_info.city}selected{/if}>{$region.region_name}</option>
+                                    {/foreach}
+                                </select>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>{$lang.local_area}：</dt>
+                            <dd>
+                                <select name="shop_district" id="selDistricts" class="select">
+                                  <option value=''>{$lang.select_please}</option>
+                                    {foreach from=$districts item=region}
+                                      <option value="{$region.region_id}" {if $region.region_id eq $shop_info.district}selected{/if}>{$region.region_name}</option>
+                                    {/foreach}
+                                </select>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>{$lang.shop_address}：</dt>
+                            <dd><input type="text" name="shop_address" value="{$shop_info.shop_address}" class="text"/></dd>
+                        </dl>	
+                        <dl>
+                            <dt>{$lang.03_shipping_list}：</dt>
+                            <dd>
+                                <select name="shipping_id" id="shipping_id" class="select">
+                                    <option value="0">请选择..</option>
+                                    {foreach from=$shipping_list item=list}
+                                    {if $priv_ru eq 0 || ($priv_ru neq 1 && $list.shipping_code != 'cac')}
+                                    <option value="{$list.shipping_id}" {if $shop_info.shipping_id eq $list.shipping_id}selected="selected"{/if}>{$list.shipping_name}</option>
+                                    {/if}
+                                    {/foreach}
+                                 </select>								
+                            </dd>
+                        </dl>	
+                        <dl>
+                            <dt>客服手机号码：</dt>
+                            <dd><input type="text" size="40" value="{$shop_info.mobile}" name="mobile" class="text text_2"></dd>
+                        </dl>	
+                        <dl>
+                            <dt>{$lang.customer_service_address}：</dt>
+                            <dd><input type="text" size="40" value="{$shop_info.seller_email}" name="seller_email" class="text text_2"></dd>
+                        </dl>	
+                        <dl>
+                            <dt>{$lang.customer_service_qq}：</dt>
+                            <dd>
+                              <textarea name='kf_qq' value="{$shop_info.kf_qq}" rows="6" cols="48" class="textarea">{$shop_info.kf_qq}</textarea>
+                              <p class="bf100"><label  class="blue_label fl ml0">{$lang.kf_qq_prompt}</label></p>
+                            </dd>
+                        </dl>	
+                        <dl>
+                            <dt>{$lang.customer_service_taobao}：</dt>
+                            <dd>
+                              <textarea name='kf_ww' value="{$shop_info.kf_ww}" rows="6" cols="48" class="textarea">{$shop_info.kf_ww}</textarea>
+                              <p class="bf100"><label  class="blue_label fl ml0">{$lang.kf_ww_prompt}</label></p>
+                            </dd>
+                        </dl>
+                            <!--
+                            @author-bylu 在线客服 start
+                            满足以下2种情况之一即显示"在线客服"的设置:
+                            1.大商创平台;
+                            2.设置了"在线客服"的商家;
+                            -->
+                        {if $shop_information.is_IM eq 1 || $shop_information.is_dsc}
+                        <dl>
+                            <dt>在线客服账号：</dt>
+                            <dd>
+                                <input type="text" size="40" value="{$shop_info.kf_touid}" name="kf_touid" class="text text_1">
+                                <p class="bf100"><label  class="blue_label fl ml0">　在<a style="color: red;text-decoration: underline" target="_blank" href="http://my.open.taobao.com/app/app_list.htm">淘宝开放平台</a>已开通云旺客服的账号 。</label></p>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>在线客服appkey：</dt>
+                            <dd>
+                                <input type="text" size="40" value="{$shop_info.kf_appkey}" name="kf_appkey" class="text text_1">
+                                <p class="bf100"><label  class="blue_label fl ml0">　在淘宝开放平台创建一个应用(百川无线)即可获得appkey。</label></p>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>在线客服secretkey：</dt>
+                            <dd>
+                                <input type="text" size="40" value="{$shop_info.kf_secretkey}" name="kf_secretkey" class="text text_1">
+                                <p class="bf100"><label  class="blue_label fl ml0">　在淘宝开放平台创建一个应用(百川无线)即可获得secretkey。</label></p>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>在线客服头像LOGO：</dt>
+                            <dd>
+                                <input type="text" size="40" value="{$shop_info.kf_logo}" name="kf_logo" class="text text_1">
+                                <p class="bf100"><label  class="blue_label fl ml0">　直接黏贴图片网址(推荐40 x 40),不填即使用默认头像。</label></p>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>在线客服欢迎信息：</dt>
+                            <dd>
+                                <input type="text" size="40" value="{$shop_info.kf_welcomeMsg}" name="kf_welcomeMsg" class="text text_1">
+                                <p class="bf100"><label  class="blue_label fl ml0">　向用户发送的一条欢迎信息。</label></p>
+                            </dd>
+                        </dl>
+                        {/if}
+                        <!--@author-bylu 在线客服 end-->
+                        <dl>
+                            <dt>美恰客服：</dt>
+                            <dd>
+                                <input type="text" size="40" value="{$shop_info.meiqia}" name="meiqia" class="text text_2">
+                                <p class="bf100"><label  class="blue_label fl ml0">&nbsp;&nbsp;此功能仅手机端（wap）使用</label></p>
+                            </dd>
+                        </dl>	
+                        <dl>
+                            <dt>{$lang.customer_service_tel}：</dt>
+                            <dd><input type="text" size="40" value="{$shop_info.kf_tel}" name="kf_tel" class="text text_2"></dd>
+                        </dl>
+                        <dl>
+                            <dt>{$lang.customer_service_css}：</dt>
+                            <dd>
+                                <div class="checkbox_items">
+                                    <label class="mr10"><input name="kf_type" type="radio" value="0" class="checkbox" {if $shop_info.kf_type eq 0}checked="checked"{/if} />{$lang.QQ_kf}</label>
+                                    <label><input name="kf_type" type="radio" value="1" class="checkbox" {if $shop_info.kf_type eq 1}checked="checked"{/if} />{$lang.wangwang_kf}</label>
+                                </div>
+                            </dd>
+                        </dl>
+                        {if $priv_ru neq 1}
+                        <dl>
+                            <dt>{$lang.seller_logo}：</dt>
+                            <dd>
+                                 <input type="file" name="shop_logo" class="file mt5 mb5"/><label class="blue_label">(无限制*128像素)</label><br />
+                                 {if $shop_info.shop_logo}
+                                    <div class="seller_img"><img src="{$shop_info.shop_logo}" width="150" /></div>
+                                 {/if}
+                            </dd>
+                        </dl>
+                        
+                        <dl>
+                            <dt>{$lang.logo_sbt}：</dt>
+                            <dd>
+                                 <input type="file" name="logo_thumb" class="file mt5 mb5"/><label class="blue_label">(80*80像素)</label><br />
+                                 {if $shop_info.logo_thumb}
+                                 <div class="seller_img"><img src="{$shop_info.logo_thumb}" width="80" height="80" /></div>
+                                 {/if}
+                            </dd>
+                        </dl>
+                        
+                        <dl>
+                            <dt>{$lang.shop_street_sbt}：</dt>
+                            <dd>
+                                 <input type="file" name="street_thumb" class="file mt5 mb5"/><label class="blue_label">(388*187像素)</label><br />
+                                 {if $shop_info.street_thumb}
+                                 <div class="seller_img"><img src="../{$shop_info.street_thumb}" width="128" height="62" /></div>
+                                 {/if}
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>{$lang.shop_street_brand_sbt}：</dt>
+                            <dd>
+                                 <input type="file" name="brand_thumb" class="file mt5 mb5"/><label class="blue_label">(180*60像素)</label><br />
+                                 {if $shop_info.brand_thumb}
+                                 <div class="seller_img"><img src="../{$shop_info.brand_thumb}" width="180" height="60" /></div>
+                                 {/if}
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>二维码中间Logo: </dt>
+                            <dd>
+                                 <input type="file" name="qrcode_thumb"/>
+                                 {if $shop_info.qrcode_thumb}
+                                 <img src="{$shop_info.qrcode_thumb}" width="80" height="80" /> 
+                                 {/if}   
+                                 (80*80像素)
+                            </dd>
+                        </dl>  
+                        <dl>
+                            <dt>{$lang.shop_street_desc}：</dt>
+                            <dd>
+                                 <textarea name="street_desc" class="textarea">{$shop_info.street_desc}</textarea>
+                            </dd>
+                        </dl>
+                        {/if}
+                        <dl>
+                            <dt>{$lang.shop_notice}：</dt>
+                            <dd><textarea name="notice" rows="10" cols="60">{$shop_info.notice}</textarea></dd>
+                        </dl>									
+                        <div class="bottom mt20">
+                        	<input type="hidden" name="data_op" value="{$data_op}"/>
+                            <label class="submit-border"><input type="submit" class="button" value="提交"></label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="library/seller_footer.lbi"}
+<script type="text/javascript">
+<!--
+{literal}
+region.isAdmin = true;
+
+onload = function()
+{
+	if(document.getElementById('paynon')){
+		document.getElementById('paynon').style.display = 'none';
+	}
+}
+
+function validator()
+{
+  var validator = new Validator('theForm');
+  validator.required('shop_name', shop_name_not_null);
+  
+  var shipping_id = document.getElementById('shipping_id').value;
+  
+  if(shipping_id == 0){
+	  alert("请选择配送方式");
+	  return false;
+  }
+  
+  return validator.passed();
+}
+
+function show_shipping_area()
+{
+  Ajax.call('shipping.php?act=shipping_priv', '', shippingResponse, 'GET', 'JSON');
+}
+
+function shippingResponse(result)
+{
+  var shipping_name = document.getElementById('shipping_type');
+  if (result.error == '1' && result.message != '')
+  {
+    alert(result.message);
+    shipping_name.options[0].selected = true;
+    return;
+  }
+  
+  var area = document.getElementById('shipping_area');
+  if(shipping_name.value == '')
+  {
+    area.style.display = 'none';
+  }
+  else
+  {
+    area.style.display = "block";
+  }
+}
+
+function loadConfig()
+{
+  var payment = document.forms['theForm'].elements['payment'];
+  var paymentConfig = document.getElementById('paymentConfig');
+  if(payment.value == '')
+  {
+    paymentConfig.style.display = 'none';
+    return;
+  }
+  else
+  {
+    paymentConfig.style.display = 'block';
+  }
+  if(document.getElementById('paynon')){
+	  if(payment.value == 'alipay')
+ 	 {
+	  document.getElementById('paynon').style.display = 'block';
+	}
+	else
+	{
+	  document.getElementById('paynon').style.display = 'none';
+	}
+  }
+	
+  var params = 'code=' + payment.value;
+
+  Ajax.call('payment.php?is_ajax=1&act=get_config', params, showConfig, 'GET', 'JSON');
+}
+
+{if $is_false && $priv_ru}
+//Ajax.call('users.php?is_ajax=1&act=main_user','', start_user, 'GET', 'TEXT','FLASE');
+function start_user(){
+}
+{/if}
+function showConfig(result)
+{
+  var payment = document.forms['theForm'].elements['payment'];
+  if (result.error == '1' && result.message != '')
+  {
+    alert(result.message);
+    payment.options[0].selected = true;
+    return;
+  }
+  var paymentConfig = document.getElementById('paymentConfig');
+  var config = result.content;
+
+  paymentConfig.innerHTML = config;
+}
+{if $goods_false && $priv_ru}
+//Ajax.call('goods.php?is_ajax=1&act=main_dsc','', start_dsc, 'GET', 'TEXT','FLASE');
+function start_dsc(){
+	//
+}
+{/if}
+{/literal}
+//-->
+</script>
+</body>
+</html>

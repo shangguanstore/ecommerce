@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        <div class="site wrapper">
+			{include file ='library/seller_menu_left.lbi'}
+            <div class="ecsc-layout-right">
+                <div class="main-content" id="mainContent">
+					{include file ='library/seller_menu_tab.lbi'}
+					<div class="info_warp">
+						<form action="goods_produts_warehouse_batch.php?act=upload" method="post" enctype="multipart/form-data" name="theForm" onsubmit="return formValidate()">
+							<table width="100%" class="table_item">
+								<tr>
+									<td colspan="2">
+										<div class="alert-info">{$lang.use_help}</div>
+									</td>
+								</tr>
+								{if $goods_name}
+								<tr>
+									<td class="label">{$lang.goods_name}</td>
+									<td class="lh28 red">{$goods_name}</td>
+								</tr>
+								{/if}
+
+								{if $attribute_list}
+								{foreach from=$attribute_list item=attribute}
+								<tr style="display:none">
+									<td class="label">{$attribute.attr_name}：</td>
+									<td>
+										<select name="goods_attr[]" id="goods_attr_list" class="select">
+											{foreach from=$attribute.goods_attr item=attr}
+											<option value="{$attr.goods_attr_id}">{$attr.attr_value}</option>
+											{/foreach}
+										</select>
+										<span class="red">{$lang.notice_select}</span>
+									</td>
+								</tr>
+								{/foreach}
+								{/if}
+								<tr>
+									<td class="label">{$lang.file_charset}</td>
+									<td>
+										<select name="charset" id="charset" class="select">
+											{html_options options=$lang_list}
+										</select>
+									</td>
+								</tr>
+
+								<tr>
+									<td class="label">{$lang.csv_file}</td>
+									<td>
+										<input name="file" type="file" size="40" class="file mt5">
+                                        <p class="fl bf100"><label class="blue_label ml0">{$lang.notice_file}</label></p>
+									</td>
+								</tr>
+								{foreach from=$download_list item=download key=charset}
+								{if $charset eq 'zh_cn'}
+								<tr>
+									<td>&nbsp;</td>
+									<td><a onclick="get_produts_batch('{$charset}', {$goods_id}, {$warehouse_id});" href="javascript:;" class="bule">{$download}</a></td>
+								</tr>
+								{/if}
+								{/foreach}
+								<tr class="no-line">
+									<td>&nbsp;</td>
+									<td class="pt20 pb20"><input name="submit" type="submit" id="submit" value="{$lang.button_submit}" class="button" /></td>
+								</tr>
+							</table>
+						</form>
+					</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+{literal}
+<script type="text/javascript">
+    var elements;
+    onload = function()
+    {
+        // 文档元素对象
+        elements = document.forms['theForm'].elements;
+
+        // 开始检查订单
+        startCheckOrder();
+    }
+
+    /**
+     * 检查是否底级分类
+     */
+    function checkIsLeaf(selObj)
+    {
+        if (selObj.options[selObj.options.selectedIndex].className != 'leafCat')
+        {
+            alert(goods_cat_not_leaf);
+            selObj.options.selectedIndex = 0;
+        }
+    }
+
+    /**
+     * 检查输入是否完整
+     */
+    function formValidate()
+    {
+        if (elements['cat'].value <= 0)
+        {
+            alert(please_select_cat);
+            return false;
+        }
+        if (elements['file'].value == '')
+        {
+            alert(please_upload_file);
+            return false;
+        }
+        return true;
+    }
+	// 分类分级 by qin
+	function catList(val, level)
+	{
+		var cat_id = val;
+		document.getElementById('cat').value = cat_id;
+		Ajax.call('goods.php?is_ajax=1&act=sel_cat', 'cat_id='+cat_id+'&cat_level='+level, catListResponse, 'GET', 'JSON');
+	}
+
+	function catListResponse(result)
+	{
+		if (result.error == '1' && result.message != '')
+		{
+		  alert(result.message);
+		  return;
+		}
+		var response = result.content;
+		var cat_level = result.cat_level; // 分类级别， 1为顶级分类
+		for(var i=cat_level;i<10;i++)
+		{
+		  $("#cat_list"+Number(i+1)).remove();
+		}
+		if(response)
+		{
+			$("#cat_list"+cat_level).after(response);
+		}
+	  return;
+	}
+
+	function get_produts_batch(charset, goods_id, warehouse_id){
+
+		var goods_attr = document.getElementsByName('goods_attr[]');
+		var spec_arr     = new Array();
+
+		for(i=0; i<goods_attr.length; i++){
+			spec_arr[i] = goods_attr[i].value;
+		}
+
+		// + "&goods_attr=" + spec_arr
+
+		location.href="goods_produts_warehouse_batch.php?act=download&charset=" +charset+ "&goods_id=" +goods_id+ "&warehouse_id=" + warehouse_id;
+	}
+
+</script>
+{/literal}
+</body>
+</html>

@@ -1,0 +1,496 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div class="ecsc-form-default">
+                    <form method="post" action="favourable.php" name="theForm" enctype="multipart/form-data" onSubmit="return validate()">
+                      <table width="100%" class="table_item">
+                        <tr>
+                          <td class="label">{$lang.label_act_name}</td>
+                          <td>
+                              {if $favourable.userFav_type eq 0 || $priv_ru}
+                              <input name="act_name" type="text" class="text" id="act_name" value="{$favourable.act_name}" size="40" />
+                              {else}
+                              <div class="no_edit">{$favourable.act_name}</div>
+                              {/if}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="label">{$lang.label_start_end_time}</td>
+                          <td>
+                            <div class="text_time" id="text_time1">
+                                  {if $favourable.userFav_type eq 0 || $priv_ru}
+                                  <input name="start_time" type="text" id="start_time" value="{$favourable.start_time}" readonly="readonly" />
+                                  <input name="selbtn1" type="button" id="selbtn1" />
+                                  {else}
+                                  <div class="no_edit">{$favourable.start_time}</div>
+                                  {/if} 
+                              </div>
+                              <span class="bolang">&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+                              <div class="text_time" id="text_time2">
+                                {if $favourable.userFav_type eq 0 || $priv_ru}
+                                  <input name="end_time" type="text" id="end_time" value="{$favourable.end_time}" readonly="readonly" />
+                                  <input name="selbtn2" type="button" id="selbtn2" />
+                                  {else}
+                                  <div class="no_edit">{$favourable.end_time}</div>
+                                  {/if}
+                              </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="label file_label">{$lang.upload_image}：</td>
+                          <td>
+                            <input name="activity_thumb" type="file" {if $favourable.user_id eq 0}disabled="disabled"{/if}/>
+                            {if $favourable.activity_thumb neq ""}
+                                <input type="button" value="{$lang.drop_activity_thumb}" onclick="if (confirm('{$lang.confirm_drop_thumb}'))location.href='favourable.php?act=drop_thumb&id={$favourable.act_id}&ru_id={$favourable.user_id}'">
+                                &nbsp;&nbsp;<a href="../{$favourable.activity_thumb}" target="_blank">{$lang.view}</a>
+                            {/if}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="label">{$lang.label_user_rank}</td>
+                          <td>
+                            <div class="checkbox_items">
+                            {foreach from=$user_rank_list item=user_rank}
+                                  {if $favourable.userFav_type eq 0 || $priv_ru}
+                                  <label><input type="checkbox" class="checkbox" name="user_rank[]" value="{$user_rank.rank_id}" {if $user_rank.checked}checked="true"{/if} /><span>{$user_rank.rank_name}</span></label>
+                                  {else}
+                                     {if $user_rank.checked} <div class="no_edit">{$user_rank.rank_name}</div>{/if}
+                                  {/if}  
+                              {/foreach}
+                              </div>
+                          </td>
+                        </tr>
+                        {if $priv_ru}
+                        <tr>
+                          <td class="label">{$lang.use_type}：</td>
+                          <td>
+                            <select name="userFav_type" class="select select_4">
+                                <option value="0" {if $favourable.userFav_type eq 0}selected="selected"{/if}>{$lang.autonomous_use}</option>
+                                  <option value="1" {if $favourable.userFav_type eq 1}selected="selected"{/if}>{$lang.general_audience}</option>
+                              </select>
+                          </td>
+                        </tr>
+                        {else}
+                            {if $favourable.userFav_type}
+                            <tr>
+                              <td class="label">{$lang.use_type}：</td>
+                              <td><div class="no_edit">{$lang.general_audience}</div></td>
+                            </tr>
+                            {/if}
+                        {/if}
+                        <tr>
+                          <td class="label">{$lang.label_act_range}</td>
+                          <td>
+                              {if $favourable.userFav_type eq 0 || $priv_ru}
+                              <select name="act_range" onchange="changeRange(this.value)" class="select select_4">
+                                <option value="0" selected="selected" {if $favourable.act_range eq 0}selected="selected"{/if}>{$lang.far_all}</option>
+                                <option value="1" {if $favourable.act_range eq 1}selected="selected"{/if}>{$lang.far_category}</option>
+                                <option value="2" {if $favourable.act_range eq 2}selected="selected"{/if}>{$lang.far_brand}</option>
+                                <option value="3" {if $favourable.act_range eq 3}selected="selected"{/if}>{$lang.far_goods}</option>
+                              </select>
+                              <div id="range-div">
+                                  {foreach from=$act_range_ext item=item}
+                                      <p>
+                                      <input name="act_range_ext[]" type="checkbox" class="checkbox" value="{$item.id}" id="checkbox_{$item.id}" checked="checked" />
+                                      <label for="checkbox_{$item.id}">{$item.name} </label>
+                                      </p>
+                                  {/foreach}
+                              </div>
+                              {else}
+                              <div class="no_edit">
+                                  {if $favourable.act_range eq 0}{$lang.far_all}{/if}
+                                  {if $favourable.act_range eq 1}{$lang.far_category}{/if}
+                                  {if $favourable.act_range eq 2}{$lang.far_brand}{/if}
+                                  {if $favourable.act_range eq 3}{$lang.far_goods}{/if}
+                              </div>
+                              {/if}    
+                          </td>
+                        </tr>
+                        {if $favourable.userFav_type eq 0 || $priv_ru}
+                        <tr id="range_search"{if $favourable.act_range eq 0} style="display:none"{/if}>
+                          <td class="label">{$lang.label_search_and_add}：</td>
+                          <td>
+                              <input name="keyword" type="text" class="text text_2 mr10 mb10" id="keyword">
+                              <input name="search" type="button" id="search" value="{$lang.button_search}" class="button button_red fl mr10" onclick="searchItem()" />
+                              <select name="result" id="result" class="select"></select>
+                              <input type="button" name="add_range" value="+" class="button button_red" onclick="addRange()" />
+                          </td>
+                        </tr>
+                        {/if}
+                        <tr>
+                          <td class="label">{$lang.label_min_amount}</td>
+                          <td>
+                            {if $favourable.userFav_type eq 0 || $priv_ru}
+                            <input name="min_amount" type="text" class="text" id="min_amount" value="{$favourable.min_amount}">
+                              {else}
+                              <div class="no_edit">{$favourable.min_amount}</div>
+                              {/if}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="label">{$lang.label_max_amount}</td>
+                          <td>
+                              {if $favourable.userFav_type eq 0 || $priv_ru}
+                            <input name="max_amount" type="text" class="text" id="max_amount" value="{$favourable.max_amount}">
+                              <label class="blue_label">{$lang.notice_max_amount}</label>
+                              {else}
+                              <div class="no_edit">{$favourable.max_amount}</div>
+                              {/if}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="label">{$lang.label_act_type}</td>
+                          <td>
+                              {if $favourable.userFav_type eq 0 || $priv_ru}
+                                  <select name="act_type" id="act_type" onchange="changeType(this.value)" class="select">
+                                    <option value="0" {if $favourable.act_type eq 0}selected="selected"{/if}>{$lang.fat_goods}</option>
+                                    <option value="1" {if $favourable.act_type eq 1}selected="selected"{/if}>{$lang.fat_price}</option>
+                                    <option value="2" {if $favourable.act_type eq 2}selected="selected"{/if}>{$lang.fat_discount}</option>
+                                  </select>
+                                  <input name="act_type_ext" type="text" class="text text_2" id="act_type_ext" value="{$favourable.act_type_ext}" size="10" />
+                              {else}
+                                  <div class="no_edit">
+                                      {if $favourable.act_type eq 0}{$lang.fat_goods}{/if}
+                                      {if $favourable.act_type eq 1}{$lang.fat_price}{/if}
+                                      {if $favourable.act_type eq 2}{$lang.fat_discount}{/if}
+                                      {if $favourable.act_type neq 0}&nbsp;&nbsp;{$favourable.act_type_ext}{/if}
+                                  </div>
+                              {/if}
+                              <p class="fl bf100">
+                                <label class="blue_label ml0" id="NoticeActType">{$lang.notice_act_type}</label>
+                              </p>
+                              <div id="gift-div">
+                                  <table id="gift-table">
+                                  {if $favourable.gift}
+                                      <tr>
+                                          <td class="tc"><strong>{$lang.js_languages.gift}</strong></td>
+                                          <td class="tc"><strong>{$lang.js_languages.price}</strong></td>
+                                      </tr>
+                                      {foreach from=$favourable.gift item=goods key=key}
+                                      <tr class="no-line">
+                                          <td>{if $favourable.userFav_type eq 0 || $priv_ru}<input type="checkbox" class="fl mt5 mr5" name="gift_id[{$key}]" id="gift_id[{$key}]" value="{$goods.id}" checked="checked" />{/if}<label for="gift_id[{$key}]" class="fl text_rest w530">{$goods.name}</label></td>
+                                          <td align="right">
+                                              {if $favourable.userFav_type eq 0 || $priv_ru}
+                                              <input name="gift_price[{$key}]" type="text" value="{$goods.price}" size="10" style="text-align:center;" />
+                                              <input name="gift_name[{$key}]" type="hidden" value="{$goods.name}" />
+                                              {else}
+                                              <div class="no_edit">{$goods.price}</div>
+                                              {/if}
+                                          </td>
+                                      </tr>
+                                      {/foreach}
+                                    {/if}
+                                  </table>
+                              </div>
+                          </td>
+                        </tr>
+                        {if $favourable.userFav_type eq 0 || $priv_ru}
+                        <tr id="type_search"{if $favourable.act_type neq 0} style="display:none"{/if}>
+                          <td class="label">{$lang.label_search_and_add_gift}：</td>
+                          <td>
+                              <input name="keyword1" type="text" id="keyword1" class="text text_2 mr10 mb10" />
+                              <input name="search1" type="button" id="search1" value="{$lang.button_search}" class="button button_red fl mr10" onclick="searchItem1()" />
+                              <select name="result1" id="result1" class="select select_4 mb10"></select>
+                              <input name="add_gift" type="button" class="button button_red" id="add_gift" onclick="addGift()" value="+" />
+                          </td>
+                        </tr>
+                        {/if}
+                      </table>
+                      <div class="bottom tc">
+                        <div class="button_info">
+                        <input type="submit" class="button" value="{$lang.button_submit}" />
+                        <input type="reset" class="button button_reset" value="{$lang.button_reset}" />
+                        <input type="hidden" name="act" value="{$form_action}" />
+                        <input type="hidden" name="id" value="{$favourable.act_id}" />    
+                        <input type="hidden" name="ru_id" value="{$favourable.user_id}" />
+                        </div>
+                      </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+<!--
+onload = function()
+{
+    // 开始检查订单
+    startCheckOrder();
+//    changeRange(document.forms['theForm'].elements['act_range'].value);
+//    changeType(document.forms['theForm'].elements['act_type'].value);
+}
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+    validator = new Validator("theForm");
+    validator.required('act_name', act_name_not_null);
+    validator.isNumber('min_amount', min_amount_not_number, true);
+    validator.isNumber('max_amount', max_amount_not_number, true);
+    validator.isNumber('act_type_ext', act_type_ext_not_number, true);
+    validator.islt('start_time', 'end_time', start_lt_end);
+    if (document.forms['theForm'].elements['max_amount'].value > 0)
+    {
+      validator.gt('max_amount', 'min_amount', amount_invalid);
+    }
+
+    return validator.passed();
+}
+
+function searchItem()
+{
+  var filter = new Object;
+  filter.keyword  = document.forms['theForm'].elements['keyword'].value;
+  filter.act_range = document.forms['theForm'].elements['act_range'].value;
+  filter.ru_id  = {$favourable.user_id};
+  if (filter.act_range == 0)
+  {
+    alert(all_need_not_search);
+    return;
+  }
+
+  Ajax.call('favourable.php?is_ajax=1&act=search', filter, searchResponse, 'GET', 'JSON');
+}
+
+function searchResponse(result)
+{
+  if (result.error == '1' && result.message != '')
+  {
+    alert(result.message);
+  return;
+  }
+
+  var sel = document.forms['theForm'].elements['result'];
+
+  sel.length = 0;
+
+  /* 创建 options */
+  var goods = result.content;
+  if (goods)
+  {
+    for (i = 0; i < goods.length; i++)
+    {
+      var opt = document.createElement("OPTION");
+      opt.value = goods[i].id;
+      opt.text  = goods[i].name;
+      sel.options.add(opt);
+    }
+  }
+
+  return;
+}
+
+/**
+ * 改变优惠范围
+ * @param int rangeId
+ */
+function changeRange(rangeId)
+{
+  document.getElementById('range-div').innerHTML = '';
+  document.getElementById('result').length = 0;
+  var row = document.getElementById('range_search');
+  if (rangeId <= 0)
+  {
+    row.style.display = 'none';
+  }
+  else
+  {
+    row.style.display = '';
+  }
+}
+
+function addRange()
+{
+  var selRange = document.forms['theForm'].elements['act_range'];
+  if (selRange.value == 0)
+  {
+    alert(all_need_not_search);
+    return;
+  }
+  var selResult = document.getElementById('result');
+  if (selResult.value == 0)
+  {
+    alert(pls_search);
+    return;
+  }
+  var id = selResult.options[selResult.selectedIndex].value;
+  var name = selResult.options[selResult.selectedIndex].text;
+
+  // 检查是否已经存在
+  var exists = false;
+  var eles = document.forms['theForm'].elements;
+  for (var i = 0; i < eles.length; i++)
+  {
+    if (eles[i].type=="checkbox" && eles[i].name.substr(0, 13) == 'act_range_ext')
+    {
+      if (eles[i].value == id)
+      {
+        exists = true;
+        alert(range_exists);
+        break;
+      }
+    }
+  }
+
+  // 创建checkbox
+  if (!exists)
+  {
+    var html = '<input name="act_range_ext[]" type="checkbox" value="' + id + '" checked="checked" />' + name + '<br />';
+    document.getElementById('range-div').innerHTML += html;
+  }
+}
+
+/**
+ * 搜索赠品
+ */
+function searchItem1()
+{
+  if (document.forms['theForm'].elements['act_type'].value == 1)
+  {
+    alert(price_need_not_search);
+    return;
+  }
+  var filter = new Object;
+  filter.keyword  = document.forms['theForm'].elements['keyword1'].value;
+  filter.ru_id  = {$favourable.user_id};
+  filter.act_range = 3;
+  Ajax.call('favourable.php?is_ajax=1&act=search', filter, searchResponse1, 'GET', 'JSON');
+}
+
+function searchResponse1(result)
+{
+  if (result.error == '1' && result.message != '')
+  {
+    alert(result.message);
+  return;
+  }
+
+  var sel = document.forms['theForm'].elements['result1'];
+
+  sel.length = 0;
+
+  /* 创建 options */
+  var goods = result.content;
+  if (goods)
+  {
+    for (i = 0; i < goods.length; i++)
+    {
+      var opt = document.createElement("OPTION");
+      opt.value = goods[i].id;
+      opt.text  = goods[i].name;
+      sel.options.add(opt);
+    }
+  }
+
+  return;
+}
+
+function addGift()
+{
+  var selType = document.forms['theForm'].elements['act_type'];
+  if (selType.value == 1)
+  {
+    alert(price_need_not_search);
+    return;
+  }
+  var selResult = document.getElementById('result1');
+  if (selResult.value == 0)
+  {
+    alert(pls_search);
+    return;
+  }
+  var id = selResult.options[selResult.selectedIndex].value;
+  var name = selResult.options[selResult.selectedIndex].text;
+
+  // 检查是否已经存在
+  var exists = false;
+  var eles = document.forms['theForm'].elements;
+  for (var i = 0; i < eles.length; i++)
+  {
+    if (eles[i].type=="checkbox" && eles[i].name.substr(0, 7) == 'gift_id')
+    {
+      if (eles[i].value == id)
+      {
+        exists = true;
+        alert(range_exists);
+        break;
+      }
+    }
+  }
+
+  // 创建checkbox
+  if (!exists)
+  {
+    var table = document.getElementById('gift-table');
+    if (table.rows.length == 0)
+    {
+        var row = table.insertRow(-1);
+        var cell = row.insertCell(-1);
+        cell.align = 'center';
+        cell.innerHTML = '<strong>' + gift + '</strong>';
+        var cell = row.insertCell(-1);
+        cell.align = 'center';
+        cell.innerHTML = '<strong>' + price + '</strong>';
+    }
+    var row = table.insertRow(-1);
+    var cell = row.insertCell(-1);
+    cell.innerHTML = '<input name="gift_id[]" id="gift_id" type="checkbox" class="checkbox" value="' + id + '" checked="checked" /><label for="gift_id">' + name+'</label>';
+    var cell = row.insertCell(-1);
+    cell.align = 'right';
+    cell.innerHTML = '<input name="gift_price[]" type="text" value="0" size="10" style="text-align:center" />' +
+                     '<input name="gift_name[]" type="hidden" value="' + name + '" />';
+  }
+}
+
+function changeType(typeId)
+{
+  document.getElementById('gift-div').innerHTML = '<table id="gift-table"></table>';
+  document.getElementById('result1').length = 0;
+  var row = document.getElementById('type_search');
+
+  if (typeId <= 0)
+  {
+    row.style.display = '';
+  }
+  else
+  {
+    row.style.display = 'none';
+  }
+}
+
+//日期选择插件调用start sunle
+var opts1 = {
+  'targetId':'start_time',//时间写入对象的id
+  'triggerId':['selbtn1'],//触发事件的对象id
+  'alignId':'text_time1',//日历对齐对象
+  'format':'-'//时间格式 默认'YYYY-MM-DD HH:MM:SS'
+},opts2 = {
+  'targetId':'end_time',
+  'triggerId':['selbtn2'],
+  'alignId':'text_time2',
+  'format':'-'
+}
+
+{if $favourable.userFav_type eq 0 || $priv_ru}
+xvDate(opts1);
+xvDate(opts2);
+{/if}
+//日期选择插件调用end sunle
+//-->
+{/literal}
+</script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="Keywords" content="{$keywords}" />
+<meta name="Description" content="{$description}" />
+<!-- TemplateBeginEditable name="doctitle" -->
+<title>{$page_title}</title>
+<!-- TemplateEndEditable -->
+<!-- TemplateBeginEditable name="head" -->
+<!-- TemplateEndEditable -->
+<link rel="shortcut icon" href="favicon.ico" />
+<link rel="icon" href="animated_favicon.gif" type="image/gif" />
+<link rel="stylesheet" type="text/css" href="themes/ecmoban_dsc/base.css" />
+<link rel="stylesheet" type="text/css" href="themes/ecmoban_dsc/user.css" />
+<link rel="stylesheet" type="text/css" href="{$ecs_css_path}" />
+<link rel="stylesheet" type="application/rss+xml" title="RSS|{$page_title}" href="{$feed_url}" />
+{insert_scripts files='jquery-1.9.1.min.js,jquery.json.js,transport_jquery.js,utils.js'}
+<script type="text/javascript" src="themes/ecmoban_dsc/js/sc_common.js"></script>
+<script type="text/javascript" src="themes/ecmoban_dsc/js/scroll_city.js"></script>
+<script type="text/javascript" src="themes/ecmoban_dsc/js/Validform.js"></script>
+</head>
+
+<body class="third_body">
+<div class="header">
+    <div class="logo-con w1200">
+        <a href="./index.php" class="logo"><img src="images/logo_2015.png" /></a>
+        <div class="logo-title">账 号 绑 定</div>
+    </div>
+</div>
+<div class="third_container w1200">
+    <div class="main clearfix">
+        <div class="register-tabNav clearfix">
+            <div class="r-tab r-tab-cur">
+                <span class="icon i-bind"></span>
+                <span>已有{$dwt_shop_name}账号，请绑定</span>
+            </div>
+            <div class="r-tab">
+                <span class="icon i-reg"></span>
+                <span>没有{$dwt_shop_name}账号，请注册</span>
+            </div>
+        </div>
+        <div class="reg-tab-con">
+            <div class="r-tabCon bind-login-content">
+                <div class="account-login-panle">
+                    <div class="wellcome-tip">
+                        <img src="{if $info.figureurl_qq_2}{$info.figureurl_qq_2}{else}{$info.img}{/if}" width="28" height="28">
+                        Hi, {$info.name} 欢迎来到{$dwt_shop_name}
+                    </div>
+                    <form class="login-form" name="loginForm" method="post" action="user.php?act=oath_register">
+                        <div class="login-error-container">
+                            <div id="login-error" class="login-error">
+                                <span id="login-server-error" class="error"></span>
+                            </div>
+                        </div>
+                        <div class="form-item" id="form-item-account">
+                            <label>用 户 账 号</label>
+                            <input type="text" name="username" placeholder="邮箱/用户名/手机号码" autocomplete="off" />
+                            <i class="i-clear"></i>
+                        </div>
+                        <div class="input-tip"><span id="error-username"></span></div>
+                        <div class="form-item">
+                            <label>输 入 密 码</label>
+                            <input type="password" name="password" placeholder="密码" autocomplete="off" />
+                            <i class="i-clear"></i>
+                        </div>
+                        <div class="input-tip"><span></span></div>
+                        <!-- 判断是否启用验证码{if $login_captcha} -->
+                        <div class="form-item form-item-authcode">
+                            <label>验　证　码</label>
+                            <input type="text" name="captcha" onclick="login_captcha();" placeholder="请输入验证码" autocomplete="off" />
+                            <img src="captcha_verify.php?captcha=is_login&{$rand}" class="login_captcha" alt="captcha" id="captcha_img" style="vertical-align: middle;cursor: pointer;" onClick="this.src='captcha_verify.php?captcha=is_login&'+Math.random()" width="119" height="52" />
+                        </div>
+                        <!--{/if}-->
+                        <div class="forget"><a href="user.php?act=get_password" target="_blank">忘记登录密码</a></div>
+                        <input name="bind_type" type="hidden" value="1" />
+                        
+                        <input name="oath_info" type="hidden" value="{$oath_info}" />
+                        <button type="button" class="btn-register" id="form-bound">立即绑定</button>
+                    </form>
+                </div>
+            </div>
+            <div class="r-tabCon reg-form">
+                <div class="wellcome-tip">
+                    <img src="{if $info.figureurl_qq_2}{$info.figureurl_qq_2}{else}{$info.img}{/if}" width="28" height="28"> Hi, {$info.name} 欢迎来到{$dwt_shop_name}
+                </div>
+                {insert_scripts files='./sms/sms.js'}
+                <form class="register-form" name="formUser" method="post" action="user.php?act=oath_register">
+                    <div class="form-item" id="form-item-account">
+                        <label>用　户　名</label>
+                        <input type="text" name="username" placeholder="您的账户名和登录名" data-valid="username" autocomplete="off" data-default="<i class='i-def'></i>支持中文、字母、数字、“-”“_”的组合，4-20个字符" />
+                    	<i class="i-status"></i>
+                        <div class="suggest-container user-suggest">
+                            <li class="disable"><div class="value"><i class="i-error1"></i><span>账号已存在</span></div></li>
+                        </div>
+                    </div>
+                    <div class="input-tip"><span></span></div>
+                    <div class="form-item">
+                        <label>设 置 密 码</label>
+                        <input type="password" name="password" data-valid="password" data-default="<i class='i-def'></i>建议使用字母、数字和符号两种及以上的组合，6-20个字符" placeholder="建议至少使用两种字符组合" autocomplete="off" />
+                    	<i class="i-status"></i>
+                    </div>
+                    <div class="input-tip"><span></span></div>
+                    <div class="form-item">
+                        <label>确 认 密 码</label>
+                        <input type="password" name="password2" data-valid="password2" data-default="<i class='i-def'></i>请再次输入密码" placeholder="请再次输入密码" autocomplete="off" />
+                    	<i class="i-status"></i>
+                    </div>
+                    <div class="input-tip"><span></span></div>
+                    <div class="form-item">
+                        <label>手 机 号 码</label>
+                        <input type="text" name="mobile_phone" id="mobile_phone" data-valid="tel" data-default="<i class='i-def'></i>完成验证后，可以使用该手机登录和找回密码" placeholder="请正确填写手机号码" autocomplete="off" />
+                    	<i class="i-status"></i>
+                    </div>
+                    <div class="input-tip"><span class="error"></span></div>
+                    <!-- 判断是否启用验证码{if $register_captcha} -->
+                    <div class="form-item form-item-authcode">
+                        <label>验　证　码</label>
+                        <input type="text" name="captcha" data-valid="captcha" onclick="register_email();" data-default="<i class='i-def'></i>看不清？点击图片更换验证码" placeholder="请输入验证码" autocomplete="off" />
+                        <img src="captcha_verify.php?captcha=is_register_phone&{$rand}" alt="captcha" id="authcode_img" class="is_register_email" style="vertical-align: middle;cursor: pointer;" onClick="this.src='captcha_verify.php?captcha=is_register_phone&'+Math.random()" width="119" height="52" />
+                    </div>
+                    <div class="input-tip"><span></span></div>
+                    <input name="is_captcha" type="hidden" value="1" />
+                    <!--{else}-->
+                    <input name="is_captcha" type="hidden" value="0" />
+                    <!--{/if}-->
+                    <!-- 判断是否启用手机验证码{if $sms_register} -->
+                    <div class="form-item form-item-telyzm">
+                        <label>手机验证码</label>
+                        <input type="text" name="mobile_code" data-valid="tel_code" data-default="<i class='i-def'></i>请输入手机验证码" placeholder="请输入手机验证码" autocomplete="off" />
+                        <a id="zphone" class="btn-phonecode">获取手机验证码</a>
+                    </div>
+                    <div class="input-tip"><span></span></div>
+                    <input name="is_code" type="hidden" value="1" />
+                    <!--{else}-->
+                    <input name="is_code" type="hidden" value="0" />
+                    <!--{/if}-->
+                    <div class="form-agreen">
+                        <div><input type="checkbox" name="agreen" checked="">我已阅读并同意<a href="#">《{$dwt_shop_name}用户注册协议》</a></div>
+                        <div class="input-tip">
+                            <span></span>
+                        </div>
+                    </div>
+                    <div>
+                    	<input type="hidden" name="flag" id="flag" value='register' />
+                        <input type="hidden" name="seccode" id="seccode" value="{$sms_security_code}" />
+                        <input name="bind_type" type="hidden" value="2" />
+                        
+                        <input name="oath_info" type="hidden" value="{$oath_info}" />
+                    	<button type="button" class="btn-register" id="form-register">立即注册</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #BeginLibraryItem "/library/page_footer_flow.lbi" --><!-- #EndLibraryItem -->
+<script type="text/javascript">
+$(".register-tabNav .r-tab").click(function(){
+	var index = $(this).index();
+	$(this).addClass("r-tab-cur").siblings().removeClass("r-tab-cur");
+	$(".reg-tab-con").find(".r-tabCon").eq(index).show().siblings().hide();
+});
+
+$.Validform(".register-form",".input-tip",'#form-register');
+
+$("#form-bound").click(function(){username
+	var form = $(".login-form");
+	var loginerror = form.find(".login-error");
+	var form_item = form.find(".form-item");
+	var fold = true;
+	var a;
+	var b = 0;
+	
+	var username = $("form[name='loginForm'] :input[name='username']").val();
+	var password = $("form[name='loginForm'] :input[name='password']").val();
+	var captcha = $("form[name='loginForm'] :input[name='captcha']").val();
+	
+	for(var i=0;i<form_item.length;i++){
+		var val = form_item.find("input").eq(i).val();
+		if(val == ""){
+			loginerror.show();
+			form_item.eq(i).addClass("form-item-error");
+			if(fold){
+				if(i==0){
+					loginerror.find(".error").html('<i class="i-error" style="margin-top: 3px;"></i><span>请输入账户名和密码</span>');
+					fold = false;
+				}else if(i == 1){
+					loginerror.find(".error").html('<i class="i-error" style="margin-top: 3px;"></i><span>请输入密码</span>');
+					fold = false;
+				}else{
+					loginerror.find(".error").html('<i class="i-error" style="margin-top: 3px;"></i><span>请输入验证码</span>');
+					fold = false;
+				}
+			}
+		}else{
+			form_item.eq(i).removeClass("form-item-error");
+			b++;
+		}
+	}
+	
+	<!-- 判断是否启用验证码{if $login_captcha} -->
+	a = 3;
+	<!--{else}-->
+	a = 2;
+	<!--{/if}-->
+	
+	if(b == a){
+		Ajax.call('user.php?act=is_user', 'username=' + username + '&password=' + password, function(data){
+			if (data.result == "false")
+			{
+				loginerror.show();
+				loginerror.find(".error").html('<i class="i-error" style="margin-top: 3px;"></i><span>请输入正确的账户名和密码</span>');
+			}else{
+				<!-- 判断是否启用验证码{if $$login_captcha} -->
+				Ajax.call('user.php?act=is_login_captcha', 'captcha=' + captcha, function(res){
+					if (res.result == "false"){
+						loginerror.show();
+						loginerror.find(".error").html('<i class="i-error" style="margin-top: 3px;"></i><span>' + res.message + '</span>');
+					}else{
+						$(".login-form").submit();
+					}
+				} , 'GET', 'JSON', true, true);	
+				<!--{else}-->
+				$(".login-form").submit();
+				<!--{/if}-->
+			}
+		} , 'GET', 'JSON', true, true);	
+	}
+});
+
+function login_captcha(){
+	$(".login_captcha").click();
+}
+
+function register_email(){
+	$(".is_register_email").click();
+}
+</script>
+</body>
+</html>

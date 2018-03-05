@@ -1,0 +1,308 @@
+<div class="nav ecsc-woman">
+    <div class="w1200">
+        <div class="categorys channel woman">
+            <div class="dt"><i class="icon woman-icon"></i>{$cate_info.cat_name}</div>
+            <div class="dd">
+            <div class="cata-nav" id="parent-cata-nav">
+                <!--{foreach from=$categories_child item=cat}-->
+                    <div class="item" style="height:auto;" data-catid="{$cat.id}">
+                        <div class="item-left">
+                        <div class="cata-nav-name" data-parentcat="{$cat.id}" parent_eveval="0">
+                                <h3><a href="{$cat.url}" target="_blank">{$cat.name|escape:html}</a></h3>
+                                <div class="ext">
+                                <!--{foreach from=$cat.cat_id item=child name=no}-->
+                                <!--{if $smarty.foreach.no.iteration < 6}-->
+                                  <a href="{$child.url}" target="_blank">{$child.name|escape:html}</a>
+                                <!--{/if}-->
+                                <!--{/foreach}-->
+                                </div>
+                            </div>
+                            <b>></b>
+                        </div>
+                        <div class="cata-nav-layer">
+                            <div class="cata-content">
+                                <h1>{$cat.name|escape:html}</h1>
+                                <div class="zfenlei">
+                                <!--{foreach from=$cat.cat_id item=child name=no}-->
+                                    <a href="{$child.url}" target="_blank">{$child.name|escape:html}</a>
+                                <!--{/foreach}-->
+                                </div>
+                                <div class="i-brand" id="brands_{$cat.id}">
+                            
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+               <!--{/foreach}--> 
+                </div>
+            </div>
+        </div>
+        <div class="navitems" id="nav">
+            <ul>
+                <li><a href="../index.php" {if $navigator_list.config.index eq 1}class="selected"{/if}>首页</a></li>
+                <!-- {foreach name=nav_middle_list from=$navigator_list.middle item=nav} -->
+                <li><a href="{$nav.url}" {if $nav.active eq 1}class="selected"{/if} {if $nav.opennew}target="_blank"{/if}>{$nav.name}</a></li>
+                <!-- {/foreach} -->
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="banner woman">
+    <div class="classify-banner">
+        <div class="bd">
+        {* ECSHOP 提醒您：动态载入cat_top_ad.lbi，显示首页分类小广告 *}{insert name='get_adv_child' ad_arr=$cat_top_ad id=$cate_info.cat_id}  
+        </div>
+        <div class="ecsc-warp">
+            <div class="hd"><ul></ul></div>
+            <div class="banner-switch">
+                <div class="banner-grab">
+                    <div class="grab-l">
+                    {* ECSHOP 提醒您：动态载入cat_top_prom_ad.lbi，显示首页分类小广告 *}{insert name='get_adv_child' ad_arr=$cat_top_prom_ad id=$cate_info.cat_id}
+                    </div>
+                    <div class="grab-r">
+                        <div class="grab-pc">
+                            <ul>
+                            <!--{foreach from=$cate_top_promote_goods item=goods name=promote}-->
+                                <li>
+                                    <div class="grab-con">
+                                        <div class="p-img"><a href="{$goods.url}" target="_blank"><img src="themes/ecmoban_dsc/images/loadGoods.gif" width="135" height="135" class="lazy" data-original="{$goods.thumb}"/></a></div>
+                                        <div class="p-name"><a href="{$goods.url}" target="_blank">{$goods.name|escape:html}</a></div>
+                                        <div class="p-price">
+                                        {if $goods.promote_price neq ''}
+                                             {$goods.promote_price}
+                                        {else}
+                                             {$goods.shop_price}
+                                        {/if}
+                                        </div>
+                                        <a href="{$goods.url}" class="btn4" target="_blank">抢 ></a>
+                                        <i class="icon dis"></i>
+                                    </div>
+                                </li>
+                            <!-- {/foreach} -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
+    <div class="lazy-ecsc-warp woman">
+        <!-- {if $cate_top_new_goods} -->
+        <div class="w1200">
+            <div class="ecsc-new woman w932">
+                <div class="ec-title"><h3>新品首发</h3></div>
+                <div class="ec-content">
+                    <div class="ecsc-tp">
+                        <div class="ecsc-tp-photo">{* ECSHOP 提醒您：动态载入cat_top_new_ad.lbi，显示首页新品首发小广告 *}{insert name='get_adv_child' ad_arr=$cat_top_new_ad id=$cate_info.cat_id}</div>
+                        <div class="ecsc-cp-r">
+                            <ul>
+                            <!--{foreach from=$cate_top_new_goods item=goods name=new}-->
+                            {if $smarty.foreach.new.iteration < 5}
+                                <li>
+                                    <div class="product-desc">
+                                        <div class="p-img"><a href="{$goods.url}" target="_blank"><img src="themes/ecmoban_dsc/images/loadGoods.gif" width="136" height="136" class="lazy" data-original="{$goods.thumb}"></a></div>
+                                        <div class="p-name"><a href="{$goods.url}" target="_blank">{$goods.name|escape:html}</a></div>
+                                        <div class="ecsc-bp">
+                                            <div class="p-price">
+                                            {if $goods.promote_price neq ''}
+                                                 {$goods.promote_price}
+                                            {else}
+                                                 {$goods.shop_price}
+                                            {/if}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                             {/if}
+                             <!-- {/foreach} -->
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="ecsc-tp last">
+                        <div class="ecsc-tp-photo">{* ECSHOP 提醒您：动态载入cat_top_newt_ad.lbi，显示首页新品首发小广告 *}{insert name='get_adv_child' ad_arr=$cat_top_newt_ad id=$cate_info.cat_id}</div>
+                        <div class="ecsc-cp-r">
+                            <ul>
+                            <!--{foreach from=$cate_top_new_goods item=goods name=new}-->
+                            {if $smarty.foreach.new.iteration > 4 && $smarty.foreach.new.iteration < 9}
+                                <li>
+                                    <div class="product-desc">
+                                        <div class="p-img"><a href="{$goods.url}" target="_blank"><img src="themes/ecmoban_dsc/images/loadGoods.gif" width="136" height="136" class="lazy" data-original="{$goods.thumb}"></a></div>
+                                        <div class="p-name"><a href="{$goods.url}" target="_blank">{$goods.name|escape:html}</a></div>
+                                        <div class="ecsc-bp">
+                                            <div class="p-price">
+                                            {if $goods.promote_price neq ''}
+                                                 {$goods.promote_price}
+                                            {else}
+                                                 {$goods.shop_price}
+                                            {/if}
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </li>
+                            {/if}
+                            <!-- {/foreach} -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ecsc-sales w240">
+                <div class="ec-title"><h3>热销商品</h3></div>
+                <div class="ec-content">
+                    <ul class="ecsc-sales-list">
+                    <!--{foreach from=$cate_top_hot_goods item=goods name=hot}-->
+                    <li>
+                        <b class="sales-num sales-num-{$smarty.foreach.hot.iteration}" id="{$smarty.foreach.hot.iteration}">{$smarty.foreach.hot.iteration}</b>
+                        <div class="sales-product-img"><a href="{$goods.url}" target="_blank"><img src="themes/ecmoban_dsc/images/loadGoods.gif" width="62" height="62" class="lazy" data-original="{$goods.thumb}"></a></div>
+                        <div class="p-name"><a href="{$goods.url}" target="_blank">{$goods.name|escape:html}</a></div>
+                        <div class="p-price">
+                        {if $goods.promote_price neq ''}
+                             {$goods.promote_price}
+                        {else}
+                             {$goods.shop_price}
+                        {/if}
+                        </div>
+                    </li>
+                    <!-- {/foreach} -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- {/if} -->
+        <div id="cat_top_lit"></div>
+        <div class="w1200 floor" id="floor_loading" style="padding:120px 0px;">
+            <div style="width:189px; height:150px; margin:auto;"><img src="themes/ecmoban_dsc/images/loading.gif"></div>
+        </div>
+    </div>
+</div>
+<input name="region_id" value="{$region_id}" type="hidden">
+<input name="area_id" value="{$area_id}" type="hidden">
+<input name="cat_id" value="{$cate_info.cat_id}" type="hidden">
+
+<script type="text/javascript">
+    function tabs(){
+        var li = $(".tab").find("li");
+        var index = 0;
+        var floors ='';
+        li.hover(function(){
+            $(this).addClass("on");
+            $(this).siblings().removeClass("on");
+            index = $(this).index();
+            floors = $(this).parents(".floor-container");
+            
+            floors.find(".ecsc-cp-tabs").hide();
+            floors.find(".ecsc-cp-tabs").eq(index).show();
+        })
+    }
+    function loadCategoryTop(key){
+        var Floor = $("#floor_"+key);
+        Floor.find(".floor-left-banner").slide({titCell:".hd ul",mainCell:".bd ul",effect:"leftLoop",autoPlay:true,autoPage:true,delayTime:300,scroll:1,vis:1});
+        tabs();
+        //首页，顶级分类页广告栏按钮自适应宽度
+        $.liWidth(".floor-left-banner");
+        Floor.find("img.lazy").lazyload({
+            effect : "fadeIn"
+        });
+    }
+    $(function(){
+        $('#parent-cata-nav .item').unbind('mouseenter').bind('mouseenter',function(){
+            var T = $(this);
+            var cat_id = T.children('.item-left').children('.cata-nav-name').data('parentcat');
+            var eveval = T.children('.item-left').children('.cata-nav-name').attr('parent_eveval');
+            
+            if(eveval != 1){
+                T.children('.item-left').children('.cata-nav-name').attr('parent_eveval', '1');
+                /*加载中by wu*/
+                $('#brands_' + cat_id).html('<img src="themes/ecmoban_dsc/images/loadGoods.gif" width="200" height="200" class="lazy" style="margin:0 141px">');					
+                $.ajax({
+                   type: "GET",
+                   url: "get_ajax_content.php",
+                   data: "act=getCategotyParentTree&cat_id=" + cat_id,
+                   dataType:'json',
+                   success: function(data){
+                     $('#brands_' + data.cat_id).html(data.brands_content);
+                   }
+                });
+            }
+            
+            T.addClass("selected");
+            T.children('.cata-nav-layer').show();
+        });
+        
+        $('#parent-cata-nav .item').unbind('mouseleave').bind('mouseleave',function(){
+            $(this).removeClass("selected");
+            $(this).children(".cata-nav-layer").hide();
+        });
+    });
+    $(function(){
+        //banner广告轮播调用
+        $(".classify-banner").slide({titCell:".hd ul",mainCell:".bd ul",effect:"fold",pnLoop:true,autoPlay:true,autoPage:true});
+        
+        //by wang start异步加载信息
+        var load_num=0;
+        var execute=true;
+        var $minUl = $(".lazy-ecsc-warp");
+        var wrapHeight = $minUl.height();
+        var wrapTop = $minUl.offset().top;
+        var items = $("#parent-cata-nav").find(".item");
+        function load_cat_top(key)
+        {
+            var region_id = $("input[name='region_id']").val();
+            var area_id = $("input[name='area_id']").val();
+            var cat_id = items.eq(key).data('catid');
+            var prent_id = $("input[name='cat_id']").val();
+            if(items.length>key){
+                execute = true;
+            }else{
+                execute = false;
+            }
+                
+            if(execute&&key<items.length)
+            {
+                $.ajax({
+                   type: "POST",
+                   url: "get_ajax_content.php",
+                   data: "act=get_cat_top_list&cat_id=" + cat_id + "&rome_key=" + load_num + "&prent_id=" + prent_id + "&region_id=" + region_id + "&area_id=" + area_id,
+                   dataType:'json',
+                   success: function(data){
+                       $("#floor_loading").hide();
+                       load_brand_response(data);
+                   },
+                   beforeSend : function(){
+                       $("#floor_loading").show();
+                   }
+                });
+                execute=false;
+            }
+        }
+        
+        load_cat_top(load_num); //默认显示品牌
+    
+        $(window).on("scroll",function(){
+            var scrollTop = $(window).scrollTop();			
+            if(scrollTop > wrapHeight-200){
+                if(execute)
+                {
+                    load_cat_top(load_num);
+                    execute=false;
+                }
+            }
+            
+        });
+        
+        function load_brand_response(result)
+        {
+            if(!result.error)
+            {
+                $("#cat_top_lit").append(result.content);
+                
+                load_num+=1;
+                loadCategoryTop(load_num);
+                execute=true;
+            }
+        }
+    })
+</script>

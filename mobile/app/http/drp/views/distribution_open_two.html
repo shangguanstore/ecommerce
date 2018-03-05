@@ -1,0 +1,94 @@
+{include file="page_header"}
+<body class="b-color-f">
+    <form action="{U('drp/index/category')}" method="post">
+		<div class="con mb-7">
+			<!--头部导航-->
+			<header class="dis-box padding-all open-header-bg">
+				<div class="box-flex">
+					<div class="header-left-box p-r">
+						<div class="header-x p-a o-hs-x active"></div>
+						<div class="header-y p-a o-hs-bg active"><span class="text-c color-whie f-03">1</span></div>
+					</div>
+					<label class="o-hs active">查看微店信息</label>
+				</div>
+				<div class="box-flex">
+					<div class="header-left-box p-r">
+						<div class="header-x p-a o-hs-x active"></div>
+						<div class="header-y p-a o-hs-bg active"><span class="text-c color-whie f-03">2</span></div>
+					</div>
+					<label class="o-hs active">选择{$custom}商品</label>
+				</div>
+				<div class="box-flex">
+					<div class="header-left-box p-r">
+						<div class="header-x p-a o-hs-x"></div>
+						<div class="header-y p-a o-hs-bg"><span class="text-c color-whie f-03">3</span></div>
+					</div>
+					<label class="o-hs">完成</label>
+				</div>
+			</header>
+			<div class="open-two-box padding-all">
+				<h4 class="f-2">温馨提示<span class="fr"><i class="iconfont icon-guanbi f-2"></i></span></h4>
+				<p class="f-03 m-top04">
+					{$notice}
+				</p>
+			</div>
+			<!--menu-->
+
+
+      <section class="open-two-box2 padding-all m-top06">
+				<h2 class="f-06 col-3 p-t">选择{$custom}商品</h2>
+				<div class="select-three m-top08 j-open-two-select-all">
+					<div class="ect-select fl onclk-n-dis">
+						<label class="dis-box my-com-nav-one" for="checkAll">
+							<i class="select-btn"></i>
+							<span class="box-flex col-7">全选</span>
+						</label>
+					</div>
+				</div>
+				<nav class="index-nav-1 open-boxx  com-post-box select-com op-no j-open-two-select">
+					<ul class="box ul-4 text-c ">
+                                                  {foreach $category as $li}
+						<li class="com-post-adr">
+							<div class="ect-select fr">
+								<label class="dis-box" for="cate{$li.id}" cat-id="{$li.id}"><i class="select-btn"></i></label>
+							</div>
+							<div class="my-com-nav2"  id="cate_{$li.id}">
+								<img src="{$li.cat_img}">
+							</div>
+							<p class="f-03 col-4">{$li.name}</p>
+						</li>
+                                              {/foreach}
+					</ul>
+				</nav>
+			</section>
+			<footer class="filter-btn dis-box">
+                            <input type="hidden" name="cate" />
+                             <button type="submit" class="btn-submit box-flex">下一步</button>
+			</footer>
+		</div>
+ </form>
+		<!--引用js-->
+
+                <script type="text/javascript">
+                    var url = "{U('category')}";
+                        $(document).ready(function() {
+                                $(".open-two-box i").click(function() {
+                                        $(".open-two-box").hide();
+                                });
+                        });
+
+                      $(".btn-submit").click(function(){
+                          var cat = '';
+                          $(".com-post-adr label.active").each(function(){
+                              cat += $(this).attr("cat-id")+",";
+                          });
+                          if(cat){
+                              $("input[name=cate]").val(cat);
+                          }
+                      });
+                      
+                      
+                </script>
+</body>
+
+</html>

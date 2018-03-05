@@ -1,0 +1,592 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+{insert_scripts files="colorselector_topic.js"}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                <div class="tabmenu">
+                    <ul class="tab">
+                        <li class="active"><a href="javascript:void(0);">{$lang.tab_general}</a></li>
+                        <li><a href="javascript:void(0);">{$lang.tab_goods}</a></li>
+                        <li><a href="javascript:void(0);">{$lang.tab_desc}</a></li>
+                        <li><a href="javascript:void(0);">{$lang.tab_advanced}</a></li>
+                    </ul>
+                    {if $action_link}
+                    <a href="{$action_link.href}" class="ecsc-btn ecsc-btn-ecblue" title="{$action_link.text}"><i class="icon-plus-sign"></i>{$action_link.text}</a>
+                    {/if}
+                </div>
+                <div class="ecsc-form-default">
+                    <div class="items-info">
+                        <form action="topic.php" method="post" name="theForm" enctype="multipart/form-data">
+                        	<div class="wrapper-list" style="padding-top:0;">
+                              <table id="general-table" data-table="general" class="table_item" width="100%">
+                                <tr>
+                                  <td class="label">{$lang.require_field}&nbsp;{$lang.topic_title}：</td>
+                                  <td><input name="topic_name" type="text" value="{$topic.title}" size="40" class="text"/></td>
+                                </tr>
+                                <tr>
+                                  <td class="label">{$lang.lable_topic_keywords}：</td>
+                                  <td><textarea name="keywords" id="keywords" cols="40" rows="3" class="textarea">{$topic.keywords}</textarea></td>
+                                </tr>
+                                <tr>
+                                  <td class="label">{$lang.lable_topic_description}：</td>
+                                  <td><textarea name="description" id="description" cols="40" rows="5" class="textarea">{$topic.description}</textarea></td>
+                                </tr>
+                                <tr>
+                                  <td class="label">{$lang.lable_topic_type}：</td>
+                                  <td>
+                                    <select name="topic_type" id="topic_type" onchange="showMedia(this.value)" class="select select_4">
+                                    <option value='0'>{$lang.top_img}</option>
+                                    <option value='1'>{$lang.top_flash}</option>
+                                    <option value='2'>{$lang.top_html}</option>
+                                    </select>
+                                    </td>
+                                </tr>
+                                <tbody id="content_01">
+                                  <tr>
+                                    <td  class="label">{$lang.lable_upload}：</td>
+                                    <td>
+                                      <input type='file' name='topic_img' id='topic_img' size='35' class="file"/>
+                                      <label class="blue_label" id="title_upload">{$width_height}</label>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td class="label">{$lang.lable_from_web}：</td>
+                                    <td><input type="text" name="url" id="url" value="" size="35" class="text" /></td>
+                                  </tr>
+                                </tbody>
+                                
+                                <tbody id="edit_img">
+                                  <tr>
+                                    <td class="label">&nbsp;</td>
+                                    <td><input type="text" name="img_url" id="img_url" value="{$topic.topic_img}" size="35" class="text" readonly="readonly"/></td>
+                                  </tr>
+                                </tbody>
+
+                                <tbody id="content_23">
+                                  <tr>
+                                    <td class="label">{$lang.lable_content}：</td>
+                                    <td><textarea name="htmls" id="htmls" cols="50" rows="7" class="textarea">{$topic.htmls}</textarea></td>
+                                  </tr>
+                                </tbody>
+                                
+                                <tr>
+                                  <td class="label">{$lang.lable_title_upload}：</td>
+                                  <td><input type='file' name='title_pic' id='title_pic' size='35' class="file" />
+                                  <label class="blue_label">{$title_width_height}</label></td>
+                                </tr>
+                                <tr>
+                                  <td class="label">{$lang.lable_from_web}：</td>
+                                  <td><input type="text" name="title_url" id="title_url" value="" size="35" class="text" /></td>
+                                </tr>
+
+                                <tbody id="edit_title_img">
+                                  <tr>
+                                    <td class="label">&nbsp;</td>
+                                    <td><input type="text" class="text" name="title_img_url" id="title_img_url" value="{$topic.title_pic}" size="35" readonly="readonly"/></td>
+                                  </tr>
+                                </tbody>
+
+                                <tr>
+                                  <td class="label">{$lang.lable_base_style}：</td>
+                                  <td><input type="text" name="base_style" id="base_style" value="{$topic.base_style}" size="7" maxlength="6" style="float:left;color:{$goods_name_color};" size="30"/><div style="background-color:#{$topic.base_style};" id="font_color" class="font_color" onclick="ColorSelecter.Show(this);"><img src="images/color_selecter.gif" style="margin-top:-1px;" /></div></td>
+                                </tr>
+
+                                <tr>
+                                  <td class="label">{$lang.cycle}：</td>
+                                  <td>
+                                    <div class="text_time" id="text_time1">
+                                    <input name="start_time" type="text" id="start_time" size="12" value='{$topic.start_time}' readonly="readonly" />
+                                    <input name="selbtn1" type="button" id="selbtn1"/>
+                                    </div>
+                                    <span class="bolang">&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+                                    <div class="text_time" id="text_time2">
+                                    <input name="end_time" type="text" id="end_time" size="12" value='{$topic.end_time}' readonly="readonly" />
+                                    <input name="selbtn2" type="button" id="selbtn2"/>
+                                    </div>
+                                  </td>  
+                                </tr>
+                              </table>
+                        	</div>
+                        	<div class="wrapper-list" style="display:none; padding-top:0;">
+                              <table width="100%" id="goods-table" class="table_item">
+                                <tr class="no-line">
+                                  <td colspan="4">
+                                    <label class="fl lh">{$lang.topic_class}：</label>
+                                    <select name="topic_class_list" id="topic_class_list" onchange="showTargetList()" class="select">
+                                    </select>
+                                    <input name="new_cat_name" type="text" id="new_cat_name" class="text text_2 mr10" />
+                                    <input name="create_class_btn" type="button" id="create_class_btn" value="{$lang.add}" class="button mr10" onclick="addClass()" /><input name="delete_class_btn" type="button" id="delete_class_btn" value="{$lang.remove}" class="button" onclick="deleteClass()" />
+                                  </td>
+                                </tr>
+                                <tr class="no-line">
+                                  <td colspan="3">
+                                    <label class="fl lh">{$lang.screen_goods}：</label>
+                                    <!--<select name="cat_id2" class="select">
+                                      <option value="0">{$lang.all_category}</option>
+                                      {$cat_list}
+                                    </select>-->
+                                    {if $select_category_html}{$select_category_html}{/if}
+                                    <input type="hidden" name="cat_id2" id="category">          
+                                    <select name="brand_id2" class="select">
+                                      <option value="0">{$lang.all_brand}</option>
+                                      {html_options options=$brand_list}
+                                    </select>
+                                    <input type="text" name="keyword2" class="text text_2 mr10"/>
+                                    <input name="button" type="button" class="button" onclick="searchGoods('cat_id2', 'brand_id2', 'keyword2')" value="{$lang.button_search}" />
+                                  </td>
+                                </tr>
+                                <!-- 商品列表 -->
+                                <tr>
+                                  <th class="tc"><div class="th">{$lang.all_goods}</div></th>
+                                  <th class="tc"><div class="th">{$lang.handler}</div></th>
+                                  <th class="tc"><div class="th">{$lang.selected_goods}</div></th>
+                                </tr>
+                                <tr>
+                                  <td width="45%">
+                                  <select name="source_select" id="source_select" size="20" style="width:100%;height:300px;"  ondblclick="addItem(this)"></select>
+                                  </td>
+                                  <td class="tc">
+                                    <div class="caozuo">
+                                    <p><input name="button" type="button" class="button button3" onclick="addAllItem(document.getElementById('source_select'))" value="&gt;&gt;" /></p>
+                                    <p><input name="button" type="button" class="button button3" onclick="addItem(document.getElementById('source_select'))" value="&gt;" /></p>
+                                    <p><input name="button" type="button" class="button button3" onclick="removeItem(document.getElementById('target_select'))" value="&lt;" /></p>
+                                    <p><input name="button" type="button" class="button button3" value="&lt;&lt;" onclick="removeItem(document.getElementById('target_select'), true)" /></p>
+                                    </div>
+                                  </td>
+                                  <td width="45%">
+                                  <select name="target_select" id="target_select" size="20" style="width:100%;height:300px;" multiple="multiple"></select>
+                                  </td>
+                                </tr>
+                              </table>
+                        	</div>
+                        	<div class="wrapper-list wrapper-list-bjq" style="display:none;">
+                            	<dl>
+                                	<dt>{$lang.goods_desc}：</dt>
+                                    <dd>{$FCKeditor}</dd>
+                                </dl>
+                        	</div>
+                        	<div class="wrapper-list" style="display:none; padding-top:0;">      
+                              <table width="100%" id="advanced-table" class="table_item">
+                                  <tr>
+                                  <td class="label">{$lang.template_file}：</td>
+                                  <td>
+                                    <input name="topic_template_file" type="text" id="topic_template_file" value="{$topic.template}" class="text" size="40" />
+                                    <p class="bf100 fl"><label class="blue_label ml0">{$lang.notice_template_file}</label></p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="label">{$lang.style_sheet}：</td>
+                                  <td >
+                                    <textarea name="topic_css" id="topic_css" cols="40" rows="5" class="textarea" style="height:auto;">{$topic.css}</textarea>
+                                    <p class="bf100 fl"><label class="blue_label ml0">{$lang.notice_css}</label></p>
+                                    <div><a href="javascript:chanageSize(3,'topic_css');" style="color:#666;">[+]</a> <a href="javascript:chanageSize(-3,'topic_css');" style="color:#666;">[-]</a> </div></td>
+                                </tr>
+                              </table>
+                        	</div>      
+                            <div class="bottom">
+                                <div class="button_info">
+                                <input  name="topic_data" type="hidden" id="topic_data" value='' />
+                                <input  name="act" type="hidden" id="act" value='{$act}' />
+                                <input  name="topic_id" type="hidden" id="topic_id" value='{$topic.topic_id}' />
+                                <input type="submit" name="Submit" value="{$lang.button_submit}" class="button" onclick="return checkForm()"/>
+                                <input type="reset" name="Reset" value="{$lang.button_reset}" class="button button_reset"/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+<!--
+var data = '{$topic.data}';
+var defaultClass = "{$lang.default_class}";
+{literal}
+var myTopic = Object();
+var status_code = "{$topic.topic_type}"; // 初始页面参数
+
+onload = function()
+{
+  
+  // 开始检查订单
+  startCheckOrder();
+  var classList = document.getElementById("topic_class_list");
+
+  // 初始化表单项
+  initialize_form(status_code);
+
+  if (data == "")
+  {
+    
+    classList.innerHTML = "";
+    myTopic['default'] = new Array();
+    var newOpt    = document.createElement("OPTION");
+    newOpt.value  = -1;
+    newOpt.text   = defaultClass;
+    classList.options.add(newOpt);
+    return;
+  }
+  var temp    = $.evalJSON(data);
+
+  var counter = 0;
+  for (var k in temp)
+  {
+    if(typeof(myTopic[k]) != "function")
+    {
+      myTopic[k] = temp[k];
+      var newOpt    = document.createElement("OPTION");
+      newOpt.value  = k == "default" ? -1 : counter;
+      newOpt.text   = k == "default" ? defaultClass : k;
+      classList.options.add(newOpt);
+      counter++;
+    }
+  }
+  showTargetList();
+}
+
+/**
+ * 初始化表单项目
+ */
+function initialize_form(status_code)
+{
+  var nt = navigator_type();
+  var display_yes = (nt == 'IE') ? 'block' : 'table-row-group';
+  status_code = parseInt(status_code);
+  status_code = status_code ? status_code : 0;
+  document.getElementById('topic_type').options[status_code].selected = true;
+
+  switch (status_code)
+  {
+    case 0 :
+      document.getElementById('content_01').style.display = display_yes;
+      document.getElementById('content_23').style.display = 'none';
+            document.getElementById('title_upload').innerHTML = '{$width_height}';
+            document.getElementById('edit_img').style.display = display_yes;
+    break;
+        
+    case 1 :
+      document.getElementById('content_01').style.display = display_yes;
+      document.getElementById('content_23').style.display = 'none';
+            document.getElementById('title_upload').innerHTML = '{$lang.tips_upload_notice}';
+            document.getElementById('edit_img').style.display = display_yes;
+    break;
+        
+    case 2 :
+      document.getElementById('content_01').style.display = 'none';
+      document.getElementById('content_23').style.display = display_yes;
+            document.getElementById('edit_img').style.display = 'none';
+    break;
+  }
+
+    {if $isadd eq 'isadd'}
+    document.getElementById('edit_img').style.display = 'none';
+    document.getElementById('edit_title_img').style.display = 'none';
+    {/if}
+
+  return true;
+}
+
+/**
+ * 类型表单项切换
+ */
+function showMedia(code)
+{
+  var obj = document.getElementById('topic_type');
+
+  initialize_form(code);
+}
+
+function checkForm()
+{
+  var validator = new Validator('theForm');
+  validator.required('topic_name', topic_name_empty);
+  validator.required('start_time', start_time_empty);
+  validator.required('end_time', end_time_empty);
+  validator.islt('start_time', 'end_time', start_lt_end);
+
+  document.getElementById("topic_data").value = $.toJSON(myTopic);
+
+  return validator.passed();
+}
+
+function chanageSize(num, id)
+{
+  var obj = document.getElementById(id);
+  if (obj.tagName == "TEXTAREA")
+  {
+    var tmp = parseInt(obj.rows);
+    tmp += num;
+    if (tmp <= 0) return;
+    obj.rows = tmp;
+  }
+}
+
+function searchGoods(catId, brandId, keyword)
+{
+  var elements = document.forms['theForm'].elements;
+  var filters = new Object;
+  filters.cat_id = elements[catId].value;
+  filters.brand_id = elements[brandId].value;
+  filters.keyword = Utils.trim(elements[keyword].value);
+  Ajax.call("topic.php?act=get_goods_list", filters, function(result)
+  {
+    clearOptions("source_select");
+    var obj = document.getElementById("source_select");
+    for (var i=0; i < result.content.length; i++)
+    {
+      var opt   = document.createElement("OPTION");
+      opt.value = result.content[i].value;
+      opt.text  = result.content[i].text;
+      opt.id    = result.content[i].data;
+      obj.options.add(opt);
+    }
+  }, "GET", "JSON");
+}
+
+function clearOptions(id)
+{
+  var obj = document.getElementById(id);
+  while(obj.options.length>0)
+  {
+    obj.remove(0);
+  }
+}
+
+function addAllItem(sender)
+{
+  if(sender.options.length == 0) return false;
+  for (var i = 0; i < sender.options.length; i++)
+  {
+    var opt = sender.options[i];
+    addItem(null, opt.value, opt.text);
+  }
+}
+
+function addItem(sender, value, text)
+{
+  var target_select = document.getElementById("target_select");
+  var sortList = document.getElementById("topic_class_list");
+  var newOpt   = document.createElement("OPTION");
+  if (sender != null)
+  {
+    if(sender.options.length == 0) return false;
+    var option = sender.options[sender.selectedIndex];
+    newOpt.value = option.value;
+    newOpt.text  = option.text;
+  }
+  else
+  {
+    newOpt.value = value;
+    newOpt.text  = text;
+  }
+  if (targetItemExist(newOpt)) return false;
+  if (target_select.length>=50)
+  {
+    alert(item_upper_limit);
+  }
+  target_select.options.add(newOpt);
+  var key = sortList.options[sortList.selectedIndex].value == "-1" ? "default" : sortList.options[sortList.selectedIndex].text;
+  
+  if(!myTopic[key])
+  {
+    myTopic[key] = new Array();
+  }
+  myTopic[key].push(newOpt.text + "|" + newOpt.value);
+}
+
+// 商品是否存在
+function targetItemExist(opt)
+{
+  var options = document.getElementById("target_select").options;
+  for ( var i = 0; i < options.length; i++)
+  {
+    if(options[i].text == opt.text && options[i].value == opt.value) 
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+function addClass()
+{
+  var obj = document.getElementById("topic_class_list");
+  var newClassName = document.getElementById("new_cat_name");
+  var regExp = /^[a-zA-Z0-9]+$/;
+  if (newClassName.value == ""){
+    alert(sort_name_empty);
+    return;
+  }
+  for(var i=0;i < obj.options.length; i++)
+  {
+    if(obj.options[i].text == newClassName.value)
+    {
+      alert(sort_name_exist);
+      newClassName.focus(); 
+      return;
+    }
+  }
+  var className = document.getElementById("new_cat_name").value;
+  document.getElementById("new_cat_name").value = "";
+  var newOpt    = document.createElement("OPTION");
+  newOpt.value  = obj.options.length;
+  newOpt.text   = className;
+  obj.options.add(newOpt);
+  newOpt.selected = true;
+  if ( obj.options[0].value == "-1")
+  {
+    if (myTopic["default"].length > 0)
+      alert(move_item_confirm.replace("className",className));
+    myTopic[className] = myTopic["default"];
+    delete myTopic["default"];
+    obj.remove(0);
+  }
+  else
+  {
+    myTopic[className] = new Array();
+    clearOptions("target_select");
+  }
+}
+
+function deleteClass()
+{
+  var classList = document.getElementById("topic_class_list");
+  if (classList.value != "-1")
+  {
+    delete myTopic[classList.options[classList.selectedIndex].text];
+    classList.remove(classList.selectedIndex);
+    clearOptions("target_select");
+  }
+  if (classList.options.length < 1)
+  {
+    var newOpt    = document.createElement("OPTION");
+    newOpt.value  = "-1";
+    newOpt.text   = defaultClass;
+    classList.options.add(newOpt);
+    myTopic["default"] = new Array();
+  }
+}
+
+function showTargetList()
+{
+  clearOptions("target_select");
+  var obj = document.getElementById("topic_class_list");
+  var index = obj.options[obj.selectedIndex].text;
+  if (index == defaultClass)
+  {
+    index = "default";
+  }
+  var options = myTopic[index];
+  
+  for ( var i = 0; i < options.length; i++)
+  {
+    var newOpt    = document.createElement("OPTION");
+    var arr = options[i].split('|');
+    newOpt.value  = arr[1];
+    newOpt.text   = arr[0];
+    document.getElementById("target_select").options.add(newOpt);
+  }
+}
+
+function removeItem(sender,isAll)
+{
+  var classList = document.getElementById("topic_class_list");
+  var key = 'default';
+  if (classList.value != "-1")
+  {
+    key = classList.options[classList.selectedIndex].text;
+  }
+  var arr = myTopic[key];
+  if (!isAll)
+  {
+    var goodsName = sender.options[sender.selectedIndex].text;
+    for (var j = 0; j < arr.length; j++)
+    {
+      if (arr[j].indexOf(goodsName) >= 0)
+      {
+          myTopic[key].splice(j,1);
+      }
+    }
+
+    for (var i = 0; i < sender.options.length;)
+    {
+      if (sender.options[i].selected) {
+        sender.remove(i);
+        myTopic[key].splice(i, 0);
+      }
+      else
+      {
+        i++;
+      }
+    }
+  }
+  else
+  {
+    myTopic[key] = new Array();
+    sender.innerHTML = "";
+  }
+}
+
+/**
+ * 判断当前浏览器类型
+ */
+function navigator_type()
+{
+  var type_name = '';
+
+  if (navigator.userAgent.indexOf('MSIE') != -1)
+  {
+    type_name = 'IE'; // IE
+  }
+  else if(navigator.userAgent.indexOf('Firefox') != -1)
+  {
+    type_name = 'FF'; // FF
+  }
+  else if(navigator.userAgent.indexOf('Opera') != -1)
+  {
+    type_name = 'Opera'; // Opera
+  }
+  else if(navigator.userAgent.indexOf('Safari') != -1)
+  {
+    type_name = 'Safari'; // Safari
+  }
+  else if(navigator.userAgent.indexOf('Chrome') != -1)
+  {
+    type_name = 'Chrome'; // Chrome
+  }
+
+  return type_name;
+}
+
+//日期选择插件调用start sunle
+var opts1 = {
+    'targetId':'start_time',//时间写入对象的id
+    'triggerId':['selbtn1'],//触发事件的对象id
+    'alignId':'text_time1',//日历对齐对象
+    'format':'-'//时间格式 默认'YYYY-MM-DD HH:MM:SS'
+},opts2 = {
+    'targetId':'end_time',
+    'triggerId':['selbtn2'],
+    'alignId':'text_time2',
+    'format':'-'
+}
+
+xvDate(opts1);
+xvDate(opts2);
+//日期选择插件调用end sunle
+//-->
+{/literal}
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>{include file ='library/admin_html_head.lbi'}</head>
+
+<body class="iframe_body">
+	<div class="warpper">
+    	<div class="title"><a href="{$action_link.href}" class="s-back">{$lang.back}</a>{$ur_here}</div>
+        <div class="content">
+        	<div class="explanation" id="explanation">
+            	<div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span></div>
+                <ul>
+                	<li>标识“<em>*</em>”的选项为必填项，其余为选填项。</li>
+                    <li>上传文件格式必须后缀为.csv文件</li>
+                </ul>
+            </div>
+            <div class="flexilist">
+                <div class="common-content">
+                    <div class="mian-info">
+						<div class="list-div" id="listDiv">
+						  <form action="virtual_card.php" method="post">
+							<table cellspacing='0' cellpadding='0'>
+							  <tr>
+								<th><input type="checkbox" checked onclick="listTable.selectAll(this, 'checked')" />{$lang.lab_card_id}</th>
+								<th>{$lang.lab_card_sn}</th>
+								<th>{$lang.lab_card_password}</th>
+								<th>{$lang.lab_end_date}</th>
+							  </tr>
+							  {foreach from=$list key=key item=card}
+							  <tr>
+								<td><input type="checkbox" name="checked[]" value="{$key}" checked /> {$key}</td>
+								<td><input type="text" class="text" name="card_sn[{$key}]" value="{$card.card_sn}" size="15" /></td>
+								<td><input type="text" class="text" name="card_password[{$key}]" value="{$card.card_password}" size="15" /></td>
+								<td><input type="text" class="text" name="end_date[{$key}]" value="{$card.end_date}" size="15" /></td>
+							  </tr>
+							  {/foreach}
+							  <tr align="center">
+								<td colspan="6">
+								  <input type="hidden" name="goods_id" value="{$smarty.request.goods_id}" />
+								  <input type="hidden" name="act" value="batch_insert" />
+								  <input type="submit" name="submit" class="button" value="{$lang.button_submit}" />
+								</td>
+							  </tr>
+							</table>
+						  </form>
+						</div>
+                    </div>
+                </div>
+            </div>
+		</div>
+    </div>
+    {include file ='library/pagefooter.lbi'}
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!-- $Id: set_grab_order.dwt 16544 2009-08-13 07:55:57Z liuhui $ -->
+{if $store_list}
+<form action="order.php" method="post" name="setForm">
+	<p><a href="javascript:selectAll('yes')">全选</a> / <a href="javascript:selectAll('no')">取消全选</a></p>
+	{foreach from=$store_list item=store}
+	<div>
+		<input type="checkbox" name="checkboxes[]" value="{$store.id}" {if $store.is_check}checked="checked"{/if}>
+		<span>{$store.stores_name}</span>
+		<span>{$store.stores_tel}</span>
+		<span>{$store.complete_store_address}</span>
+	</div>
+	{/foreach}
+	<div class="pb-ct">
+		<input type="hidden" name="order_id" value="{$order_id}">
+		<input type="hidden" name="act" value="set_grab">
+		<input type="submit" name="submit" value="提交">
+	</div>
+</form>
+{else}
+<p class="w200 h100" style="text-align:center; line-height:100px;">该商家尚未设置门店</p>
+{/if}
+
+<script>
+function selectAll(result)
+{
+	obj = $("form[name=setForm]").find('input[type=checkbox]');
+	if(result == 'yes')
+	{
+		obj.prop('checked', true);
+	}
+	else
+	{
+		obj.prop('checked', false);
+	}
+}
+</script>

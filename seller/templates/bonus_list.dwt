@@ -1,0 +1,149 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div class="list-div" id="listDiv">
+                {/if}
+                  <table class="ecsc-default-table">
+                      <thead>
+                          <tr>
+                            <th width="5%">
+                              <div class="first_all">
+                                <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox">
+                                  <a href="javascript:listTable.sort('bonus_id');">{$lang.record_id}</a>
+                                  <div class="img">{$sort_bonus_id}</div>
+                              </div>
+                            </th>
+                            {if $show_bonus_sn}
+                            <th width="15%"><a href="javascript:listTable.sort('bonus_sn');">{$lang.bonus_sn}</a><div class="img">{$sort_bonus_sn}</div></th>
+                            <th width="15%">{$lang.bind_password}</th>
+                            {/if}
+                            <th width="12%"><a href="javascript:listTable.sort('type_name');">{$lang.bonus_type}</a><div class="img">{$sort_type_name}</div></th>
+                            <th width="12%"><a href="javascript:listTable.sort('order_id');">{$lang.order_id}</a><div class="img">{$sort_order_id}</div></th>
+                            <th width="12%"><a href="javascript:listTable.sort('user_id');">{$lang.user_id}</a><div class="img">{$sort_user_id}</div></th>
+                            <th width="14%"><a href="javascript:listTable.sort('used_time');">{$lang.used_time}</a><div class="img">{$sort_use_time}{$sort_used_time}</div></th>
+                            {if $show_mail}
+                            <th width="8%"><a href="javascript:listTable.sort('emailed');">{$lang.emailed}</a><div class="img">{$sort_emailed}</div></th>
+                            {/if}
+                            <th>{$lang.handler}</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                      {foreach from=$bonus_list item=bonus}
+                      <tr>
+                        <td align="center" class="first_td_checkbox">
+                          <div class="first_all">
+                          <input value="{$bonus.bonus_id}" id="checkboxes_{$bonus.bonus_id}" name="checkboxes[]" type="checkbox">
+                          <label for="checkboxes_{$bonus.bonus_id}">{$bonus.bonus_id}</label>
+                          </div>
+                        </td>
+                        {if $show_bonus_sn}
+                        <td align="center">{$bonus.bonus_sn}</td>
+                        <td align="center">{$bonus.bonus_password}</td>
+                        {/if}
+                        <td align="center">{$bonus.type_name}</td>
+                        <td align="center">{$bonus.order_sn}</td>
+                        <td>{if $bonus.email}<a href="mailto:{$bonus.email}">{$bonus.user_name}</a>{else}{$bonus.user_name}{/if}</td>
+                        <td align="center">{$bonus.used_time}</td>
+                        {if $show_mail}
+                        <td align="center">{$bonus.emailed}</td>
+                        {/if}
+                        <td align="center">
+                          <a href="javascript:;" onclick="listTable.remove({$bonus.bonus_id}, '{$lang.drop_confirm}', 'remove_bonus')" class="blue">{$lang.remove}</a>
+                          {if $show_mail and $bonus.order_id eq 0 and $bonus.email}<a href="bonus.php?act=send_mail&bonus_id={$bonus.bonus_id}" class="blue">{$lang.send_mail}</a>{/if}
+                        </td>
+                      </tr>
+                      {foreachelse}
+                      <tr><td class="no-records" colspan="11">{$lang.no_records}</td></tr>
+                      {/foreach}
+                      </tbody>
+                      <tfoot>
+                          <tr>
+                              <td colspan="20">
+                              {include file="page.dwt"}
+                              </td>
+                          </tr>
+                      </tfoot>
+                  </table>
+                  {if $full_page}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+
+<script type="text/javascript" language="JavaScript">
+<!--
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+
+  {literal}
+  onload = function()
+  {
+     // 开始检查订单
+     startCheckOrder();
+  }
+  
+  {if $priv_ru eq 1}
+  function get_store_search(val){
+    if(val == 1){
+      document.forms['searchForm'].elements['merchant_id'].style.display = '';
+      document.forms['searchForm'].elements['store_keyword'].style.display = 'none';
+      document.forms['searchForm'].elements['store_type'].style.display = 'none';
+    }else if(val == 2){
+      document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+      document.forms['searchForm'].elements['store_keyword'].style.display = '';
+      document.forms['searchForm'].elements['store_type'].style.display = 'none';
+    }else if(val == 3){
+      document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+      document.forms['searchForm'].elements['store_keyword'].style.display = '';
+      document.forms['searchForm'].elements['store_type'].style.display = '';
+    }else{
+      document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+      document.forms['searchForm'].elements['store_keyword'].style.display = 'none';
+      document.forms['searchForm'].elements['store_type'].style.display = 'none';
+    }
+  }
+  {/if}
+  
+  /**
+   * 搜索优惠活动
+   */
+  function searchActivity()
+  {
+    
+    {if $priv_ru eq 1}
+    listTable.filter['store_search'] = Utils.trim(document.forms['searchForm'].elements['store_search'].value);
+    listTable.filter['merchant_id'] = Utils.trim(document.forms['searchForm'].elements['merchant_id'].value);
+    listTable.filter['store_keyword'] = Utils.trim(document.forms['searchForm'].elements['store_keyword'].value);
+    listTable.filter['store_type'] = Utils.trim(document.forms['searchForm'].elements['store_type'].value);
+    {/if}
+
+    var use_type = Utils.trim(document.forms['searchForm'].elements['use_type'].value);
+  var keyword = Utils.trim(document.forms['searchForm'].elements['keyword'].value);
+  listTable.filter['use_type'] = use_type;
+    listTable.filter['keyword'] = keyword;
+    listTable.filter['page'] = 1;
+    listTable.loadList("favourable_list");
+  }
+  {/literal}
+//-->
+</script>
+</body>
+</html>
+{/if}

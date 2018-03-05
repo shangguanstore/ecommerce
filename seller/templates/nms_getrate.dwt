@@ -1,0 +1,87 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  {include file ='library/seller_html_head.lbi'}
+  <link href="css/nms_style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+          <div class="main-content" id="mainContent">                  
+            {include file ='library/seller_menu_tab.lbi'}            
+            <div class="tab-div" style="margin-top: 15px;">
+              <div id="tabbody-div" class="tbbg" >
+                <form enctype="multipart/form-data" action="nms_getrate.php?act=getrate" method="post" name="theForm" >
+                  <table width="90%" id="general-table">
+                    <div class="shuoming" style="display:none"> 
+                      1、打开某个店铺的商品宝贝列表（一般是点击：所有分类），全选页面（按Ctrl-A），复制页面全部图文内容粘贴进来即可<br />
+                      2、目前只提供店铺“页面采集”方式，暂不支持输入店铺链接来采集<br />
+                      3、每次采集一个页面的商品（约60个商品），如需采集整页商品，请在“采集数量”栏输入大于该页商品的数量
+                    </div>
+                    <tr>
+                      <th width="150">采集方式：</th>
+                      <td>
+                        <input type="radio" name="col_type" value="1" onclick="document.getElementById('dpurl').style.display='';document.getElementById('webcode').style.display='none';document.getElementById('keyword').style.display='none';" checked/>
+                        <span>商品链接</span>
+                        <input type="radio" name="col_type" value="2" onclick="document.getElementById('dpurl').style.display='none';document.getElementById('webcode').style.display='';document.getElementById('keyword').style.display='none';"  />
+                        <span>商品页面</span> 
+                        <input style="display:none" type="radio" name="col_type" value="3" onclick="document.getElementById('dpurl').style.display='none';document.getElementById('webcode').style.display='none';document.getElementById('keyword').style.display='';"  />
+                        <span style="display:none">商品名称</span>      
+                      </td>
+                    </tr>
+                    <tr id="dpurl" >
+                      <th width="150"><div id="dpurl">商品链接</div></th>
+                      <td><textarea name="content" cols="80" rows="4" wrap="VIRTUAL"></textarea>
+                        <br/>
+                        <span>&nbsp;
+                        (把要采集的淘宝商品网址粘贴即可，如：https://item.taobao.com/item.htm?id=539850302899）</span>
+                      </td>
+                    </tr>
+                    <tr id="webcode" style="display:none">
+                      <th width="150">页面内容：</th>
+                      <td> {$FCKeditor} <br /><span>&nbsp;(打开淘宝商品页，点击评论（选择具体的评论页），复制页面图文粘贴进来即可）</span></td>
+                    </tr>
+                    <tr id="keyword" style="display:none">
+                      <th>关键字：</th>
+                      <td><input type="text" value="{$goods_name}" class="textinput" name="keyword" size="20"></td>
+                    </tr>
+                    <tr>
+                      <th>采集数量：</th>
+                      <td><input type="text" value="{$user_setting.conum}10" class="textinput" name="conum" size="4"></td>
+                    </tr>
+                    <tr class="act">
+                      <th>&nbsp;</th>
+                      <td>
+                        <input name="is_order" type="checkbox" value="1" {if $user_setting.is_order} checked="checked" {/if}/><font color="#FF0000">生成订单</font>
+                        <input name="itemlist" type="checkbox" value="1" {if $user_setting.itemlist} checked="checked" {/if}/><font color="#FF0000">选择采集</font>
+                      </td>
+                    </tr>
+                    <tr class="act">
+                      <th><input type="hidden" value="{$goods_id}" class="textinput" name="goods_id" size="4"></th>
+                      <td><div id="caij_btns" style="width:100%;"> <a class="caiji" href="javascript:colltaobao();" >立即采集</a> </div></td>
+                    </tr>
+                  </table>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+function colltaobao()
+{
+  document.getElementById('caij_btns').innerHTML = '正在采集：<img src="https://img.alicdn.com/imgextra/i1/619666972/TB2PCZjjVXXXXXxXpXXXXXXXXXX-619666972.gif" />';
+  var targetForm = document.forms[ "theForm" ];
+  targetForm.submit();
+}
+</script>
+</body>
+</html>
+{/if}

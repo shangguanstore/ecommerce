@@ -1,0 +1,94 @@
+{if $full_page}
+<!doctype html>
+<html>
+<head>{include file ='library/admin_html_head.lbi'}</head>
+
+<body class="iframe_body">
+	<div class="warpper">
+    	<div class="title">系统设置 - {$ur_here}</div>
+        <div class="content">
+        	<div class="tabs_info">
+            	<ul>
+                    <li {if $menu_select.current eq 'oss_configure'}class="curr"{/if}><a href="oss_configure.php?act=list">阿里云OSS配置</a></li>
+                    <li {if $menu_select.current eq 'alidayu_configure'}class="curr"{/if}><a href="alidayu_configure.php?act=list">阿里大鱼短信配置</a></li>
+                    <li {if $menu_select.current eq 'website'}class="curr"{/if}><a href="website.php?act=list">第三方登录插件管理</a></li>
+                </ul>
+            </div>		
+        	<div class="explanation" id="explanation">
+            	<div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span></div>
+                <ul>
+                	<li>列表页展示所有短信配置模板的信息列表。</li>
+                    <li>每条信息可以进行编辑和删除操作。</li>
+                </ul>
+            </div>
+            <div class="flexilist">
+            	<div class="common-head">
+                    <div class="fl">
+                    	<a href="{$action_link.href}"><div class="fbutton"><div class="add" title="{$action_link.text}"><span><i class="icon icon-plus"></i>{$action_link.text}</span></div></div></a>
+                    </div>
+                </div>
+                <div class="common-content">
+                	<div class="list-div" id="listDiv">
+                        {/if}
+                    	<table cellpadding="0" cellspacing="0" border="0">
+                        	<thead>
+                            	<tr>
+                                    <th width="3%" class="sign"><div class="tDiv"><input type="checkbox" name="all_list" class="checkbox" id="all_list" /><label for="all_list" class="checkbox_stars"></label></div></th>
+                                    <th width="5%"><div class="tDiv">{$lang.record_id}</div></th>
+                                    <th width="12%"><div class="tDiv">{$lang.sign_name}</div></th>
+                                    <th width="15%"><div class="tDiv">{$lang.sms_cdoe}</div></th>
+                                    <th width="25%"><div class="tDiv">{$lang.temp_content}</div></th>
+                                    <th width="15%"><div class="tDiv">{$lang.add_time}</div></th>
+                                    <th width="15%"><div class="tDiv">{$lang.send_time}</div></th>
+                                    <th width="15%" class="handle">{$lang.handler}</div></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {foreach from=$note_list item=note}
+                            	<tr>
+                                    <td class="sign"><div class="tDiv"><input type="checkbox" name="checkboxes[]" value="{$note.id}" class="checkbox" id="checkbox_{$note.id}" /><label for="checkbox_{$note.id}" class="checkbox_stars"></label></div></td>
+                                    <td><div class="tDiv">{$note.id}</div></td>
+                                    <td><div class="tDiv">{$note.set_sign}</div></td>
+                                    <td><div class="tDiv">{$note.temp_id}</div></td>
+                                    <td><div class="tDiv">{$note.temp_content}</div></td>
+                                    <td><div class="tDiv">{$note.add_time}</div></td>
+                                    <td><div class="tDiv">{$note.send_time}</div></td>
+                                    <td class="handle">
+                                        <div class="tDiv a2">
+                                            <a href="alidayu_configure.php?act=edit&id={$note.id}" title="{$lang.edit}" class="btn_edit"><i class="icon icon-edit"></i>{$lang.edit}</a>
+                                            <a href="javascript:confirm_redirect('{$lang.remove_confirm}', 'alidayu_configure.php?act=remove&id={$note.id}')" title="{$lang.remove}"class="btn_trash"><i class="icon icon-trash"></i>{$lang.remove}</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {foreachelse}
+                                    <tr><td class="no-records" colspan="12">{$lang.no_records}</td></tr>
+                                {/foreach}
+                            </tbody>
+                            <tfoot>
+                            	<tr>
+                                    <td colspan="8">
+                                    	<div class="list-page">
+                                            {include file="library/page.lbi"}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                            {if $full_page}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     {include file ='library/pagefooter.lbi'}
+    <script type="text/javascript">
+       listTable.recordCount = '{$record_count}';
+listTable.pageCount = '{$page_count}';
+
+{foreach from=$filter item=item key=key}
+listTable.filter.{$key} = '{$item}';
+{/foreach}
+    </script>
+</body>
+</html>
+{/if}

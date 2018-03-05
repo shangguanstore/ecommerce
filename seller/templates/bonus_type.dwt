@@ -1,0 +1,163 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div class="search-form">
+                    <form action="javascript:searchActivity()" name="searchForm">
+                      <div class="fr">
+                      <label>{$lang.use_type}</label>
+                      <select name="use_type" class="select">
+                          <option value="0">{$lang.please_select}</option>
+                          <option value="4">{$lang.self}</option>
+                          <option value="3">{$lang.full_court}</option>
+                      </select>
+                      <label>{$lang.act_name}</label><input type="text" name="keyword" size="30" class="text text_2 mr10"/>
+                      <label class="submit-border"><input type="submit" value="{$lang.button_search}" class="button" /></label>
+                      </div>
+                    </form>
+                </div>
+                <div class="list-div" id="listDiv">
+                {/if}
+                  <table class="ecsc-default-table">
+                      <thead>
+                          <tr>
+                              <th width="25%">类型名称</th>
+                              <th width="15%">发放类型</th>
+                              <th width="10%">红包金额</th>
+                              <th width="10%">订单下限</th>
+                              <th width="10%">发放数量</th>
+                              <th width="10%">使用数量</th>
+                              <th width="20%">操作</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                      {foreach from=$type_list item=type}
+                          <tr class="bd-line">
+                            <td class="tc">
+                            	<span class="activity_name w245">
+                              {if $priv_ru || $type.usebonus_type eq 0}
+                              <span onclick="listTable.edit(this, 'edit_type_name', {$type.type_id})" class="activity_name w250">{$type.type_name|escape:html}</span>
+                              {else}
+                              {$type.type_name|escape:html}
+                              {/if}
+                              {if $type.usebonus_type && $priv_ru eq 0}<font style="color:#A60000;">({$lang.general_audience})</font>{/if}
+                              </span>
+                            </td>
+                            <td align="center">{$type.send_by}</td>
+                            <td align="center"><span onclick="listTable.edit(this, 'edit_type_money', {$type.type_id})">{$type.type_money}</span></td>
+                            <td align="center"><span onclick="listTable.edit(this, 'edit_min_amount', {$type.type_id})">{$type.min_amount}</span></td>
+                            <td align="center"><span>{$type.send_count}</span></td>
+                            <td align="center">{$type.use_count}</td>
+                            <td align="center">
+                            {if $type.usebonus_type eq 0 || $priv_ru}
+                              {if $type.send_type eq 3}
+                              <a href="bonus.php?act=gen_excel&tid={$type.type_id}" class="blue">{$lang.report_form}</a> |
+                              {/if}
+                              {if $type.send_type neq 2}
+                              <a href="bonus.php?act=send&amp;id={$type.type_id}&amp;send_by={$type.send_type}" class="blue">{$lang.send}</a> |
+                              {/if}
+                              <a href="bonus.php?act=bonus_list&amp;bonus_type={$type.type_id}" class="blue">{$lang.view}</a> |
+                            {/if}  
+                              <a href="bonus.php?act=edit&amp;type_id={$type.type_id}" class="blue">{$lang.edit}</a>
+                              {if $type.usebonus_type eq 0 || $priv_ru} |
+                              <a href="javascript:;" onclick="listTable.remove({$type.type_id}, '{$lang.drop_confirm}')" class="blue">{$lang.remove}</a></span>
+                              {/if}
+                             </td>
+                          </tr>
+                      {foreachelse}
+                          <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+                      {/foreach}
+                      </tbody>
+                      <tfoot>
+                          <tr>
+                              <td colspan="20">
+                              {include file="page.dwt"}
+                              </td>
+                          </tr>
+                      </tfoot>
+                  </table>
+                  {if $full_page}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+
+
+
+
+<!--
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+
+  {literal}
+  onload = function()
+  {
+     // 开始检查订单
+     startCheckOrder();
+  }
+  
+  {if $priv_ru eq 1}
+  function get_store_search(val){
+    if(val == 1){
+      document.forms['searchForm'].elements['merchant_id'].style.display = '';
+      document.forms['searchForm'].elements['store_keyword'].style.display = 'none';
+      document.forms['searchForm'].elements['store_type'].style.display = 'none';
+    }else if(val == 2){
+      document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+      document.forms['searchForm'].elements['store_keyword'].style.display = '';
+      document.forms['searchForm'].elements['store_type'].style.display = 'none';
+    }else if(val == 3){
+      document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+      document.forms['searchForm'].elements['store_keyword'].style.display = '';
+      document.forms['searchForm'].elements['store_type'].style.display = '';
+    }else{
+      document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+      document.forms['searchForm'].elements['store_keyword'].style.display = 'none';
+      document.forms['searchForm'].elements['store_type'].style.display = 'none';
+    }
+  }
+  {/if}
+  
+  /**
+   * 搜索优惠活动
+   */
+  function searchActivity()
+  {
+    
+    {if $priv_ru eq 1}
+    listTable.filter['store_search'] = Utils.trim(document.forms['searchForm'].elements['store_search'].value);
+    listTable.filter['merchant_id'] = Utils.trim(document.forms['searchForm'].elements['merchant_id'].value);
+    listTable.filter['store_keyword'] = Utils.trim(document.forms['searchForm'].elements['store_keyword'].value);
+    listTable.filter['store_type'] = Utils.trim(document.forms['searchForm'].elements['store_type'].value);
+    {/if}
+
+    var use_type = Utils.trim(document.forms['searchForm'].elements['use_type'].value);
+  var keyword = Utils.trim(document.forms['searchForm'].elements['keyword'].value);
+  listTable.filter['use_type'] = use_type;
+    listTable.filter['keyword'] = keyword;
+    listTable.filter['page'] = 1;
+    listTable.loadList("favourable_list");
+  }
+  {/literal}
+//-->
+</script>
+</body>
+</html>
+{/if}

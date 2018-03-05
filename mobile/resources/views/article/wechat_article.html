@@ -1,0 +1,54 @@
+{include file="page_header"}
+<div class="con mb-7">
+    <div id="loading"><img src="{__TPL__}img/loading.gif"/></div>
+    <!--晒单列表-->
+    <section class=" article-list">
+        <div class="art-tit-box padding-all">
+            <h4 class="com-cont-box art-cont-box">{$article.title}</h4>
+            <small>
+                <time>{$article.add_time}</time>
+                <span>{$article.author}</span></small>
+        </div>
+        <div class="com-cont-box padding-all">{$article.content}</div>
+    </section>
+</div>
+
+<input type="hidden" name="article_id" value="{$article.article_id}"/>
+<input type="hidden" name="cid" value=""/>
+<div class="mask-filter-div"></div>
+
+
+
+<script>
+    function dianzan(id) {
+        if ($("#red" + id).hasClass("active")) {
+            $("#red" + id).removeClass("active");
+        } else {
+            $("#red" + id).addClass("active");
+        }
+        var islike = document.getElementById('islike').value;
+        var article_id = document.getElementById('like').value;
+        var isclick = document.getElementById('isclick').value;
+        $("#isclick").val(new Date().getTime());
+        if (isclick < (new Date().getTime() - 1000)) {
+            $.ajax({
+                type: "post",
+                url: "{U('article/index/like')}",
+                data: {article_id: article_id, islike: islike},
+                dataType: "json",
+                success: function (data) {
+                    $("#like_num").html(data.like_num);
+                    $("#islike").val(data.is_like);
+                }
+            });
+        }
+
+
+    }
+
+</script>
+
+
+</body>
+
+</html>

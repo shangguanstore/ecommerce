@@ -1,0 +1,18 @@
+{
+    "require": {
+        "phpoffice/phpexcel": "^1.8",
+        "overtrue/pinyin": "~3.0",
+        "sentry/sentry": "^1.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "app\\": "app/",
+            "ectouch\\": "vendor/ectouch/",
+            "base\\": "vendor/ectouch/framework",
+            "libraries\\": "vendor/ectouch/libraries"
+        },
+        "files": [
+            "vendor/ectouch/framework/helpers/common.php"
+        ]
+    }
+}

@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>{include file ='library/admin_html_head.lbi'}</head>
+<body class="iframe_body">
+<div class="warpper">
+  <div class="title">订单 - {$ur_here}</div>
+    <div class="content">
+      <div class="explanation" id="explanation">
+        <div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span></div>
+        <ul>
+            <li>可从管理平台手动添加一名新会员，并填写相关信息。</li>
+            <li>标识“<em>*</em>”的选项为必填项，其余为选填项。</li>
+            <li>新增会员后可从会员列表中找到该条数据，并再次进行编辑操作，但该会员名称不可变。</li>
+        </ul>
+      </div>
+      <div class="flexilist">
+        <div class="common-content">
+          <div class="mian-info">
+          <form action="order.php" method="post">
+            <div class="switch_info">
+            	<div class="tc">{$fckeditor}</div>
+                <div class="tc info_btn pt20 pb20">
+                	<input type="hidden" name="act" value="{$act}" />
+				    <input type="submit" value="{$lang.button_submit}" class="button fn" />
+                </div>
+			</div>
+		  </form>
+		</div>
+	  </div>
+	</div>
+  </div>
+</div>
+ {include file ='library/pagefooter.lbi'}
+</body>
+</html>

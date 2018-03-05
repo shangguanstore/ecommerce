@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <!--start-->
+                <!-- comment content list -->
+                <div class="info_warp">
+                  <table width="100%">
+                    <tr>
+                        <td>
+                            <div class="mt5 ml10">
+                                <a href="mailto:{$msg.email}" class="blue"><b>{if $msg.user_name}{$msg.user_name}{else}{$lang.anonymous}{/if}</b></a>
+                                <span>{$lang.from}</span>
+                                <span>{$msg.add_time}<span>
+                                <span>{$lang.to}<span>
+                                <strong>{$id_value}</strong>
+                                <span>{$lang.send_comment}</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><hr color="#dadada" size="1"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="msg_info">
+                                <div class="msg_desc">{$msg.content}</div>
+                                <ul class="msg_items">
+                                    <!--{foreach from=$msg.img_list item=item}-->
+                                    <li><img src="../{$item.img_thumb}" width="60" height="60"></li>
+                                    <!--{/foreach}-->
+                                </ul>
+                                <div class="time">
+                                    <p><b>{$lang.comment_rank}:</b>{$msg.comment_rank}</p>
+                                    <p><b>{$lang.ip_address}</b>: {$msg.ip_address}</p>
+                                </div>
+                            </div>    
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center">
+                            {if $comment_edit_delete}
+                            {if $msg.status eq "0"}
+                            <input type="button" onclick="location.href='comment_manage.php?act=check&check=allow&id={$msg.comment_id}'" value="{$lang.allow}" class="button" />
+                            {else}
+                            <input type="button" onclick="location.href='comment_manage.php?act=check&check=forbid&id={$msg.comment_id}'" value="{$lang.forbid}" class="button" />
+                            {/if}
+                            {/if} 
+                        </td>
+                    </tr>
+                  </table>
+                </div>
+
+                {if $reply_info.content}
+                <!-- reply content list -->
+                <div class="info_warp mt10">
+                  <table width="100%">
+                    <tr>
+                      <td>
+                          <div class="mt5 ml10">
+                              <span>{$lang.admin_user_name}</span>
+                              <a href="mailto:{$msg.email}" class="blue"><b>{$reply_info.user_name}</b></a>
+                              <span>{$lang.from}</span>
+                              <span>{$reply_info.add_time}</span>
+                              <span>{$lang.reply}</span>
+                          </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><hr color="#dadada" size="1"></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="msg_info">
+                            <div class="msg_desc">{$reply_info.content}</div>
+                            <div class="time">
+                                <p><b>{$lang.ip_address}</b>: {$reply_info.ip_address}</p>
+                            </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                {/if}
+
+                {if $send_fail}
+                <ul class="red2 mt10">
+                    <li class="Start315">{$lang.mail_send_fail}</li>
+                </ul>
+                {/if}
+
+                <div class="info_warp mt10">
+                <form method="post" action="comment_manage.php?act=action" name="theForm" onsubmit="return validate()">
+                <table class="table_item" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <th colspan="2" class="pb20 fs14"><strong>{$lang.reply_comment}</strong></th>
+                  </tr>
+                  <tr>
+                    <td align="right">{$lang.user_name}：</td>
+                    <td><input name="user_name" type="text" class="text" {if $reply_info.user_name eq ""}value="{$admin_info.user_name}"{else} value="{$reply_info.user_name}"{/if} size="30" readonly="true" /></td>
+                  </tr>
+                  <tr>
+                    <td align="right">{$lang.email}：</td>
+                    <td><input name="email" type="text" class="text" {if $reply_info.email eq ""}value="{$admin_info.email}"{else} value="{$reply_info.email}"{/if} size="30" readonly="true" /></td>
+                  </tr>
+                  <tr>
+                    <td align="right">{$lang.reply_content}：</td>
+                    <td><textarea name="content" cols="50" rows="4" wrap="VIRTUAL" class="textarea">{$reply_info.content}</textarea></td>
+                  </tr>
+                  {if $reply_info.content}
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td>{$lang.have_reply_content}</td>
+                  </tr>
+                  {/if}
+                  <tr>
+                    <td></td>
+                    <td><label><input name="send_email_notice" type="checkbox" value='1' class="checkbox"/>{$lang.send_email_notice}</label></td>
+                  </tr>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td class="pt10 pb20">
+                      <input name="submit" type="submit" value="{$lang.button_submit}" class="button fl">
+                      {if $reply_info.content}<input type="submit" name="remail" value="{$lang.remail}" class="button ml10 fl">{/if}
+                      <input type="reset" value="{$lang.button_reset}" class="button button_reset fl">
+                      <input type="hidden" name="comment_id" value="{$msg.comment_id}">
+                      <input type="hidden" name="comment_type" value="{$msg.comment_type}">
+                      <input type="hidden" name="id_value" value="{$msg.id_value}">
+                    </td>
+                  </tr>
+                </table>
+                </form>
+                </div>					
+                <!--end-->
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+{literal}
+<script type="text/javascript">
+<!--
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+    validator = new Validator("theForm");
+    validator.required("content",  no_content);
+    return validator.passed();
+}
+
+onload = function() {
+    // 开始检查订单
+    startCheckOrder();
+}
+//-->
+</script>
+{/literal}
+<!--end-->
+</body>
+</html>

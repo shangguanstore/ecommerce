@@ -1,0 +1,291 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <!--start-->
+                <div class="info_warp">
+                  <form name="theForm" method="post" action="goods_batch.php?act=edit" onsubmit="return getGoodsIDs()">
+                  <table width="100%" class="table_item">
+                  <tr>
+                    <td class="label">{$lang.select_method}</td>
+                    <td>
+                        <div class="checkbox_items">
+                            <label><input name="select_method" id="sm_cat" type="radio" class="checkbox" value="cat" checked onclick="toggleSelectMethod(this.value)">{$lang.by_cat}</label>
+                            <label><input name="select_method" id="sm_sn" type="radio" class="checkbox" value="sn" onclick="toggleSelectMethod(this.value)">{$lang.by_sn}</label>
+                        </div>
+                    </td>
+                  </tr>
+                  <tr id="cat_1">
+                    <td class="label" id="cat_2">{$lang.select_cat}</td>
+                    <td id="cat_3">
+                        <input type="hidden" name="cat" id="cat" value="0" />
+                        <select name="cat_list1" id="cat_list1" onchange="getGoods(this.value, 1)" class="select">
+                          <option value="0" selected>{$lang.select_please}</option>{$cat_list}
+                        </select>
+                    </td>
+                  </tr>
+                  <tr id="cat_7">
+                    <td class="label" id="cat_8">{$lang.select_brand}</td>
+                    <td id="cat_9">
+                        <select name="brand" id="brand" onchange="getGoods()" class="select">
+                            <option value="0" selected>{$lang.select_please}</option>
+                            {html_options options=$brand_list}
+                        </select>
+                    </td>
+                  </tr>
+                  <tr id="cat_4">
+                    <td class="label" id="cat_5">{$lang.goods_list}</td>
+                    <td valign="middle" id="cat_6">
+                      <table width="80%" class="batch_select_goods_list">
+                      <tr>
+                        <th width="40%" class="pt5" align="center">{$lang.src_list}</th>
+                        <th width="20%">&nbsp;</th>
+                        <th width="40%" class="pt5" align="center">{$lang.dest_list}</th>
+                      </tr>
+                      <tr>
+                        <td width="40%">
+                          <select name="srcList" size="10" multiple id="srcList" class="selectzoom" ondblclick="addGoods()"></select>
+                        </td>
+                        <td class="tc" valign="middle">
+                          <div class="caozuo">
+                            <p><input name="add" type="button" class="button" id="add" value="&gt;&gt;" onclick="addGoods()" /></p>
+                            <p><input name="del" class="button" type="button" id="del" value="&lt;&lt;" onclick="delGoods()" /></p>
+                          </div>
+                        </td>
+                        <td width="40%">
+                          <select name="destList" size="10" multiple id="destList" class="selectzoom" ondblclick="delGoods()"></select>
+                        </td>
+                      </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr style="display:none" id="sn_1">
+                    <td class="label" style="display:none" id="sn_2">{$lang.input_sn}</td>
+                    <td style="display:none" id="sn_3"><textarea name="sn_list" rows="10" cols="40" id="sn_list" class="textarea"></textarea><br /><label class="blue_label ml0">（每行一个）</label></td>
+                  </tr>
+                  <tr>
+                    <td class="label">{$lang.edit_method}</td>
+                    <td>
+                      <div class="checkbox_items">
+                        <label><input name="edit_method" type="radio" class="checkbox" value="each" checked>{$lang.edit_each}</label>
+                        <label><input type="radio" name="edit_method" class="checkbox" value="all">{$lang.edit_all}</label>
+                      </div>
+                    </td>
+                  </tr>
+                  </table>
+                  <div class="bottom tc">
+                    <div class="button_info">
+                        <input type="submit" name="submit" value="{$lang.go_edit}" class="button" />
+                        <input type="hidden" name="goods_ids" value="" />
+                    </div>
+                  </div>
+                  </form>
+                </div>					
+                <!--end-->
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+{literal}
+<script language="JavaScript">
+  var ele = document.forms['theForm'].elements;
+
+  onload = function()
+  {
+    // 开始检查订单
+      startCheckOrder();
+  }
+
+  /**
+   * 切换选择商品方式：
+   * @param: method 当前方式 cat sn
+   */
+  function toggleSelectMethod(method)
+  {
+    if (method == 'cat')
+    {
+        var catDisplay = '';
+        var snDisplay = 'none';
+    }
+    else
+    {
+        var catDisplay = 'none';
+        var snDisplay = '';
+    }
+
+    for (var i = 1; i <= 9; i++)
+    {
+       document.getElementById('cat_' + i).style.display = catDisplay;
+    }
+    for (var i = 1; i <= 3; i++)
+    {
+       document.getElementById('sn_' + i).style.display = snDisplay;
+    }
+  }
+
+  /**
+   * 取得商品
+   */
+
+  function getGoods(val, level)
+  {
+      if (level > 0) 
+      {
+        catList(val, level);
+      }
+      
+      var catId   = ele['cat'].value;
+      var brandId = ele['brand'].value;
+      if (catId >= 0 || brandId > 0)
+      {
+          Ajax.call('goods_batch.php?is_ajax=1&act=get_goods', "cat_id="+catId+"&brand_id="+brandId, getGoodsResponse, "GET", "JSON");
+      }
+      else
+      {
+          ele['srcList'].options.length = 0;
+      }
+  }
+
+  function getGoodsResponse(result)
+  {
+	
+    if (result.error == 0)
+    {
+      ele['srcList'].options.length = 0;
+
+      for (var i = 0; i < result.content.length; i++)
+      {
+        var opt = document.createElement('OPTION');
+        opt.value = result.content[i].goods_id;
+        opt.text = result.content[i].goods_name;
+        ele['srcList'].options.add(opt);
+      }
+    }
+  }
+
+  // 分类分级 by qin
+  function catList(val, level)
+  {
+      var cat_id = val;
+      document.getElementById('cat').value = cat_id;
+      Ajax.call('goods.php?is_ajax=1&act=sel_cat_edit', 'cat_id='+cat_id+'&cat_level='+level, catListResponse, 'GET', 'JSON');
+  }
+
+  function catListResponse(result)
+  {
+      if (result.error == '1' && result.message != '')
+      {
+        alert(result.message);
+        return;
+      }
+      var response = result.content;
+      var cat_level = result.cat_level; // 分类级别， 1为顶级分类
+      for(var i=cat_level;i<10;i++)
+      {
+        $("#cat_list"+Number(i+1)).remove();
+      }
+      if(response)
+      {
+          $("#cat_3").append(response);
+      }
+    return;
+  }
+  /**
+   * 添加商品
+   */
+  function addGoods()
+  {
+      var src = document.getElementById('srcList');
+      var dest = document.getElementById('destList');
+
+      for (var i = 0; i < src.options.length; i++)
+      {
+          if (src.options[i].selected)
+          {
+              var exist = false;
+              for (var j = 0; j < dest.options.length; j++)
+              {
+                  if (dest.options[j].value == src.options[i].value)
+                  {
+                      exist = true;
+                      break;
+                  }
+              }
+              if (!exist)
+              {
+                  var opt = document.createElement('OPTION');
+                  opt.value = src.options[i].value;
+                  opt.text = src.options[i].text;
+                  dest.options.add(opt);
+              }
+          }
+      }
+  }
+
+  /**
+   * 删除商品
+   */
+  function delGoods()
+  {
+      var dest = document.getElementById('destList');
+
+      for (var i = dest.options.length - 1; i >= 0 ; i--)
+      {
+          if (dest.options[i].selected)
+          {
+              dest.options[i] = null;
+          }
+      }
+  }
+
+  /**
+   * 取得选择的商品id，赋值给隐藏变量。同时检查是否选择或输入了商品
+   */
+  function getGoodsIDs()
+  {
+      if (document.getElementById('sm_cat').checked)
+      {
+          var idArr = new Array();
+          var dest = document.getElementById('destList');
+          for (var i = 0; i < dest.options.length; i++)
+          {
+              idArr.push(dest.options[i].value);
+          }
+          if (idArr.length <= 0)
+          {
+              alert(please_select_goods);
+              return false;
+          }
+          else
+          {
+              document.forms['theForm'].elements['goods_ids'].value = idArr.join(',');
+              return true;
+          }
+      }
+      else
+      {
+          if (document.forms['theForm'].elements['sn_list'].value == '')
+          {
+              alert(please_input_sn);
+              return false;
+          }
+          else
+          {
+              return true;
+          }
+      }
+  }
+</script>
+{/literal}
+</body>
+</html>

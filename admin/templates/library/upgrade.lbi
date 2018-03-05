@@ -1,0 +1,27 @@
+<div class="list-div">
+	<table cellpadding="0" cellspacing="0" border="0">
+		<tbody>
+        	<tr>
+				<td align="center">&nbsp;</td>
+			</tr>
+			<tr>
+				<td align="left"><div class="ml10">您已经升级最新{$ecs_version}版本，请您操作以下事项：</div></td>
+			</tr>
+            <tr>
+				<td align="left">
+                	<div class="ml10">
+                        <div class="common-head">
+                            <div class="fl">
+                            	1、操作商家分类与平台分类数据分离，实现商家分类数据独立：
+                                <a href="category_store.php?act=category_separate"><div class="fbutton"><div class="add" title="分离平台分类"><span><i class="icon icon-plus"></i>分离平台分类</span></div></div></a>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+			</tr>
+            <tr>
+				<td align="center">&nbsp;</td>
+			</tr>
+		</tbody>
+	</table>        
+</div>

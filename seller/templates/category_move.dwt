@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div style="margin-top:10px;">
+                    <form action="{$file_name}.php" method="post" name="theForm" enctype="multipart/form-data">
+                        <table width="100%" class="table_item">
+                          <tr>
+                            <td colspan="2">
+                              <div style="font-weight:bold"><img src="images/notice.gif" width="14" height="14" border="0" /> {$lang.cat_move_desc}</div>
+                               <ul>
+                                 <li>{$lang.cat_move_notic}</li>
+                               </ul>
+                            </td>
+                          </tr>
+                          <tr>
+                          	<td class="label"></td>
+                            <td>
+                              <div class="fl">
+                              <strong class="fl" style="padding:5px 8px 0px 0px; ">{$lang.source_cat}</strong>&nbsp;&nbsp;
+                              	<select name="cat_id" onchange="get_select_category(this.value,1,'left_user_cat',0, {$is_table})" cat-type="select" class="fl" id="left_cat_id">
+                                    <option value="0">{$lang.select_please}</option>
+                                    {foreach from=$cat_list item=cat}
+                                    <option value="{$cat.cat_id}">{$cat.cat_name}</option>
+                                    {/foreach}
+                                </select>
+                                <input name="left_user_cat" id="left_user_cat" value="0" type="hidden">
+                              </div>
+                              
+                              <div class="fl">
+                              <strong class="fl" style="padding:5px 8px 0px 0px; ">{$lang.target_cat}</strong>
+                                <select name="target_cat_id" onchange="get_select_category(this.value,1,'right_user_cat',0, {$is_table})" cat-type="select" class="fl" id="right_cat_id">
+                                    <option value="0">{$lang.select_please}</option>
+                                    {foreach from=$cat_list item=cat}
+                                    <option value="{$cat.cat_id}">{$cat.cat_name}</option>
+                                    {/foreach}
+                                </select>
+                                <input name="right_user_cat" id="right_user_cat" value="0" type="hidden">
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                          	<td colspan="2">
+                            	<div style="width:160px; margin:auto !important;">
+                            	<input type="submit" name="move_cat" value="{$lang.start_move_cat}" class="button">
+                                <input type="reset" value="{$lang.button_reset}" class="button button_reset" />
+                                <input type="hidden" name="act" value="{$form_act}" />
+                                </div>
+                            </td>
+                          </tr>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+</body>
+<script type="text/javascript">
+$(function(){
+	$("#left_cat_id").val(0);
+	$("#right_cat_id").val(0);
+});
+</script>
+</html>

@@ -1,0 +1,131 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div class="search-form">
+                  <form action="javascript:searchGard()" name="searchForm">
+                  	<div class="fr">
+                    <label>{$lang.gift_gard_name}</label>
+                    <input type="text" name="keyword" class="text text_2 mr10" />                  
+                    <label class="submit-border"><input type="submit" value="{$lang.button_search}" class="button" /></label>
+                    </div>
+                  </form>
+                </div>
+
+                <form method="post" action="" name="listForm">
+                <div class="list-div" id="listDiv">
+                {/if}
+                <table class="ecsc-default-table">
+                    <thead>
+                        <tr>
+                          <th>{$lang.gift_gard_name}</th>
+                          <th>{$lang.gift_number}</th>
+                          <th>{$lang.effective_date}</th>
+                          <th>{$lang.handler}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {foreach from=$type_list item=type}
+                    <tr class="bd-line">
+                      <td align="center"><span onclick="listTable.edit(this, 'edit_type_name', {$type.gift_id})">{$type.gift_name}</span></td>
+                      <td align="center">{$type.gift_count}</td>
+                      <td align="center">{$type.effective_date}</td>
+                      <td align="center">
+                        <a href="gift_gard.php?act=bonus_list&amp;bonus_type={$type.gift_id}" class="blue">{$lang.view}</a> |
+                        <a href="gift_gard.php?act=edit&amp;type_id={$type.gift_id}" class="blue">{$lang.edit}</a> |
+                        <a href="javascript:;" onclick="listTable.remove({$type.gift_id}, '{$lang.drop_confirm}')" class="blue">{$lang.remove}</a></span></td>
+                    </tr>
+                      {foreachelse}
+                    <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+                      {/foreach} 
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="20">
+                            {include file="page.dwt"}
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                {if $full_page}
+              </div>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript" language="JavaScript">
+<!--
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+
+  {literal}
+  onload = function()
+  {
+     // 寮�妫�煡璁㈠崟
+     startCheckOrder();
+  }
+  
+  {if $priv_ru eq 1}
+  function get_store_search(val){
+    if(val == 1){
+      document.forms['searchForm'].elements['merchant_id'].style.display = '';
+      document.forms['searchForm'].elements['store_keyword'].style.display = 'none';
+      document.forms['searchForm'].elements['store_type'].style.display = 'none';
+    }else if(val == 2){
+      document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+      document.forms['searchForm'].elements['store_keyword'].style.display = '';
+      document.forms['searchForm'].elements['store_type'].style.display = 'none';
+    }else if(val == 3){
+      document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+      document.forms['searchForm'].elements['store_keyword'].style.display = '';
+      document.forms['searchForm'].elements['store_type'].style.display = '';
+    }else{
+      document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+      document.forms['searchForm'].elements['store_keyword'].style.display = 'none';
+      document.forms['searchForm'].elements['store_type'].style.display = 'none';
+    }
+  }
+  {/if}
+  
+  /**
+   * 搜索预售活动
+   */
+  function searchGard()
+  {
+    {if $priv_ru eq 1}
+    listTable.filter['store_search'] = Utils.trim(document.forms['searchForm'].elements['store_search'].value);
+    listTable.filter['merchant_id'] = Utils.trim(document.forms['searchForm'].elements['merchant_id'].value);
+    listTable.filter['store_keyword'] = Utils.trim(document.forms['searchForm'].elements['store_keyword'].value);
+    listTable.filter['store_type'] = Utils.trim(document.forms['searchForm'].elements['store_type'].value);
+    {/if}
+    
+    var keyword = Utils.trim(document.forms['searchForm'].elements['keyword'].value);
+    listTable.filter['keyword'] = keyword;
+    listTable.filter['page'] = 1;
+    listTable.loadList();
+  }
+  {/literal}
+  
+  {/literal}
+//-->
+</script>
+</body>
+</html>
+{/if}

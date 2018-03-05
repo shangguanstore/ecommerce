@@ -1,0 +1,69 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!--{foreach from=$categories_pro item=cat name=categories_pro}-->
+<div class="item fore{$smarty.foreach.categories_pro.iteration}">
+    <div class="item-left">
+        <div class="cata-nav-name">
+            <h3>
+            	{if $cat.category_link eq 1}
+                {$cat.name}
+                {else}
+                <a href="{$cat.url}" title="{$cat.name|escape:html}">{$cat.name|escape:html}</a>
+                {/if}
+            </h3>
+        </div>
+        <b>></b>
+    </div>
+    <div class="cata-nav-layer">
+        <div class="cata-nav-left">
+            <div class="item-channels">
+                <div class="channels">
+                    <a href="#" target="_blank">品牌日<i>&gt;</i></a>
+                    <a href="#" target="_blank">家电城<i>&gt;</i></a>
+                    <a href="#" target="_blank">智能生活馆<i>&gt;</i></a>
+                    <a href="#" target="_blank">商创净化馆<i>&gt;</i></a>
+                    <a href="#" target="_blank">商创帮服务店<i>&gt;</i></a>
+                    <a href="#" target="_blank">值得买精选<i>&gt;</i></a>
+                </div>
+            </div>
+            <div class="subitems">
+                <!--{foreach from=$cat.cat_id item=child name=nocat_id}-->
+                <dl class="dl_fore{$smarty.foreach.nocat_id.iteration}">
+                    <dt><a href="{$child.url}">{$child.name|escape:html}<i>></i></a></dt>
+                    <dd>
+                        <!--{foreach from=$child.cat_id item=childer name=nochild_cat}-->
+                        <a href="{$childer.url}">{$childer.name|escape:html}</a>
+                        <!--{/foreach}-->
+                    </dd>
+                </dl>
+                <!-- {/foreach} -->
+            </div>
+        </div>    
+        <div class="cata-nav-rigth">       
+            <div class="item-brands">
+                <ul>
+                    <!--{foreach from=$cat.brands item=brand name=cat_brand}-->
+                    <li class="brand-fore{$smarty.foreach.cat_brand.iteration}"><a href="{$brand.url}" title="{$brand.brand_name}"><img src="data/brandlogo/{$brand.brand_logo}" width="91" height="40" /></a></li>
+                    <!-- {/foreach} -->
+                </ul>
+            </div>
+            <div class="item-promotions">
+                <!--{foreach from=$cat.ad_position item=posti key=pkey}-->
+                <a href="{$posti.ad_link}" target="_blank"><img width="{$posti.ad_width}" height="{$posti.ad_height}" src="data/afficheimg/{$posti.ad_code}" /></a>
+                <!--{/foreach}-->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- {/foreach} -->
+<script type="text/javascript">
+//导航栏子分类展开
+$("#cata-nav .item").mouseenter(function(){
+	$(this).addClass("selected");
+	$(this).children(".cata-nav-layer").show();
+});
+$("#cata-nav .item").mouseleave(function(){
+	$(this).removeClass("selected");
+	$(this).children(".cata-nav-layer").hide();
+});
+</script>

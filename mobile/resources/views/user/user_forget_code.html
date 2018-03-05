@@ -1,0 +1,56 @@
+{include file="page_header"}
+<body class="b-color-f">
+		<div class="con" id="pjax-container">
+			<!--根据邮箱找回-->
+			<form action="{U('edit_forget_mail')}" method="post" onsubmit="return check()" >
+				<section class="user-center user-forget-email margin-lr">
+					<p class="fl t-remark2">您的邮箱地址：{$data}</p>
+					<div class="text-all dis-box j-text-all" name="email_codediv">
+						<div class="input-text input-check  box-flex">
+							<input class="j-input-text" name="email_code" type="text" placeholder="请输入邮件内收到的验证码" />
+							<i class="iconfont icon-guanbi1 is-null j-is-null"></i>
+						</div>
+					</div>
+					<input type="hidden" name="email" value="{$data}" />
+					<input type="hidden" name="code" value="{$code}" />
+					<button type="submit" class="btn-submit">下一步</button>
+				</section>
+			</form>
+		</div>
+        <div class="div-messages"></div>
+		<script type="text/javascript" src="{__TPL__}md5.js"></script>
+        <script>
+	        $(":input").keyup(function(){
+	            var box=this.name+"div";
+	            var div=$("div[name="+box+"]");
+	            var value=div.attr("class").indexOf("active")
+	            if ( value > 0 ){
+	         	  div.removeClass("active");
+	            }
+	 	    });
+           function check(){
+                var email_code=$("input[name=email_code]");
+                var code      =$("input[name=code]").val();
+                var codehtml  =$.md5(email_code.val());
+                if(code != codehtml){
+      				 d_messages('验证码错误');
+      				 $("div[name=email_codediv]").addClass("active");
+      				 return false;
+      			 }
+               
+           }
+           function d_messages(m_text) { //弹出消息
+				$(".div-messages").text(m_text);
+				m_marginLeft = $(".div-messages").innerWidth() / 2;
+				$(".div-messages").css("margin-left", -m_marginLeft);
+				if (!$(".div-messages").hasClass()) {
+					$(".div-messages").addClass("active");
+				}
+				setTimeout(function() {
+					$(".div-messages").removeClass("active");
+				}, 3000);
+			}
+        </script>
+	</body>
+
+</html>

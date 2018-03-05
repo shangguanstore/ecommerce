@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+    	{include file ='library/seller_menu_left.lbi'}
+		<div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+            	{include file ='library/seller_menu_tab.lbi'}
+                <div class="wrapper-list ecsc-form-default">
+                <form action="merchants_navigator.php" method="post" name="form" onSubmit="return checkForm();">
+                	<dl>
+                    	<dt>{$lang.system_main}：</dt>
+                        <dd>
+                        	<select onchange="add_main(this.value);" name="menulist" id="menulist" class="select">
+                                <option value='-'>-</option>
+                                {foreach from=$sysmain item=val key=key}
+                                    <option value='{$key}|{$val.cat_id}|{$val.cat_name}|{$val.url}' id="" url="{$val.url}">{$val.cat_name}</option>
+                                {/foreach}
+                            </select>
+                        </dd>
+                    </dl>
+                    <dl>
+                    	<dt>{$lang.item_name}：</dt>
+                        <dd><input type="text" name="item_name" value="{$rt.item_name}" id="item_name" class="text" size="40" onKeyPress="javascript:key();" /></dd>
+                    </dl>
+                    <dl>
+                    	<dt>{$lang.item_url}：</dt>
+                        <dd>
+                        	<input type="text" name="item_url" value="{$rt.item_url}" id="item_url" class="text" size="40" onKeyPress="javascript:key();" />
+                            <p class="fl" style="width:100%;"><label class="blue_label ml0">{$lang.notice_url}</label></p>
+                        </dd>
+                    </dl>
+                    <dl>
+                    	<dt>{$lang.item_catId}：</dt>
+                        <dd><input type="text" id="item_catId" name="item_catId" value="{$rt.item_catId}" size="40" class="text text_2" /></dd>
+                    </dl>
+                    <dl>
+                    	<dt>{$lang.item_vieworder}：</dt>
+                        <dd><input type="text" name="item_vieworder" value="{$rt.item_vieworder}" size="40" class="text text_2" /></dd>
+                    </dl>
+                    <dl>
+                    	<dt>{$lang.item_ifshow}：</dt>
+                        <dd>
+                        	<select name="item_ifshow" class="select">
+                                <option value='1' {$rt.item_ifshow_1}>{$lang.yes}</option><option value='0' {$rt.item_ifshow_0}>{$lang.no}</option>
+                            </select>
+                        </dd>
+                    </dl>
+                    <dl>
+                    	<dt>{$lang.item_opennew}：</dt>
+                        <dd>
+                        	<select name="item_opennew" class="select">
+                                <option value='0' {$rt.item_opennew_0}>{$lang.no}</option>
+                                <option value='1' {$rt.item_opennew_1}>{$lang.yes}</option>
+                            </select>
+                        </dd>
+                    </dl>
+                    <dl>
+                    	<dt>{$lang.item_type}：</dt>
+                        <dd>
+                        	<select name="item_type" class="select">
+                            	<option value='middle' {$rt.item_type_middle}>{$lang.middle}</option>
+                            </select>
+                        </dd>
+                    </dl>
+                    <div class="bottom">
+                    	<div class="submit-border">
+                    	<input type="hidden" name="id" value="{$rt.id}"/>
+                        <input type="hidden" name="step" value="2"/>
+                        <input type="hidden" name="act" value="{$rt.act}"/>
+                        <input type="submit" class="button" name="Submit" value="{$lang.button_submit}"/>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="library/seller_footer.lbi"}
+<script type="text/javascript">
+var last;
+function add_main(val)
+{
+	val = val.split("|");
+    
+	$("#item_catId").val(val[1]);
+	$("#item_name").val(val[2]);
+	$("#item_url").val(val[3]);
+}
+function checkForm()
+{
+    if(document.getElementById('item_name').value == '')
+    {
+        alert('{$lang.namecannotnull}');
+        return false;
+    }
+    if(document.getElementById('item_url').value == '')
+    {
+        alert('{$lang.linkcannotnull}');
+        return false;
+    }
+    return true;
+}
+
+function key()
+{
+    last = document.getElementById('menulist').selectedIndex = 0;
+}
+<!--
+{literal}
+onload = function()
+{
+  // 开始检查订单
+  startCheckOrder();
+}
+//-->
+</script>
+</body>

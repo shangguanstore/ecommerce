@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>{include file ='library/admin_html_head.lbi'}</head>
+
+<body class="iframe_body">
+	<div class="warpper">
+    	<div class="title">系统设置 - {$ur_here}</div>
+        <div class="content">
+        	<div class="tabs_info">
+            	<ul>
+                    <li {if $menu_select.current eq '03_shipping_list'}class="curr"{/if}><a href="shipping.php?act=list">配送方式</a></li>
+                    <li {if $menu_select.current eq '05_area_list'}class="curr"{/if}><a href="area_manage.php?act=list">地区列表</a></li>
+                    <li {if $menu_select.current eq '09_warehouse_management'}class="curr"{/if}><a href="warehouse.php?act=list">仓库管理</a></li>
+                    <li {if $menu_select.current eq 'shipping_date_list'}class="curr"{/if}><a href="shipping.php?act=date_list">自提时间段</a></li>
+                </ul>
+            </div>		
+        	<div class="explanation" id="explanation">
+            	<div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span></div>
+                <ul>
+                	<li>该页面展示了平台所有配送方式的信息列表。</li>
+                    <li>安装配送方式后需设置区域方可使用。</li>
+                </ul>
+            </div>
+            <div class="flexilist">
+                <div class="common-content">
+                	<div class="list-div">
+                        <table class="table_layout">
+                        	<thead>
+                            	<tr>
+                                    <th width="14%"><div class="tDiv">{$lang.shipping_name}</div></th>
+                                    <th width="24%"><div class="tDiv">{$lang.shipping_desc}</div></th>
+                                    <th width="2%"><div class="tDiv">&nbsp;</div></th>
+                                    <th width="15%"><div class="tDiv">{$lang.insure}</div></th>
+                                    <th width="7%"><div class="tDiv">{$lang.support_cod}</div></th>
+                                    <th><div class="tDiv">&nbsp;</div></th>
+                                    <th width="6%"><div class="tDiv">{$lang.sort_order}</div></th>
+                                    <th width="24%" class="handle">{$lang.handler}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                  {foreach from=$modules item=module}
+                                  {if ($seller_shopinfo.ru_id>0 && $module.install == 1 && $module.code != 'cac') || $seller_shopinfo.ru_id==0}
+                            	<tr>
+                                    <td><div class="tDiv">
+                                        {if $module.install == 1}
+										<input type="text" name="measure_unit" class="text w100" value="{$module.name}" onBlur="listTable.editInput(this, 'edit_name', '{$module.code}')"/>
+                                            {if $seller_shopinfo.ru_id==0 && $module.id==$seller_shopinfo.shipping_id} <img src="images/yes.png" title="{$module.name}已启用">{/if}
+										{else}
+                                            {$module.name}
+                                        {/if}
+                                        </div>
+                                    </td>
+                                    <td>
+                                    	<div class="tDiv">
+                                          {if $module.install == 1}
+                                          <span onclick="listTable.edit(this, 'edit_desc', '{$module.code}'); return false;">{$module.desc}</span>
+                                          {else}
+                                          {$module.desc}
+                                          {/if}
+                                        </div>
+                                    </td>
+                                    <td>&nbsp;</td>
+                                    <td>
+                                    	<div class="tDiv">
+                                          {if $module.install == 1 && $module.is_insure neq 0}
+                                          <span onclick="listTable.edit(this, 'edit_insure', '{$module.code}'); return false;">{$module.insure_fee}</span>
+                                          {else}
+                                          {$module.insure_fee}
+                                          {/if}
+                                        </div>
+                                    </td>
+                                    <td><div class="tDiv">{if $module.cod==1}{$lang.yes}{else}{$lang.no}{/if}</div></td>
+                                    <td><div class="tDiv">&nbsp;</div></td>
+                                    <td>
+                                    	<div class="tDiv">
+                                    		{if $module.install == 1} 
+                                            <span onclick="listTable.edit(this, 'edit_order', '{$module.code}'); return false;">{$module.shipping_order}</span> 
+                                            {else}
+                                            0
+                                            {/if}
+                                        </div>
+                                    </td>
+                                    <td class="handle">
+                                        <div class="tDiv a3_3">
+                                          {if $module.install == 1}
+                                          <a href="javascript:confirm_redirect(lang_removeconfirm,'shipping.php?act=uninstall&code={$module.code}')" class="btn_trash"><i class="icon icon-trash"></i>{$lang.uninstall}</a>
+                                          <a href="shipping_area.php?act=list&shipping={$module.id}" class="btn_region"><i class="sc_icon icon-map-marker"></i>{$lang.shipping_area}</a> 
+                                          <a href="shipping.php?act=edit_print_template&shipping={$module.id}" class="btn_edit"><i class="icon icon-edit"></i>{$lang.shipping_print_edit}</a>
+                                          {else}
+                                          <a href="shipping.php?act=install&code={$module.code}" class="btn_inst"><i class="sc_icon sc_icon_inst"></i>{$lang.install}</a>
+                                          {/if}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {/if}
+                                {foreachelse}
+                                    <tr><td class="no-records" colspan="12">{$lang.no_records}</td></tr>
+                                {/foreach}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+ 	{include file ='library/pagefooter.lbi'}
+</body>
+</html>

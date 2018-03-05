@@ -1,0 +1,122 @@
+{if $full_page}
+<!doctype html>
+<html>
+<head>{include file ='library/admin_html_head.lbi'}</head>
+
+<body class="iframe_body">
+	<div class="warpper">
+    	<div class="title">促销 - {$ur_here}</div>
+        <div class="content">
+        	<div class="explanation" id="explanation">
+            	<div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span></div>
+                <ul>
+                	<li>展示了预售活动的相关信息列表。</li>
+                    <li>可通过搜索关键字商品名称，筛选店铺名称搜索出具体预售活动信息。</li>
+                    <li>可进行增加、编辑、修改、删除等操作，查看预售活动订单。</li>
+                </ul>
+            </div>
+            <div class="flexilist">
+            	<div class="common-head">
+                	<div class="fl">
+                        <a href="presale.php?act=add"><div class="fbutton"><div class="add" title="添加预售活动"><span><i class="icon icon-plus"></i>添加预售活动</span></div></div></a>
+						<a href="presale_cat.php?act=list"><div class="fbutton"><div class="open" title="预售分类列表"><span><i class="icon icon-screenshot"></i>预售分类列表</span></div></div></a>
+                    </div>
+                    <div class="refresh">
+                    	<div class="refresh_tit" title="刷新数据"><i class="icon icon-refresh"></i></div>
+                    	<div class="refresh_span">刷新 - 共{$record_count}条记录</div>
+                    </div>
+                    <div class="search">
+						{include file ='library/search_store.lbi'}
+                    	<div class="input">
+                        	<input type="text" name="keyword" class="text nofocus" placeholder="商品名称" autocomplete="off" /><button class="btn" name="secrch_btn"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="common-content">
+					<form method="post" action="presale.php?act=batch_drop" name="listForm" onsubmit="return confirm(batch_drop_confirm);">
+                	<div class="list-div" id="listDiv" >
+						{/if}
+                    	<table cellpadding="1" cellspacing="1" >
+                        	<thead>
+                            	<tr>
+                                	<th width="3%" class="sign"><div class="tDiv"><input type="checkbox" name="all_list" class="checkbox" id="all_list" /><label for="all_list" class="checkbox_stars"></label></div></th>
+                                    <th width="5%"><div class="tDiv">{$lang.record_id}</div></th>
+                                    <th width="22%"><div class="tDiv">{$lang.goods_name}</div></th>
+                                    <th width="10%"><div class="tDiv">{$lang.goods_steps_name}</div></th>
+									<th width="12%"><div class="tDiv">{$lang.current_status}</div></th>
+                                    <th width="10%"><div class="tDiv">{$lang.end_date}</div></th>
+                                    <th width="6%"><div class="tDiv tc">{$lang.deposit}</div></th>
+                                    <th width="8%"><div class="tDiv tc">{$lang.valid_goods}</div></th>
+                                    <th width="7%"><div class="tDiv tc">{$lang.valid_order}</div></th>
+                                    <th width="18" class="handle">{$lang.handler}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+							{foreach from=$presale_list item=presale}
+                            	<tr>
+                                	<td class="sign"><div class="tDiv">
+										<input type="checkbox" name="checkboxes[]" value="{$presale.act_id}" class="checkbox" id="checkbox_{$presale.act_id}" />
+										<label for="checkbox_{$presale.act_id}" class="checkbox_stars"></label>
+									</div></td>
+                                    <td><div class="tDiv">{$presale.act_id}</div></td>
+                                	<td><div class="tDiv">{$presale.goods_name|escape:html}</div></td>
+									{if $priv_ru eq 1}
+                                    <td><div class="tDiv red">{$presale.shop_name}</div></td>
+                                    {/if}
+									<td><div class="tDiv">{$presale.cur_status}</div></td>
+                                    <td><div class="tDiv">{$presale.pay_end_time}</div></td>
+                                    <td><div class="tDiv tc">{$presale.deposit}</div></td>
+                                    <td><div class="tDiv tc">{$presale.valid_goods}</div></td>
+									<td><div class="tDiv tc">{$presale.valid_order}</div></td>
+                                    <td class="handle">
+										<div class="tDiv a3">
+											<a href="order.php?act=list&amp;presale_id={$presale.act_id}" title="{$lang.view_detail}" class="btn_see"><i class="sc_icon sc_icon_see"></i>{$lang.view}</a>
+											<a href="presale.php?act=edit&amp;id={$presale.act_id}" title="{$lang.edit}" class="btn_edit"><i class="icon icon-edit"></i>{$lang.edit}</a>
+											<a href="javascript:;" onclick="listTable.remove({$presale.act_id},'{$lang.drop_confirm}')" title="{$lang.remove}" class="btn_trash"><i class="icon icon-trash"></i>{$lang.remove}</a>									
+										</div>
+									</td>
+                                </tr>
+							{foreachelse}
+							<tr><td class="no-records" align="center" colspan="10">{$lang.no_records}</td></tr>
+							{/foreach}
+                            </tbody>
+                            <tfoot>
+                            	<tr>
+									<td colspan="12">
+                                        <div class="tDiv">
+                                            <div class="tfoot_btninfo">
+                                              <div class="shenhe">
+                                                  <input type="submit" name="drop" id="btnSubmit" value="{$lang.drop}" class="btn btn_disabled" disabled="true" ectype="btnSubmit" />
+                                              </div>										
+                                            </div>
+                                            <div class="list-page">
+                                                {include file="library/page.lbi"}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+						{if $full_page}
+                    </div>
+					</form>
+                </div>
+            </div>
+        </div>
+    </div>
+ {include file ='library/pagefooter.lbi'}
+<script type="text/javascript">
+	//列表导航栏设置下路选项
+	$(".ps-container").perfectScrollbar();
+	
+	//分页传值
+	listTable.recordCount = '{$record_count}';
+	listTable.pageCount = '{$page_count}';
+
+	{foreach from=$filter item=item key=key}
+	listTable.filter.{$key} = '{$item}';
+	{/foreach}
+</script>
+</body>
+</html>
+{/if}

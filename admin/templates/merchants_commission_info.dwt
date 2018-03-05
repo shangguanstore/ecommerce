@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+<head>{include file ='library/admin_html_head.lbi'}</head>
+
+<body class="iframe_body">
+	<div class="warpper">
+    	<div class="title"><a href="merchants_commission.php?act=list" class="s-back">{$lang.back}</a>商家 - {$ur_here}</div>
+        <div class="content">
+        	<div class="explanation" id="explanation">
+            	<div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span></div>
+                <ul>
+                	<li>标识“<em>*</em>”的选项为必填项，其余为选填项。</li>
+                    <li>请填写和商家达成一致的佣金比例，以免结算时出现矛盾。</li>
+                </ul>
+            </div>
+            <div class="flexilist">
+                <div class="common-content">
+                    <div class="mian-info">
+						<form method="post" action="merchants_commission.php" name="theForm" enctype="multipart/form-data" id="merchants_commission_form">
+                            <div class="switch_info">
+                                <div class="items">
+                                    <div class="item">
+                                        <div class="label">{$lang.require_field}{$lang.suppliers_name}：</div>
+                                        <div class="label_value">
+											<div id="merchants_name" class="imitate_select select_w320">
+												<div class="cite">{$lang.please_select}</div>
+												<ul>
+												{foreach from=$user_list item=user}
+													<li><a href='javascript:;' data-value='{$user.user_id}' class='ftx-01'>{$user.user_name}</a></li>
+												{/foreach}
+												</ul>
+                                                <input name="merchants_name" type="hidden" value="{$server.user_id}" id="merchants_name_val">
+											</div>
+                                            <div class="form_prompt"></div>
+                                        </div>
+                                    </div>
+                                    <div class="item" id="query_merchants"  style="display:none">
+                                        <div class="label">{$lang.suppliers_store}：</div>
+                                        <div class="label_value" id="query_merchants_info">
+										</div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="label">{$lang.label_suppliers_percent}</div>
+                                        <div class="label_value">
+											<div id="merchants_percent" class="imitate_select select_w320">
+												<div class="cite">{$lang.please_select}</div>
+												<ul>
+												{foreach from=$suppliers_percent item=percent}
+													<li><a href='javascript:;' data-value='{$percent.percent_id}' class='ftx-01'>{$percent.percent_value}</a></li>
+												{/foreach}
+												</ul>
+                                                <input name="merchants_percent" type="hidden" value="{$server.suppliers_percent}" id="merchants_percent_val">
+											</div>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="label">{$lang.label_suppliers_server_desc}</div>
+                                        <div class="label_value">
+											<textarea  name="suppliers_desc" class="textarea">{$server.suppliers_desc}</textarea>
+										</div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="label">&nbsp;</div>
+                                        <div class="label_value info_btn">
+											<input type="submit" class="button" value="{$lang.button_submit}" id="submitBtn" />
+											<input type="reset" class="button button_reset" value="{$lang.button_reset}" />
+											<input type="hidden" name="act" value="{$form_action}" />
+											<input type="hidden" name="id" value="{$id}" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+		</div>
+	</div>
+ {include file ='library/pagefooter.lbi'}
+    {literal}
+	<script type="text/javascript">
+		$(function(){
+			//表单验证
+			$("#submitBtn").click(function(){
+				if($("#merchants_commission_form").valid()){
+					$("#merchants_commission_form").submit();
+				}
+			});
+		
+			$('#merchants_commission_form').validate({
+				errorPlacement:function(error, element){
+					var error_div = element.parents('div.label_value').find('div.form_prompt');
+					element.parents('div.label_value').find(".notic").hide();
+					error_div.append(error);
+				},
+				rules:{
+					merchants_name :{
+						required : true
+					}
+				},
+				messages:{
+					merchants_name:{
+						 required : '<i class="icon icon-exclamation-sign"></i>请选择会员名称'
+					}
+				}			
+			});
+		});
+	
+        //活动商品下拉
+        $.divselect("#merchants_name","#merchants_name_val",function(){
+            var user_id = $("#merchants_name_val").val();
+            Ajax.call('merchants_commission.php?is_ajax=1&act=query_merchants_info', "user_id="+user_id, query_merchantsResponse, "GET", "JSON");
+        });
+    
+		function query_merchantsResponse(result)
+		{
+			if(result.content.user_id > 0){
+				document.getElementById('query_merchants').style.display = '';
+				document.getElementById('query_merchants_info').innerHTML = result.content.shoprz_brandName + result.content.shopNameSuffix;
+			}else{
+				document.getElementById('query_merchants').style.display = 'none';
+				document.getElementById('query_merchants_info').innerHTML = '';
+			}
+		}
+    
+		function get_query_merchants(user_id)
+		{
+			Ajax.call('merchants_commission.php?is_ajax=1&act=query_merchants_info', "user_id="+user_id, query_merchantsResponse, "GET", "JSON");
+		}
+		
+		function query_merchantsResponse(result)
+		{
+			if(result.content.user_id > 0){
+				document.getElementById('query_merchants').style.display = '';
+				document.getElementById('query_merchants_info').innerHTML = result.content.shoprz_brandName + result.content.shopNameSuffix;
+			}else{
+				document.getElementById('query_merchants').style.display = 'none';
+				document.getElementById('query_merchants_info').innerHTML = '';
+			}
+		}
+    </script>
+    {/literal}
+</body>
+</html>

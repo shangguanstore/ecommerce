@@ -1,0 +1,121 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<table class="user-product-list" cellpadding="0" cellspacing="0">
+    <thead class="thead">
+        <th class="th u-product first"><span>商品</span></th>
+        <th class="th u-price"><span>单价</span></th>
+        <th class="th u-time"><span>收藏时间</span></th>
+        <th class="th u-operate"><span>操作</span></th>
+        <th class="th u-enthusiasm"><span>关注</span></th>
+        <th class="th u-delete"><span>删除</span></th>
+    </thead>
+    <!-- {if $goods_list} -->
+    <tbody class="tbody">
+        <input type="hidden" name="allgoods" value="" />
+        <!--{foreach from=$goods_list item=goods}-->
+        <tr class="tr">
+            <td class="td u-product first">
+                <div class="product-item item_checkbox">
+                    <div class="checkbox">
+                        <input type="checkbox" id="yu_{$goods.goods_id}" class="ui-grey-checkbox collcheck" value="{$goods.goods_id}" name="goods_check"  onChange="get_goods_check(this, 'allgoods')">
+                        <label for="yu_{$goods.goods_id}" class="ui-grey">&nbsp;</label>
+                    </div>
+                    <div class="p-img"><a href="{$goods.url}" target="_blank"><img src="{$goods.goods_thumb}" width="55" height="55"></a></div>
+                    <div class="p-name"><a href="{$goods.url}" target="_blank">{$goods.goods_name|escape:html}</a></div>
+                </div>
+            </td>
+            <td class="td u-price">
+                <span class="ftx-02">
+                    <!-- {if $goods.promote_price neq ""} -->
+                    {$lang.promote_price}<span class="goods-price">{$goods.promote_price}</span>
+                    <!-- {else}-->
+                    <span class="goods-price">{$goods.shop_price}</span>
+                    <!--{/if}-->
+                </span>
+            </td>
+            <td class="td u-time"><span class="ftx-03">{$goods.add_time}</span></td>
+            <td class="td u-operate">
+                <a href="{$goods.url}" class="operate-btn" target="_blank">立即购买</a>
+            </td>
+            <td class="td u-enthusiasm">
+             	<!-- {if $goods.is_attention} -->
+                <a class="goods_gz has_gz" href="javascript:void(0);" data-dialog="attention_dialog" data-divid="user_attention" data-url="user.php?act=del_attention&rec_id={$goods.rec_id}" data-confirmtitle="{$lang.del_attention}">&nbsp;</a>
+                <!-- {else} -->
+                <a class="goods_gz" href="javascript:void(0);" data-dialog="attention_dialog" data-divid="user_attention" data-url="user.php?act=add_to_attention&rec_id={$goods.rec_id}" data-confirmtitle="{$lang.add_to_attention}">&nbsp;</a>
+                <!-- {/if} -->
+            </td>
+            <td class="td u-delete">
+            	<a href="javascript:void(0);" class="delete" data-dialog="goods_collect_dialog" data-divid="delete_goods_collect" data-url="user.php?act=delete_collection&collection_id={$goods.rec_id}&type=1" data-goodsid="0" data-width="455" data-height="58" data-title="提示" data-padding="17px 0px 0px 10px"><i class="icon-delete"></i></a>
+            </td>
+        </tr>
+        <!-- {/foreach} -->
+    </tbody>
+    <tfoot class="tfoot">
+        <tr class="tr">
+            <td class="td first" colspan="6">
+            	<div class="tfoot_bg">
+                    <div class="checkbox">
+                        <input type="checkbox" name="coll_checkall" id="coll_checkall" value="0" class="ui-grey-checkbox orderCheckAll" onChange="get_coll_checkall(this, 'allgoods')">
+                        <label for="coll_checkall" class="ui-grey">全选</label>
+                    </div>
+                    <a href="javascript:alertBatchFollow(0);" class="pl_cz">批量关注</a>
+                    <a href="javascript:alertBatchFollow(1);" class="pl_cz">取消关注</a>
+                    <a href="javascript:alertBatchFollow(2);" class="pl_cz">批量删除</a>
+                    <span class="collection-num">共有<em>{$record_count}</em>个记录</span>
+                </div>
+            </td>
+        </tr>
+    </tfoot>
+    <!-- {else} -->
+    <tbody class="tbody">
+        <tr class="tr">
+        	<td class="td td_bf">抱歉，您尚未收藏商品！</td>
+        </tr>
+        <!-- {/if} -->
+    </tbody>    
+</table>
+
+{if $record_count > $size}
+<div class="user-pages pages26">
+    <div class="pages"><div class="pages-it">{$paper}</div></div>
+</div>
+{/if}
+
+<script type="text/javascript">
+$(function(){
+	$(document).on("click","*[data-dialog='attention_dialog']",function(){
+		
+		var confirmtitle = $(this).data('confirmtitle');
+		var divId = $(this).data('divid');
+		var url = $(this).data('url');
+		
+		var content = '<div id="flow_add_cart">' + 
+							'<div class="tip-box icon-box">' +
+								'<span class="warn-icon m-icon"></span>' + 
+								'<div class="item-fore">' +
+									'<h3 class="rem ftx-04">' + confirmtitle + '</h3>' +
+								'</div>' +
+							'</div>' +
+						'</div>';
+		pb({
+			id:divId,
+			title:'标题',
+			width:455,
+			height:58,
+			ok_title:'确定', 	//按钮名称
+		    cl_title:'取消', 	//按钮名称
+			content:content, 	//调取内容
+			drag:false,
+			foot:true,
+			onOk:function(){
+				location.href = url;
+			}
+		});
+		
+		$('#' + divId + ' .item-fore').css({
+			'padding-top' : '12px'
+		});
+		
+		$('#' + divId + ' .tip-box .pb-ok').addClass('color_df3134');
+	});
+});
+</script>

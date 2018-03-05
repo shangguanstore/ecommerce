@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>{$page_title}</title>
+    <link rel="stylesheet" type="text/css" href="themes/ecmoban_dsc/base.css" />
+    <link rel="stylesheet" type="text/css" href="themes/ecmoban_dsc/user.css" />
+    <link rel="stylesheet" href="themes/ecmoban_dsc/purebox.css">
+    {* 包含脚本文件 *}
+    {insert_scripts files='jquery-1.9.1.min.js,jquery.json.js,transport_jquery.js,common.js,utils.js'}
+    <script type="text/javascript" src="themes/ecmoban_dsc/js/sc_memake.js"></script>
+    <script type="text/javascript" src="themes/ecmoban_dsc/js/sc_common.js"></script>
+    <script type="text/javascript" src="themes/ecmoban_dsc/js/jquery.SuperSlide.2.1.1.js"></script>
+    <script type="text/javascript" src="themes/ecmoban_dsc/js/jquery.tabso_yeso.js"></script>
+    
+    <script type="text/javascript" src="themes/ecmoban_dsc/js/jquery.yomi.js"></script>
+    <script type="text/javascript" src="themes/ecmoban_dsc/js/rotate3di.js"></script>
+    <script type="text/javascript" src="themes/ecmoban_dsc/js/ecsc-nav.js"></script>
+    <script type="text/javascript" src="themes/ecmoban_dsc/js/checkAll.js"></script>
+    <script type="text/javascript" src="themes/ecmoban_dsc/js/scroll_city.js"></script>
+    <script type="text/javascript" src="themes/ecmoban_dsc/js/ZeroClipboard/ZeroClipboard.js"></script>
+</head>
+
+<body id="user">
+<!-- #BeginLibraryItem "/library/page_header_user.lbi" --><!-- #EndLibraryItem -->
+<div class="main w1200 user_home user_tran">
+    <div class="user-left">
+        <!-- #BeginLibraryItem "/library/user_menu.lbi" --><!-- #EndLibraryItem -->
+    </div>
+
+    <!--@author-bylu 我的白条 start-->
+    {if $action==baitiao}
+    <div class="user-right">
+        <div class="user-item-temp user-item-temp1">
+            <div class="user-item-title">
+                <h3>我的白条</h3>
+            </div>
+            <div class="baitiao_info">
+                <ul style="margin-top:30px;">
+                    <li>白条总额度：<span>{$bt_info.amount}</span> 元</li>
+                    <li>剩余白条额度：<span>{$remain_amount}</span> 元</li>
+                    <li>延后还款期：<span>{$bt_info.repay_term}</span> 天</li>
+                    <li>待付款总额：<span>{if $repay_bt.total_amount>0}{$repay_bt.total_amount}{else}0{/if}</span> 元</li>
+                    <li>待付款白条：<span>{$repay_bt.numbers}</span> 张</li>
+                </ul>
+            </div>
+        </div>
+        <div class="user-item-temp user-item-temp1">
+            <div class="user-item-title">
+                <h3>交易明细</h3>
+            </div>
+            <div class="user-order-list user-order-baitiao">
+                <div class="thead">
+                    <div class="th b_info">订单信息</div>
+                    <div class="th">消费记账日</div>
+                    <div class="th">到期还款日</div>
+                    <div class="th">我的还款日</div>
+                    <div class="th">金额</div>
+                    <div class="th">操作</div>
+                </div>
+                <div class="tbody">
+                     {foreach from=$bt_logs item=bt_log}
+                    <div class="tr">
+                        <div class="td b_info">
+                            <p class="line-item"><span>订单号：</span><a href="user.php?act=order_detail&order_id={$bt_log.order_id}" target="_blank" class="ftx-05">{$bt_log.order_sn}</a>{if $bt_log.is_stages==1}<span class="ftx-01 ml5">(分期)</span>{/if}</p>
+                            <p class="line-item last"><span>订单金额：</span>{if $bt_log.order_amount}{$bt_log.order_amount}{/if}</p>
+                        </div>
+                        <div class="td"><span class="ftx-02">{$bt_log.use_date}</span></div>
+                        <div class="td{if $bt_log.is_stages} b_log{/if}">
+                            <p class="line-item ftx-01">{$bt_log.repay_date}</p>
+                            {if $bt_log.is_stages}
+                            	<p class="line-item ftx-10 last">{$bt_log.yes_num}期/{$bt_log.stages_total}期</p>
+                            {/if}
+                        </div>
+                        <div class="td"><span class="ftx-06">{if $bt_log.repayed_date}{$bt_log.repayed_date}{/if}</span></div>
+                        <div class="td">
+                            <span>
+                                {if $bt_log.order_amount}
+                                  {if $bt_log.is_stages}
+                                    {$bt_log.stages_one_price}元/期
+                                  {else /}
+                                    {$bt_log.order_amount}
+                                  {/if}
+                                {/if}
+                        	</span>
+                        </div>
+                        <div class="td">
+                            {if $bt_log.is_refund eq 1}<span class="ftx-03">已退款</span>{elseif $bt_log.is_repay eq 1}<span class="ftx-01">已还清</span>{else}<a href="user.php?act=repay_bt&order_id={$bt_log.order_id}&pay_id={$bt_log.pay_id}" class="fk_ztai"><span class="repay_btn">还款</span></a>{/if}
+                        </div>
+                    </div>
+                    {/foreach}
+                </div>
+            </div>
+        </div>
+    </div>
+    {/if}
+    <!--@author-bylu 我的白条 end-->
+
+    <!--@author-bylu 白条还款页 start-->
+    {if $action eq repay_bt}
+    <div class="user-right">
+        <div class="user-item-temp">
+            <div class="user-item-title user-item-title30 borderNone">
+                <h3>费用总计</h3>
+            </div>
+            <table class="complete-order-list total-order-list">
+                <tbody class="tbody">
+                <tr class="tr">
+                    <td class="td tore1 first">
+                        <div class="item">
+                            <span class="ftx-09">订单总价：</span>
+                            <span class="ftx-01">{$order.formated_order_amount}</span>
+                        </div>
+                    </td>
+                    <td class="td tore3">
+                        <div class="item">
+                            {if $stages_info.is_stages eq 1}
+                            <span class="ftx-09">费率：</span>
+                            <span class="ftx-01">
+                                {if $stages_info.stages_total eq 1}
+                                0%
+                                {else /}
+                                {$stages_rate}%
+                                {/if}
+                            </span>
+                            {/if}
+                        </div>
+                    </td>
+                    <td class="td tore3">
+                        <div class="item">
+                            {if $stages_info.is_stages eq 1}
+                            <span class="ftx-09">已还期数：</span>
+                            <span class="ftx-01">
+                                {$stages_info.yes_num}期/{$stages_info.stages_total}期
+                            </span>
+                            {/if}
+                        </div>
+                    </td>
+                    <td class="td tore4">
+                        <div class="item">
+                            <span class="ftx-08">当前应还款金额：</span>
+                            {if $stages_info.is_stages eq 1}
+                            <span class="ftx-01 ftx-h1">{$stages_info.stages_one_price}元</span>
+                            {else /}
+                            <span class="ftx-01 ftx-h1">{$order.order_amount}元</span>
+                            {/if}
+                        </div>
+                    </td>
+                </tr>
+                <!--{if $payment_list}-->
+                <tr class="tr">
+                    <td class="td colspan5 first" colspan="5">
+                        <form name="payment" method="post" action="user.php" style="padding-left: 555px;">
+                            {$lang.change_payment}：
+                            <select name="pay_id">
+                                <!--{foreach from=$payment_list item=payment}-->
+                                <option value="{$payment.pay_id}">
+                                    {$payment.pay_name}({$lang.pay_fee}:{$payment.format_pay_fee})
+                                </option>
+                                <!--{/foreach}-->
+                            </select>
+                            <input type="hidden" name="act" value="repay_bt" />
+                            <input type="hidden" name="order_id" value="{$order.order_id}" />
+                            <input type="submit" name="Submit" class="submit" value="{$lang.button_submit}" />
+                        </form>
+                        <!--生成的支付按钮-->
+                        <span id="pay_btn" style="width: 60px;float: right;margin:0px 22px 10px 0px;">{$order.pay_online}</span>
+                    </td>
+                </tr>
+                <!--{/if}-->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {/if}
+    <!--@author-bylu 白条还款页 end-->
+</div>
+<!-- #BeginLibraryItem "/library/page_footer_flow.lbi" --><!-- #EndLibraryItem -->
+<!-- #BeginLibraryItem "/library/common_html.lbi" --><!-- #EndLibraryItem -->
+</body>
+</html>

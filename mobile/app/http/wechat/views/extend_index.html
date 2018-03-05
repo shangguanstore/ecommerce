@@ -1,0 +1,50 @@
+{include file="pageheader"}
+<div class="wrapper">
+	<div class="title">微信通 - 功能扩展</div>
+    <div class="content_tips">
+    	<div class="explanation" id="explanation">
+        	<div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span></div>
+            <ul>
+            	<li>功能扩展里的功能，安装配置好之后，可复制相对应的关键词，加入到微信自定义菜单中配合使用。 </li>
+                <li>例如，精品 对应的关键词是 best（也可以使用相应的扩展词），在自定义菜单中添加一个菜单，菜单类型选择 关键词click。</li>
+            </ul>
+        </div>
+		<div class="flexilist">
+			<div class="common-content">
+				<div class="list-div">
+					<table cellspacing="0" cellpadding="0" border="0">
+			            <tr>
+			                <th><div class="tDiv">功能名称</div></th>
+			                <th><div class="tDiv">关键词</div></th>
+			                <th><div class="tDiv">扩展词</div></th>
+			                <th><div class="tDiv">插件作者</div></th>
+			                <th><div class="tDiv">插件来源</div></th>
+			                <th><div class="tDiv">操作</div></th>
+			            </tr>
+			            {foreach $modules as $val}
+			            <tr>
+			                <td><div class="tDiv">{$val['name']}</div></td>
+			                <td><div class="tDiv">{$val['command']}</div></td>
+			                <td><div class="tDiv">{$val['keywords']}</div></td>
+			                <td><div class="tDiv">{$val['author']}</div></td>
+			                <td><div class="tDiv">{$val['website']}</div></td>
+			                <td class="handle">
+			                	<div class="tDiv a2">
+				                    {if isset($val['enable']) && !empty($val['enable'])}
+				                    <a href="{U('edit', array('ks'=>$val['command'], 'handler'=>'edit'))}" class="btn_edit"><i class="icon icon-edit"></i>编辑</a>
+				                    <a href="javascript:if(confirm('确认卸载吗？')){window.location.href='{U('uninstall', array('ks'=>$val['command']))}'};" class="btn_trash"><i class="icon icon-trash"></i>卸载</a>
+				                    {else}
+				                    <a href="{U('edit', array('ks'=>$val['command']))}" class="btn_inst"><i class="sc_icon sc_icon_inst"></i>安装</a>
+				                    {/if}
+				                    {if $val['enable'] == 1 && $val['config']['haslist'] == 1}<a href="{U('winner_list', array('ks'=>$val['command']))}" class="btn_see"><i class="sc_icon sc_icon_see"></i>查看记录</a>{/if}
+			                    </div>
+			                </td>
+			            </tr>
+			            {/foreach}
+					</table>
+				</div>
+			</div>
+		</div>
+    </div>
+</div>
+{include file="pagefooter"}

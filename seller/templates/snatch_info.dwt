@@ -1,0 +1,317 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                <div class="tabmenu">
+                    <ul class="tab">
+                        <li class="active"><a href="javascript:;">基本信息</a></li>
+                        <li><a href="javascript:;">夺宝介绍</a></li>
+                        <li><a href="javascript:;">服务保障</a></li>
+                        <li><a href="javascript:;">夺宝攻略</a></li>
+                    </ul>
+                    {if $action_link}
+                    <a href="{$action_link.href}" class="ecsc-btn ecsc-btn-ecblue" title="{$action_link.text}">{$action_link.text}</a>
+                    {/if}
+                </div>
+                <div class="ecsc-form-default">
+                	<div class="items-info">
+                    <form onsubmit="return validate()" name="theForm" action="snatch.php" method="post" enctype="multipart/form-data">
+                        <div class="wrapper-list wrapper-list2">
+                            <dl>
+                                <dt><i class="required">*</i>活动名称：</dt>
+                                <dd>
+                                  <input class="text w260"id="snatch_name" name="snatch_name" type="text" value="{$snatch.snatch_name}">
+                                  <span></span>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>商品关键字：</dt>
+                                <dd>
+                                  <input type="text" name="keywords" size="30" class="text mr10"/>
+                                  <input name="ru_id" value="{$ru_id}" type="hidden" />
+                                  <input type="button" value="{$lang.button_search}" class="button button_red" onclick="searchGoods()">
+                                  <span></span>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><i class="required">*</i>商品名称：</dt>
+                                <dd>
+                                    <select name="goods_id" onchange="javascript:change_good_products();" class="select select_2">
+                                    {$snatch.option}
+                                    </select>
+                                    <select name="product_id" {if $snatch.product_id <= 0}style="display:none"{/if} class="select">
+                                    {html_options options=$good_products_select selected=$snatch.product_id}
+                                    </select>
+                                    <p class="hint" style="margin-left:0">{$lang.notice_goodsid}</p>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><i class="required">*</i>开始时间：</dt>
+                                <dd>
+                                    <input id="start_time" name="start_time" type="text" class="text w130" readonly value="{$snatch.start_time}" /><em class="add-on"><i class="icon-calendar"></i></em>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><i class="required">*</i>结束时间：</dt>
+                                <dd>
+                                    <input id="end_time" name="end_time" type="text" class="text w130" readonly value="{$snatch.end_time}" /><em class="add-on"><i class="icon-calendar"></i></em><span></span>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><i class="required">*</i>价格上下线：</dt>
+                                <dd>
+                                    <input class="w70 text" id="start_price" name="start_price" type="text" value="{$snatch.start_price}"><em class="add-on"><i class="icon-renminbi"></i></em>
+                                    <span class="fl ml10 mr10">-</span>
+                                    <input class="w70 text" id="end_price" name="end_price" type="text" value="{$snatch.end_price}"><em class="add-on"><i class="icon-renminbi"></i></em>
+                                    <p class="hint">用户出价范围的上下限</p>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>最多需支付的价格：</dt>
+                                <dd>
+                                    <input class="w70 text" id="max_price" name="max_price" type="text" value="{$snatch.max_price}">
+                                    <span></span>
+                                    <p class="hint">获奖者出价高于这个价格，则以这个价格购买该商品。为0时按用户出价购买商品</p>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>消耗积分：</dt>
+                                <dd>
+                                    <input class="w70 text" id="cost_points" name="cost_points" type="text" value="{$snatch.cost_points}">
+                                    <span></span>
+                                    <p class="hint">每次出价所消耗的积分值</p>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><i class="required">*</i>活动描述：</dt>
+                                <dd><textarea name="desc" cols="40" rows="3" class="textarea">{$snatch.act_desc}</textarea></dd>
+                            </dl>
+                            <dl>
+                                <dt>是否热销：</dt>
+                                <dd>
+                                  <label><input type="radio" class="checkbox" name="is_hot" value="1" {if $snatch.is_hot eq 1}checked{/if}><span>{$lang.ishot}</span></label>
+                                  <label><input type="radio" class="checkbox" name="is_hot" value="0" {if $snatch.is_hot eq 0}checked{/if}><span>{$lang.isnothot}</span></label>
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="wrapper-list wrapper-list-bjq" style="display:none">
+                            <dl>
+                                <dt>夺宝介绍：</dt>
+                                <dd>{$act_desc}</dd>
+                            </dl>
+                        </div>
+                        <div class="wrapper-list wrapper-list-bjq" style="display:none">
+                            <dl>
+                                <dt>服务保障：</dt>
+                                <dd>{$act_promise}</dd>
+                            </dl>
+                        </div>
+                        <div class="wrapper-list wrapper-list-bjq" style="display:none">
+                            <dl>
+                                <dt>夺宝攻略：</dt>
+                                <dd>{$act_ensure}</dd>
+                            </dl>
+                        </div>
+                        <div class="bottom">
+                            <label class="button_info">
+                                <input type="submit" name="submit" value="{$lang.button_submit}" class="button" />
+                                <input type="reset" value="{$lang.button_reset}" class="button button_reset ml10" />
+                                <input type="hidden" name="act" value="{$form_action}" />
+                                <input type="hidden" name="id" value="{$snatch.act_id}" />
+                            </label>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+<!--
+{literal}
+var display_yes = (Browser.isIE) ? 'block' : 'table-row-group';
+
+onload = function()
+{
+  // 开始检查订单
+  startCheckOrder();
+}
+
+
+
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+  validator = new Validator("theForm");
+  validator.required("snatch_name",  no_name);
+  validator.required("desc",         no_desc);
+  validator.isNullOption("goods_id", no_goods_id);
+  //validator.isTime("start_time", invalid_starttime, true);
+  //validator.isTime("end_time", invalid_endtime, true);
+  validator.gt("end_time", "start_time", invalid_gt);
+  validator.gt("end_price", "start_price", invalid_price);
+  validator.isNumber("start_price", invalid_min_price, true);
+  validator.isNumber("max_price", invalid_max_price, true);
+  validator.isInt("cost_points", invalid_integral, true);
+
+  if (document.forms['theForm'].elements['act'] == "insert")
+  {
+      validator.required("password", no_password);
+  }
+
+  return validator.passed();
+}
+
+function searchGoods()
+{
+  var filter = new Object;
+  filter.keyword = document.forms['theForm'].elements['keywords'].value;
+  filter.ru_id = document.forms['theForm'].elements['ru_id'].value;
+
+  Ajax.call('snatch.php?is_ajax=1&act=search_goods', filter, searchGoodsResponse, 'GET', 'JSON');
+}
+
+function searchGoodsResponse(result)
+{
+  var frm = document.forms['theForm'];
+  var sel = frm.elements['goods_id'];
+  var sp = frm.elements['product_id'];
+
+  if (result.error == 0)
+  {
+    /* 清除 options */
+    sel.length = 0;
+    sp.length = 0;
+
+    /* 创建 options */
+    var goods = result.content.goods;
+    if (goods)
+    {
+      for (i = 0; i < goods.length; i++)
+      {
+          var opt = document.createElement("OPTION");
+          opt.value = goods[i].goods_id;
+          opt.text  = goods[i].goods_name;
+          sel.options.add(opt);
+      }
+    }
+    else
+    {
+      var opt = document.createElement("OPTION");
+      opt.value = 0;
+      opt.text  = search_is_null;
+      sel.options.add(opt);
+    }
+
+    /* 创建 product options */
+    var products = result.content.products;
+    if (products)
+    {
+      sp.style.display = display_yes;
+
+      for (i = 0; i < products.length; i++)
+      {
+        var p_opt = document.createElement("OPTION");
+        p_opt.value = products[i].product_id;
+        p_opt.text  = products[i].goods_attr_str;
+        sp.options.add(p_opt);
+      }
+    }
+    else
+    {
+      sp.style.display = 'none';
+
+      var p_opt = document.createElement("OPTION");
+      p_opt.value = 0;
+      p_opt.text  = search_is_null;
+      sp.options.add(p_opt);
+    }
+  }
+
+  if (result.message.length > 0)
+  {
+    alert(result.message);
+  }
+}
+
+function change_good_products()
+{
+  var filter = new Object;
+  filter.goods_id = document.forms['theForm'].elements['goods_id'].value;
+
+  Ajax.call('snatch.php?is_ajax=1&act=search_products', filter, searchProductsResponse, 'GET', 'JSON');
+}
+
+function searchProductsResponse(result)
+{
+  var frm = document.forms['theForm'];
+  var sp = frm.elements['product_id'];
+
+  if (result.error == 0)
+  {
+    /* 清除 options */
+    sp.length = 0;
+
+    /* 创建 product options */
+    var products = result.content.products;
+    if (products.length)
+    {
+      sp.style.display = display_yes;
+
+      for (i = 0; i < products.length; i++)
+      {
+        var p_opt = document.createElement("OPTION");
+        p_opt.value = products[i].product_id;
+        p_opt.text  = products[i].goods_attr_str;
+        sp.options.add(p_opt);
+      }
+    }
+    else
+    {
+      sp.style.display = 'none';
+
+      var p_opt = document.createElement("OPTION");
+      p_opt.value = 0;
+      p_opt.text  = search_is_null;
+      sp.options.add(p_opt);
+    }
+  }
+
+  if (result.message.length > 0)
+  {
+    alert(result.message);
+  }
+}
+//日期选择插件调用start sunle
+var opts1 = {
+  'targetId':'start_time',//时间写入对象的id
+  'triggerId':['start_time'],//触发事件的对象id
+  'alignId':'start_time',//日历对齐对象
+  'format':'-'//时间格式 默认'YYYY-MM-DD HH:MM:SS'
+},opts2 = {
+  'targetId':'end_time',
+  'triggerId':['end_time'],
+  'alignId':'end_time',
+  'format':'-'
+}
+
+xvDate(opts1);
+xvDate(opts2);
+//日期选择插件调用end sunle
+//-->
+{/literal}
+</script>
+</body>
+</html>

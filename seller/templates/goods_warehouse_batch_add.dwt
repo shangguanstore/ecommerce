@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+		{include file ='library/seller_menu_left.lbi'}
+		<div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+				{include file ='library/seller_menu_tab.lbi'}
+				<div class="info_warp">
+				<form action="goods_warehouse_batch.php?act=upload" method="post" enctype="multipart/form-data" name="theForm" onsubmit="return formValidate()">
+				<table width="100%" class="table_item">
+				  <tr>
+					<td colspan="2" class="pb20">
+						<div class="alert-info">{$lang.use_help}</div>
+					</td>
+				  </tr>
+				  {if $goods_name}
+				  <tr>
+					<td class="label">{$lang.goods_name}</td>
+					<td class="red">{$goods_name}</td>
+				  </tr>
+				  {/if}
+				  <tr>
+					<td class="label">{$lang.file_charset}</td>
+					<td>
+						<select name="charset" id="charset" class="select">
+						  {html_options options=$lang_list}
+						</select>
+					</td>
+				  </tr>
+				  <tr>
+					<td class="label file_label pt5">{$lang.csv_file}</td>
+					<td>
+						<input name="file" type="file" size="40" class="file mt5">
+						<p id="noticeFile" class="red bf100 fl">{$lang.notice_file}</p>
+					</td>
+				  </tr>
+				  {foreach from=$download_list item=download key=charset}
+				  {if $charset eq 'zh_cn'}
+				  <tr>
+					<td>&nbsp;</td>
+					<td><a href="goods_warehouse_batch.php?act=download&charset={$charset}&goods_id={$goods_id}" class="blue">{$download}</a></td>
+				  </tr>
+				  {/if}
+				  {/foreach}
+				  <tr class="no-line">
+					<td></td>
+					<td class="pt10 pb20"><input name="submit" type="submit" id="submit" value="{$lang.button_submit}" class="button" /></td>
+				  </tr>
+				</table>
+				</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{include file ='library/seller_footer.lbi'}
+{literal}
+<script language="JavaScript">
+    var elements;
+    onload = function()
+    {
+        // 文档元素对象
+        elements = document.forms['theForm'].elements;
+
+        // 开始检查订单
+        startCheckOrder();
+    }
+
+    /**
+     * 检查是否底级分类
+     */
+    function checkIsLeaf(selObj)
+    {
+        if (selObj.options[selObj.options.selectedIndex].className != 'leafCat')
+        {
+            alert(goods_cat_not_leaf);
+            selObj.options.selectedIndex = 0;
+        }
+    }
+
+    /**
+     * 检查输入是否完整
+     */
+    function formValidate()
+    {
+        if (elements['cat'].value <= 0)
+        {
+            alert(please_select_cat);
+            return false;
+        }
+        if (elements['file'].value == '')
+        {
+            alert(please_upload_file);
+            return false;
+        }
+        return true;
+    }
+</script>
+{/literal}
+</body>
+</html>

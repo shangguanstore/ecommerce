@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div class="info_warp">
+                  <form action="javascript:searchGoods()" name="searchForm">
+                    <table cellspacing='0' cellpadding='0' class="table_item" width="100%">
+                        <tr>
+                          <td>
+                              <!-- 分类 -->
+                              <!--<select name="cat_id" class="select"><option value="0">{$lang.all_category}</option>{$cat_list}</select>-->
+                              {if $select_category_html}{$select_category_html}{/if}
+                              <input type="hidden" name="cat_id" id="cat_id" value="0"/>
+                              <!-- 品牌 -->
+                              <select name="brand_id" class="select"><option value="0">{$lang.all_brand}</option>{html_options options=$brand_list}</select>
+                              <!-- 关键字 -->
+                              <input type="text" name="keyword" size="30" class="text text_2 mr10"/>
+                              <input type="submit" value="{$lang.button_search}" class="button" />
+                          </td>
+                        </tr>
+                       </table> 
+                  </form>
+                </div>
+                <div class="info_warp mt20">
+                  <form name="theForm">
+                    <table cellspacing='0' cellpadding='0' class="table_item" width="100%">
+                      <tr>
+                        <th class="tc"><div class="th">{$lang.all_goods}</div></th>
+                        <th class="tc"><div class="th">{$lang.handler}</div></th>
+                        <th class="tc"><div class="th">{$lang.send_bouns_goods}</div></th>
+                      </tr>
+                      <tr class="no-line">
+                        <td width="45%" align="center">
+                          <select name="source_select" size="20" class="selectzoom" ondblclick="sz.addItem(false, 'add_bonus_goods', bounsTypeId)" multiple="true">
+                          </select>
+                        </td>
+                        <td align="center" class="tc">
+                            <div class="caozuo">
+                              <p><input type="button" value="&gt;&gt;" onclick="sz.addItem(true, 'add_bonus_goods', bounsTypeId)" class="button button3" /></p>
+                              <p><input type="button" value="&gt;" onclick="sz.addItem(false, 'add_bonus_goods', bounsTypeId)" class="button button3" /></p>
+                              <p><input type="button" value="&lt;" onclick="sz.dropItem(false, 'drop_bonus_goods', bounsTypeId)" class="button button3" /></p>
+                              <p><input type="button" value="&lt;&lt;" onclick="sz.dropItem(true, 'drop_bonus_goods', bounsTypeId)" class="button button3" /></p>
+                            </div>  
+                        </td>
+                        <td width="45%" align="center">
+                          <select name="target_select" multiple="true" size="20" class="selectzoom" ondblclick="sz.dropItem(false, 'drop_bonus_goods', bounsTypeId)">
+                            {foreach from=$goods_list item=goods}
+                            <option value="{$goods.goods_id}">{$goods.goods_name}</option>
+                            {/foreach}
+                          </select>
+                        </td>
+                      </tr>
+                    
+                    </table>
+                    <div class="bottom tc hr32">
+                        <div id="button-info">
+                            <input type="button"  class="button" value="{$lang.send}" onClick="javascript:history.back()" style="float:none;" />
+                        </div>
+                    </div>
+                  </form>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+
+<script type="text/javascript" language="JavaScript">
+<!--
+var bounsTypeId = '{$bonus_type.type_id}';
+  var elements    = document.forms['theForm'].elements;
+  var sz          = new SelectZone(1, elements['source_select'], elements['target_select'], '');
+
+  {literal}
+  onload = function()
+  {
+    startCheckOrder();
+  }
+
+  function searchGoods()
+  {
+    var elements  = document.forms['searchForm'].elements;
+    var filters   = new Object;
+
+    filters.cat_id = elements['cat_id'].value;
+    filters.brand_id = elements['brand_id'].value;
+    filters.keyword = Utils.trim(elements['keyword'].value);
+
+    sz.loadOptions('get_goods_list', filters);
+  }
+//-->
+</script>
+</body>
+</html>

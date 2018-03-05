@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+		{include file ='library/seller_menu_left.lbi'}
+		<div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+				{include file ='library/seller_menu_tab.lbi'}
+                <div class="info_warp">
+                <form method="post" action="warehouse.php" name="theForm" enctype="multipart/form-data">
+                <table width="100%" class="table_item table_item2">
+                  <tr>
+                    <td class="label">{$lang.originating_place}：</td>
+                    <td>
+                        <select name="warehouse_id" id="warehouse_id" class="select" onchange="javascript:area_freight($('#shipping_id').val(), this.value);">
+                        {foreach from=$warehouse_list item=warehouse}
+                            <option value="{$warehouse.region_id}" {if $parent_id eq $warehouse.region_id} selected="selected"{/if}>{$warehouse.region_name}</option>
+                        {/foreach}    
+                        </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="label">{$lang.reach_the_destination}：</td>
+                    <td><span class="red_text" id="region_name">{$region_name}</span></td>
+                  </tr>
+                  <tr>
+                    <td class="label">{$lang.logistics_distribution}：</td>
+                    <td>
+                        <select name="shipping_id" id="shipping_id" onchange="javascript:area_freight(this.value, $('#warehouse_id').val());" class="select">
+                        {foreach from=$shipping_list item=shipping}
+                            <option value="{$shipping.shipping_id}">{$shipping.shipping_name}</option>
+                        {/foreach}    
+                        </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" id="freightArea" style="border-bottom:0; padding:0;"></td>
+                  </tr>
+                  <tr class="no-line">
+                    <td></td>
+                    <td class="pt10 pb10">
+                      <input type="submit" value="{$lang.button_submit}" class="button" />
+                      <input type="reset" value="{$lang.button_reset}" class="button button_reset" />
+                      <input type="hidden" name="act" value="{$form_action}" />
+                      <input name="id" value="{$region_id}" type="hidden"  id="region_id"/>
+                      <input name="rId" value="{$regionId}" type="hidden"  id="regionId"/>    </td>
+                  </tr>
+                </table>  
+                </form>
+                </div>
+                <div class="list-div order_desc mt20">
+                	<h3 class="w_f_tit">{$lang.logistics_info}</h3>
+                    <div class="log_items">
+                        <div class="label">{$lang.select_logistics_company}：</div>
+                        {foreach from=$freight_list item=freight name=nofreight}
+                        <div class="item"><a href="warehouse_shipping_mode.php?act=list&shipping_id={$freight.shipping_id}&id={$freight.region_id}" class="blue">{$freight.shipping_name}</a></div>
+                        {foreachelse}
+                        <div class="item" style="color:#aaa;">{$lang.no_records}</div>
+                        {/foreach}
+                    </div>
+                </div>
+        	</div>
+    	</div>
+	</div>
+</div>
+{include file ='library/seller_footer.lbi'}
+{literal}
+<script type="text/javascript">
+onload = function()
+{
+    // 开始检查订单
+    startCheckOrder();
+	var shipping_id = $("#shipping_id").val();
+	var warehouse_id = $("#warehouse_id").val();
+	area_freight(shipping_id, warehouse_id);
+}
+//-->
+function addImg(obj)
+  {
+      var src  = obj.parentNode.parentNode;
+      var idx  = rowindex(src);
+      var tbl  = document.getElementById('info-table');
+      var row  = tbl.insertRow(idx + 1);
+      var cell = row.insertCell(-1);
+      cell.innerHTML = src.cells[0].innerHTML.replace(/(.*)(addImg)(.*)(\[)(\+)/i, "$1removeImg$3$4-");
+  }
+function removeImg(obj)
+  {
+      var row = rowindex(obj.parentNode.parentNode);
+      var tbl = document.getElementById('info-table');
+
+      tbl.deleteRow(row);
+  } 
+  
+/**
+ * 查询运费模式参数
+ */
+function area_freight(shipping_id, warehouse_id){
+  
+  var region_id = $("#regionId").val();
+  Ajax.call('warehouse.php?act=get_freight_area&shipping_id=' + shipping_id + '&warehouse_id=' + warehouse_id + '&region_id=' + region_id, '', area_freightResponse, 'GET', 'JSON');
+
+} 
+
+function area_freightResponse(res){
+	document.getElementById('freightArea').innerHTML = res.content;
+}
+
+/**
+ * 配送费用计算方式
+ */
+function compute_mode(shipping_code,mode)
+{
+    var base_fee  = document.getElementById("base_fee");
+    var step_fee  = document.getElementById("step_fee");
+    var item_fee  = document.getElementById("item_fee");
+    if(shipping_code == 'post_mail' || shipping_code == 'post_express')
+    {
+     var step_fee1  = document.getElementById("step_fee1");
+    }
+
+    if(mode == 'number')
+    {
+      item_fee.style.display = '';
+      base_fee.style.display = 'none';
+      step_fee.style.display = 'none';
+      if(shipping_code == 'post_mail' || shipping_code == 'post_express')
+      {
+       step_fee1.style.display = 'none';
+      }
+    }
+    else
+    {
+      item_fee.style.display = 'none';
+      base_fee.style.display = '';
+      step_fee.style.display = '';
+      if(shipping_code == 'post_mail' || shipping_code == 'post_express')
+      {
+       step_fee1.style.display = '';
+      }
+    }
+}
+</script>
+{/literal}
+</body>
+</html>

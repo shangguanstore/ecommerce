@@ -1,0 +1,140 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                 <form action="javascript:searchOrder()" name="searchForm">
+                    <div class="search-form">
+                        <div class="fr">
+                            <label>发货单流水号</label>
+                            <input type="text" class="text text_2 mr10" name="delivery_sn" value="">
+                            <label>订单号</label>
+                            <input type="text" class="text text_2 mr10" name="order_sn" value="">
+                            <label>收货人</label>
+                            <input type="text" class="text text_2 mr10" name="consignee" value="">
+                            <label>{$lang.label_delivery_status}</label>
+                            <select name="status" id="status" class="select">
+                                <option value="-1" selected="selected">{$lang.select_please}</option>
+                                {html_options options=$lang.delivery_status selected=-1}
+                            </select>
+                            <label class="submit-border"><input type="submit" class="submit" value="搜索"></label>
+                        </div>
+                    </div>
+                </form>
+                {/if}
+                <form method="post" action="order.php?act=operate" name="listForm" onsubmit="return check()">
+                <div class="table_list" id="listDiv">
+                    <table class="ecsc-default-table order">
+                        <thead>
+                            <tr>
+                                <th width="16%">
+                                <div class="first_all">
+                                    <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" class="checkbox"/><a href="javascript:listTable.sort('delivery_sn', 'DESC'); ">{$lang.label_delivery_sn}</a>{$sort_delivery_sn}
+                                </div>
+                                </th>
+                                <th width="16%"><a href="javascript:listTable.sort('order_sn', 'DESC'); ">{$lang.order_sn}</a>{$sort_order_sn}</th>
+                                <th width="12%"><a href="javascript:listTable.sort('consignee', 'DESC'); ">{$lang.consignee}</a>{$sort_consignee}</th>
+                                <th width="8%"><a href="javascript:listTable.sort('add_time', 'DESC'); ">{$lang.label_add_time}</a>{$sort_add_time}</th>                                    
+                                <th width="8%"><a href="javascript:listTable.sort('update_time', 'DESC'); ">{$lang.label_update_time}</a>{$sort_update_time}</th>
+                                <th width="10%">{$lang.label_suppliers_name}</th>
+                                <th width="10%">{$lang.label_delivery_status}</th>
+                                <th width="10%">{$lang.operator}</th>
+                                <th width="10%">{$lang.handler}</th>
+                            </tr>
+                        </thead>
+                        {foreach from=$delivery_list item=delivery key=dkey}
+                        <tbody>
+                            <tr><td colspan="20" class="sep-row"></td></tr>
+                            <tr class="sep_bor">
+                                <td  class="bdl">
+                                   <div class="first_all"><label><input type="checkbox" name="checkboxes[]" value="{$delivery.delivery_id}" class="checkbox" />{$delivery.delivery_sn}</label></div>
+                                </td>
+                                <td class="bdl" rowspan="1">
+                                   {$delivery.order_sn}
+                                </td>
+                                <td align="center"><a href="mailto:{$delivery.email}"> {$delivery.consignee|escape}</a></td>
+                                <td align="center">{$delivery.add_time}</td>
+                                <td align="center">{$delivery.update_time}</td>
+                                <td align="center">{$delivery.suppliers_name}</td>
+                                <td align="center">{$delivery.status_name}</td>
+                                <td align="center">{$delivery.action_user}</td>
+                                <td align="center" class="bdr">
+                                <a href="order.php?act=delivery_info&delivery_id={$delivery.delivery_id}" class="blue">{$lang.detail}</a>
+                                <a onclick="{if(confirm('{$lang.confirm_delete}')){return true;}return false;}" href="order.php?act=operate&remove_invoice=1&delivery_id={$delivery.delivery_id}" class="blue">{$lang.remove}</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        {/foreach}
+                        <tfoot>
+                            <tr>
+                                <td colspan="20" class="td_border">
+                                    <input name="remove_invoice" type="submit" id="btnSubmit3" value="{$lang.remove}" class="button btn_disabled" disabled="true" onclick="{if(confirm('{$lang.confirm_delete}')){return true;}return false;}" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="20">{include file="page.dwt"}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                </form>
+                {if $full_page}
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+  listTable.query = "delivery_query";
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+  /**
+     * 搜索订单
+     */
+    function searchOrder()
+    {
+        listTable.filter['order_sn'] = Utils.trim(document.forms['searchForm'].elements['order_sn'].value);
+        listTable.filter['consignee'] = Utils.trim(document.forms['searchForm'].elements['consignee'].value);
+        listTable.filter['status'] = document.forms['searchForm'].elements['status'].value;
+        listTable.filter['delivery_sn'] = document.forms['searchForm'].elements['delivery_sn'].value;
+        listTable.filter['page'] = 1;
+        listTable.loadList();
+    }
+
+  function check()
+    {
+      var snArray = new Array();
+      var eles = document.forms['listForm'].elements;
+      for (var i=0; i<eles.length; i++)
+      {
+        if (eles[i].tagName == 'INPUT' && eles[i].type == 'checkbox' && eles[i].checked && eles[i].value != 'on')
+        {
+          snArray.push(eles[i].value);
+        }
+      }
+      if (snArray.length == 0)
+      {
+        return false;
+      }
+      else
+      {
+        eles['order_id'].value = snArray.toString();
+        return true;
+      }
+    }
+</script>
+</body>
+</html>
+{/if}

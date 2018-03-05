@@ -1,0 +1,187 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div class="search-form">
+                    <form action="javascript:searchActivity()" name="searchForm">
+                    	<div class="fr">
+                            <label>{$lang.use_type}</label>
+                            <select name="cou_type" class="select">
+                                <option value="1,2,3,4">请选择</option>
+                                <option value="1">{$lang.coupons_type_01}</option>
+                                <option value="2">{$lang.coupons_type_02}</option>
+                                <option value="3">{$lang.coupons_type_03}</option>
+                                <option value="4">{$lang.coupons_type_04}</option>
+                            </select>
+                            <label>优惠券名称</label><input type="text" name="cou_name" size="30" class="text text_2 mr10"/>
+                            <label class="submit-border"><input type="submit" value="{$lang.button_search}" class="button" /></label>
+                        </div>
+                    </form>
+                </div>
+                <div class="list-div" id="listDiv">
+                    {/if}
+                    <table class="ecsc-default-table">
+                    	<thead>
+                        <tr>
+                            <th width="5%">编号</th>
+                            <th width="10%">优惠劵名称</th>
+                            <th width="10%">类型</th>
+                            <th width="10%">使用门槛(元)</th>
+                            <th width="10%">面值(元)</th>
+                            <th width="10%">总发行数(张)</th>
+                            <th width="10%">有效期</th>
+                            <th width="10%">已过期</th>
+                            <th width="10%">{$lang.handle}</th>
+						</tr>
+                        </thead>
+                        <tbody>
+                        {foreach from=$cou_list item=vo}
+                        <tr class="bd-line">
+                            <td width="5%">{$vo.cou_id}</td>
+                            <td width="10%">{$vo.cou_name}</td>
+                            <td width="10%">{$vo.cou_type}</td>
+                            <td width="10%">{$vo.cou_man}</td>
+                            <td width="10%">{$vo.cou_money}</td>
+                            <td width="10%">{$vo.cou_total}</td>
+                            <td width="10%">{$vo.cou_start_time}至<br />{$vo.cou_end_time}</td>
+                            <td width="10%">{$vo.cou_is_time}</td>
+                            <td width="10%">
+                            	<a href="coupons.php?act=coupons_list&cou_id={$vo.cou_id}" title="{$lang.edit}" class="blue"><i class="icon icon-search"></i></a>
+                                <a href="coupons.php?act=edit&cou_id={$vo.cou_id}" title="{$lang.edit}" class="blue"><i class="icon icon-edit"></i></a>
+                                <a href="javascript:;" onclick="coupons_del({$vo.cou_id})" title="{$lang.remove}" class="blue"><i class="icon icon-trash"></i></a>
+                            </td>
+                        </tr>
+                        {/foreach}
+                        </tbody>
+                        <tfoot>
+                        	<tr><td colspan="20">{include file="page.dwt"}</td></tr>
+                        </tfoot>
+                    </table>
+                    {if $full_page}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<div id="content" class="hide">
+    <div class="ysc-coupon-dialog">
+        <h2>{$lang.coupons_add_title}</h2>
+        <ul class="ysc-coupon-list">
+            <li>
+                <a href="coupons.php?act=add&type=register" class="clearfix">
+                    <div class="ysc-ticket ysc-ticket-red">
+                        <i class="qIcon zhuce"></i>
+                        <span>{$lang.coupons_type_01}</span>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="coupons.php?act=add&type=buy" class="clearfix">
+                    <div class="ysc-ticket ysc-ticket-blue">
+                        <i class="qIcon gouwuche"></i>
+                        <span>{$lang.coupons_type_02}</span>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="coupons.php?act=add&type=all" class="clearfix">
+                    <div class="ysc-ticket ysc-ticket-green">
+                        <i class="qIcon house"></i>
+                        <span>{$lang.coupons_type_03}</span>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="coupons.php?act=add&type=member" class="clearfix">
+                    <div class="ysc-ticket ysc-ticket-yellow">
+                        <i class="qIcon renzhengyonghu"></i>
+                        <span>{$lang.coupons_type_04}</span>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript" src="../seller/js/jquery.purebox.js"></script>
+<script type="text/javascript">
+
+    $(function(){
+        $("#actionSpan").click(function(){
+            var content = $("#content").html();
+            pb({
+                id:"dialog",
+                title:"添加优惠券",
+                content:content,
+                width:600,
+                height:360,
+                drag:false,
+                foot:false
+            });
+        });
+    });
+
+
+<!--
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+
+  {literal}
+  onload = function()
+  {
+     // 开始检查订单
+     startCheckOrder();
+  }
+  
+
+  /**
+   * 搜索优惠活动
+   */
+  function searchActivity()
+  {
+      var cou_type = Utils.trim(document.forms['searchForm'].elements['cou_type'].value);
+      var cou_name = Utils.trim(document.forms['searchForm'].elements['cou_name'].value);
+      listTable.filter['cou_type'] = cou_type;
+      listTable.filter['cou_name'] = cou_name;
+      listTable.filter['page'] = 1;
+      listTable.loadList("favourable_list");
+  }
+  {/literal}
+//-->
+
+/*  @author-bylu 优惠券删除 start  */
+function coupons_del(cou_id){
+    if(confirm('确定删除吗?'))
+        $.get('coupons.php?act=remove_coupons', { cou_id:cou_id }, function (data) { if(data=='ok')location.href=location.href;else alert('删除失败!') });
+}
+
+//修改秒杀排序;
+$(function(){
+    $('.cou_order').change(function(){
+        var cou_order=$(this).val();
+        var cou_id=$(this).attr('cou_id');
+        $.get('coupons.php?act=change_order', { cou_id:cou_id,cou_order:cou_order }, function (data) { if(data=='ok')alert('修改成功') });
+    })
+})
+
+
+/*  @author-bylu  end  */
+
+</script>
+</body>
+</html>
+{/if}

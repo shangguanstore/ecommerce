@@ -1,0 +1,27 @@
+# System Files
+#-------------------------
+.DS_Store
+Thumb.db
+node_modules
+bower_components
+
+# Application Files
+#-------------------------
+*.lock
+*.log
+
+# IDE Files
+#-------------------------
+nbproject
+.idea
+.project
+
+# Sublime Text cache files
+#-------------------------
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+.buildpath
+.settings

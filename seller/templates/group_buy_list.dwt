@@ -1,0 +1,151 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div class="search-form">
+                  <form action="javascript:searchGroupBuy()" name="searchForm">
+                  	<div class="fr">
+                    <label>{$lang.goods_name}</label>
+                    <input type="text" name="keyword" size="30" class="text text_2 mr10" />
+                    <label class="submit-border"><input type="submit" value="{$lang.button_search}" class="button" /></label>
+                    </div>
+                  </form>
+                </div>
+                <form method="post" action="group_buy.php?act=batch_drop" name="listForm" onsubmit="return confirm(batch_drop_confirm);">
+                <div class="list-div" id="listDiv">
+                {/if}
+                    <table class="ecsc-default-table">
+                        <thead>
+                            <tr>
+                                <th width="8%">编号</th>
+                                <th width="27%">商品名称</th>
+                                <th width="10%">状态</th>
+                                <th width="10%">结束时间</th>
+                                <th width="6%">保证金</th>
+                                <th width="6%">限购</th>
+                                <th width="6%">订购商品</th>
+                                <th width="6%">订单</th>
+                                <th width="10%">当前价格</th>
+                                <th width="12%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {foreach from=$group_buy_list item=group_buy}
+                            <tr class="bd-line">
+                                <td>
+                                    <input value="{$group_buy.act_id}" id="group_buy_{$group_buy.goods_id}" name="checkboxes[]" type="checkbox" class="checkbox">
+                                    <label for="group_buy_{$group_buy.goods_id}">{$group_buy.act_id}</label>
+                                </td>
+                                <td class="tl"><span class="activity_name w260" title="{$group_buy.goods_name|escape:html}">{$group_buy.goods_name|escape:html}</td>
+                                <td>{$group_buy.cur_status}</td>
+                                <td>{$group_buy.end_time}</td>
+                                <td>{$group_buy.deposit}</td>
+                                <td>{$group_buy.restrict_amount}</td>
+                                <td>{$group_buy.valid_goods}</td>
+                                <td>{$group_buy.valid_order}</td>
+                                <td>{$group_buy.cur_price}</td>
+                                <td>
+                                    <a href="order.php?act=list&amp;group_buy_id={$group_buy.act_id}" class="btn-green"><i class="icon icon-search"></i></a>
+                                    <a href="group_buy.php?act=edit&amp;id={$group_buy.act_id}" class="btn-blue"><i class="icon icon-edit"></i></a>
+                                    <a href="javascript:;" onclick="listTable.remove({$group_buy.act_id},'{$lang.drop_confirm}')" title="{$lang.remove}" ectype="btn_del_xianshi" data-xianshi-id="8" class="btn-red"><i class="icon icon-trash"></i></a>
+                                </td>
+                            </tr>
+                        {foreachelse}
+                            <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+                        {/foreach}
+                        </tbody>
+                        <tfoot>
+                        	<tr>
+                            	<td colspan="10" class="td_border">
+                                	<div class="shenhe ml20">
+                                        <input type="submit" name="drop" id="btnSubmit" value="{$lang.drop}" class="button btn_disabled" disabled="true" />
+                                    </div> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="20">
+                                {include file="page.dwt"}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    {if $full_page}
+                </div>
+                
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+<!--
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+
+  {literal}
+  onload = function()
+  {
+    startCheckOrder();
+  }
+  
+  {if $priv_ru eq 1}
+    function get_store_search(val){
+        if(val == 1){
+            document.forms['searchForm'].elements['merchant_id'].style.display = '';
+            document.forms['searchForm'].elements['store_keyword'].style.display = 'none';
+            document.forms['searchForm'].elements['store_type'].style.display = 'none';
+        }else if(val == 2){
+            document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+            document.forms['searchForm'].elements['store_keyword'].style.display = '';
+            document.forms['searchForm'].elements['store_type'].style.display = 'none';
+        }else if(val == 3){
+            document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+            document.forms['searchForm'].elements['store_keyword'].style.display = '';
+            document.forms['searchForm'].elements['store_type'].style.display = '';
+        }else{
+            document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+            document.forms['searchForm'].elements['store_keyword'].style.display = 'none';
+            document.forms['searchForm'].elements['store_type'].style.display = 'none';
+        }
+    }
+    {/if}
+
+  /**
+   * 搜索团购活动
+   */
+  function searchGroupBuy()
+  {
+      
+      {if $priv_ru eq 1}
+        listTable.filter['store_search'] = Utils.trim(document.forms['searchForm'].elements['store_search'].value);
+        listTable.filter['merchant_id'] = Utils.trim(document.forms['searchForm'].elements['merchant_id'].value);
+        listTable.filter['store_keyword'] = Utils.trim(document.forms['searchForm'].elements['store_keyword'].value);
+        listTable.filter['store_type'] = Utils.trim(document.forms['searchForm'].elements['store_type'].value);
+        {/if}
+
+    var keyword = Utils.trim(document.forms['searchForm'].elements['keyword'].value);
+    listTable.filter['keyword'] = keyword;
+    listTable.filter['page'] = 1;
+    listTable.loadList("group_buy_list");
+  }
+  {/literal}
+//-->
+</script>
+</body>
+</html>
+{/if}

@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+<head>{include file ='library/admin_html_head.lbi'}</head>
+
+<body class="iframe_body">
+	<div class="warpper">
+    	<div class="title"><a href="seller_grade.php?act=list" class="s-back" ></a>商家 - {$ur_here}</div>
+        <div class="content">
+        	<div class="explanation" id="explanation">
+            	<div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span></div>
+                <ul>
+                	<li>根据不同的入驻商家等级进行分派权限。</li>
+                    <li>修改权限将导致商家后台改变，请谨慎操作。</li>
+                </ul>
+            </div>
+            <div class="flexilist">
+                <div class="common-content">
+                    <div class="mian-info">
+						<form method="POST" action="merchants_privilege.php" name="theFrom" onsubmit="return validate();">
+                    	<div class="switch_info business_info" style="background:none;">
+                            <div class="step">
+                            	<div class="tit">
+                                    <div class="checkbox_items">
+                                    	<div class="checkbox_item">{$lang.require_field}{$lang.grade_allot}</div>
+                                    </div>
+                                </div>
+                                <div class="qx_items">
+                                	<div class="qx_item">
+                                        <div class="center">
+                                            <div id="grade_id" class="imitate_select select_w320">
+                                                <div class="cite">{$lang.select_please}</div>
+                                                <ul>
+                                                    {foreach from=$seller_grade item=seller_grade}
+                                                        <li><a href='javascript:;' data-value='{$seller_grade.id}' class='ftx-01'>{$seller_grade.grade_name}</a></li>
+                                                    {/foreach}
+                                                </ul>
+                                                <input name="grade_id" type="hidden" value="{$grade_id}" id="grade_id_val">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="step">
+                            	<div class="tit">
+                                    <div class="checkbox_items">
+                                    	<div class="checkbox_item">{$lang.initialize_merchants_allot}</div>
+                                    </div>
+                                </div>
+                                <div class="qx_items">
+                                	<div class="qx_item">
+                                        <div class="checkbox_items">
+                                            <div class="checkbox_item">
+                                                <input type="checkbox" value="1" name="initialize_allot" id="initialize_allot" class="ui-checkbox"/>
+                                                <label for="initialize_allot" class="ui-label">{$lang.edit_allot}<font class="red">{$lang.prudent_operation}</font></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="ajax_allot">
+                                {include file ='library/ajax_allot.lbi'}
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+ {include file ='library/pagefooter.lbi'}
+<script language="javascript">
+        $.divselect("#grade_id","#grade_id_val",function(obj){
+            var val = obj.attr("data-value");
+            ajax_allot(val);
+        });
+        
+        function ajax_allot(val){
+            $.jqueryAjax('get_ajax_content.php', 'act=ajax_allot&grade_id='+val, function(data){
+                $("#ajax_allot").html(data);
+            });
+        }
+
+	$("#checkall").click(function(){
+		var frm = this.checked;
+		$('input:checkbox[type="checkbox"]').each(function() 
+		{  
+			 if($(this).attr("name") == 'action_code[]' || $(this).attr("name") == 'chkGroup'){
+				 $(this).attr('checked',frm);
+			 }
+		}); 
+	})
+	function check(list, obj)
+	{
+		var frm = obj.checked;
+		$('input:checkbox[type="checkbox"]').each(function() 
+		{
+			 if($(this).attr("name") == 'action_code[]' && $(this).attr("date") == list){
+				 $(this).attr('checked',frm);
+			 }
+		}); 
+	}
+	
+	function checkrelevance(relevance, priv_list)
+	{
+	  if($("#"+priv_list).checked && relevance != '')
+	  {
+		$("#"+relevance).attr('checked',true);
+	  }
+	  else
+	  {
+		$('input:checkbox[type="checkbox"]').each(function() 
+		{
+			var i = $(this).attr("title");
+			 if(i = priv_list){
+				 var val = $(this).val();
+				$("#"+val).checked = false;
+			 }
+		});
+	  }
+	}
+</script>
+</body>
+</html>

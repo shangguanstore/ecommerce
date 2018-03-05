@@ -1,0 +1,143 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <!--start-->
+                <script>
+                var thisfile = '{$thisfile}';
+                var deleteck = '{$lang.deleteck}';
+                var deleteid = '{$lang.delete}';
+                </script>
+                {if !$crons_enable}
+                <ul style="padding:0; margin: 0; list-style-type:none; color: #CC0000;">
+                  <li style="border: 1px solid #CC0000; background: #FFFFCC; padding: 10px; margin-bottom: 5px;" >{$lang.enable_notice}</li>
+                </ul>
+                {/if}
+                <div class="search-form">
+                <form action="{$thisfile}" method="post">
+                    <div class="fr">
+                        <label>{$lang.goods_name}</label>
+                        <input type="hidden" name="act" value="list" />
+                        <input name="goods_name" type="text" size="25" class="text text_2 mr10" />
+                        <label class="submit-border"><input type="submit" value="{$lang.button_search}" class="button" /></label>
+                    </div>
+                </form>
+                </div>
+                <div class="list-div" id="listDiv">
+                    <form method="post" action="" name="listForm">
+                    {/if}
+                    <table class="ecsc-default-table">
+                        <thead>
+                        <tr>
+                          <th width="10%"><div class="first_all"><label><input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" class="checkbox" />{$lang.id}</label></div></th>
+                          <th width="50%">{$lang.goods_name}</th>
+                          <th width="15%">{$lang.starttime}</th>
+                          <th width="15%">{$lang.endtime}</th>
+                          <th width="10%">{$lang.handler}</th>
+                        </tr>
+                        </thead>
+                        {foreach from=$goodsdb item=val}
+                        <tr class="bd-line">
+                          <td class="first_td_checkbox"><div class="first_all"><input name="checkboxes[]" type="checkbox" value="{$val.goods_id}" id="goods_{$val.goods_id}" class="checkbox"/><label for="goods_{$val.goods_id}">{$val.goods_id}</label></div></td>
+                          <td class="tl"><span class="activity_name w490">{$val.goods_name}</span></td>
+                          <td align="center">
+                            <span onclick="listTable.edit(this, 'edit_starttime', '{$val.goods_id}');"><!-- {if $val.starttime} -->{$val.starttime}<!-- {else} -->0000-00-00<!-- {/if} --></span>
+                          </td>
+                          <td align="center">
+                            <span onclick="listTable.edit(this, 'edit_endtime', '{$val.goods_id}');"><!-- {if $val.endtime} -->{$val.endtime}<!-- {else} -->0000-00-00<!-- {/if} --></span>
+                          </td>
+                          <td align="center">
+                              <span id="del{$val.goods_id}">
+                              {if $val.endtime || $val.starttime}
+                                <a href="{$thisfile}?goods_id={$val.goods_id}&act=del" onclick="return confirm('{$lang.deleteck}');">{$lang.delete}</a>
+                              {else}
+                                -
+                              {/if}
+                              </span>
+                          </td>
+                        </tr>
+                        {foreachelse}
+                        <tr><td class="no-records" colspan="5">{$lang.no_records}</td></tr>
+                        {/foreach}
+                        <tfoot>
+                            <tr>
+                                <td colspan="5" class="td_border">
+                                    <div class="shenhe">
+                                      <input type="hidden" name="act" value="" />
+                                      <div class="text_time mr10" id="text_time1">
+                                      <input name="date" type="text" id="date" size="10" value='0000-00-00' readonly="readonly" style=" text-align:left; margin-right:0;"/>
+                                      <input name="selbtn1" type="button" id="selbtn1" style=" margin-right:0;" />
+                                      </div>
+                                      <input type="button" id="btnSubmit1" value="{$lang.button_start}" disabled="true" class="button btn_disabled" onClick="return validate('batch_start')" />
+                                      <input type="button" id="btnSubmit2" value="{$lang.button_end}" disabled="true" class="button btn_disabled" onClick="return validate('batch_end')" />
+                                    </div>  
+                                </td>
+                            </tr>
+                            <tr><td colspan="5">{include file="page.dwt"}</td></tr>
+                        </tfoot>
+                    </table>
+                    {if $full_page}
+                    </form>
+                </div>					
+                <!--end-->
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<!--start-->
+<script type="Text/Javascript">
+listTable.recordCount = {$record_count};
+listTable.pageCount = {$page_count};
+{foreach from=$filter item=item key=key}
+listTable.filter.{$key} = '{$item}';
+{/foreach}
+<!--
+{literal}
+onload = function()
+{
+  // 开始检查订单
+  startCheckOrder();
+}
+{/literal}
+
+function validate(name)
+{
+  if(document.listForm.elements["date"].value == "0000-00-00")
+  {
+    alert('{$lang.select_time}');
+    return;	
+  }
+  else
+  {
+    document.listForm.act.value=name;
+    document.listForm.submit();
+  }
+}
+
+//日期选择插件调用start sunle
+var opts1 = {
+	'targetId':'date',//时间写入对象的id
+	'triggerId':['selbtn1'],//触发事件的对象id
+	'alignId':'text_time1',//日历对齐对象
+	'format':'-'//时间格式 默认'YYYY-MM-DD HH:MM:SS'
+}
+
+xvDate(opts1);
+//日期选择插件调用end sunle
+//-->
+</script>
+<!--end-->
+</body>
+</html>
+{/if}

@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent" >
+				{include file ='library/seller_menu_tab.lbi'}
+                <div class="list-div order_desc">
+                <form action="order.php?act=list" method="post" enctype="multipart/form-data" name="searchForm">
+                    <table width="100%">
+                        <tr>
+                          <td colspan="4">
+                              <ul>
+                                  <li><strong>{$lang.user_name}：</strong><span>{$booking.user_name|escape}</span></li>
+                                  <li><strong>{$lang.booking_time}：</strong><span>{$booking.booking_time}</span></li>
+                                  <li><strong>{$lang.goods_name}：</strong><a href="../goods.php?id={$booking.goods_id}" target="_blank" title="{$lang.view}" class="blue">{$booking.goods_name}</a></li>
+                                  <li><strong>{$lang.number}：</strong><span>{$booking.goods_number}</span></li>
+                                  <li><strong>{$lang.desc}：</strong><span>{$booking.goods_desc|escape|nl2br}</span></li>
+                                  <li><strong>{$lang.link_man}：</strong><span>{$booking.link_man|escape} {if $booking.email}<{$booking.email|escape}>{/if}</span></li>
+                                  <li><strong>{$lang.tel}：</strong><span>{$booking.tel|escape}</span></li>
+                              </ul>
+                          </td>
+                        </tr>
+                        {if $booking.is_dispose}
+                        <tr>
+                              <td colspan="4">
+                              <ul>
+                                  <li><strong>{$lang.dispose_user}：</strong>{$booking.dispose_user}</li>
+                                  <li><strong>{$lang.dispose_time}：</strong>{$booking.dispose_time}</li>
+                                  <li><strong>{$lang.note}：</strong>{$booking.dispose_note}</li>
+                              </ul>
+                          </td>
+                        </tr>
+                        {/if}
+                  </table>
+                </form>
+                </div>
+                {if $send_fail}
+                    <ul style="padding:10px 0; margin: 0; list-style-type:none; color: #CC0000;">
+                    	<li style="border: 1px solid #CC0000; background: #FFFFCC; padding: 10px; margin-bottom: 5px;" >{$lang.mail_send_fail}</li>
+                    </ul>
+                {/if}
+                <div class="form-div">
+                <form name='theForm' method="post" action="goods_booking.php" onsubmit="return validate()">
+                    <label>{$lang.note}：</label>
+                    <input type="text" name="dispose_note" size="55" value="{$booking.dispose_note}" class="text" />
+                    <input type ="hidden" name="act" value="update" />
+                    <input type="hidden" name="rec_id" value="{$booking.rec_id}" >
+                    <input name="send_email_notice" type="checkbox" value='1' class="checkbox" id="send_email_notice"/>
+                    <label style="float:none; cursor:pointer;" for="send_email_notice">{$lang.send_email_notice}</label>
+                    <input type="submit" value="{$lang.i_dispose}" class="button mr10">
+                    {if $booking.is_dispose}<input type="submit" name="remail" value="{$lang.remail}" class="button">{/if}
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script>
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+    validator = new Validator("theForm");
+    validator.required("dispose_note", no_note);
+    return validator.passed();
+}
+</script>
+</body>
+</html>

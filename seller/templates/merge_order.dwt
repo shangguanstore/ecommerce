@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent" >
+				{include file ='library/seller_menu_tab.lbi'}
+                <table class="table_item">
+                    <tr>
+                        <td class="label">{$lang.to_order_sn}</td>
+                        <td>
+                            <input name="to_order_sn" type="text" id="to_order_sn" class="text text_2 mr10">
+                            <select name="to_list" id="to_list" class="select" onchange="if (this.value != '') document.getElementById('to_order_sn').value = this.value; else document.getElementById('to_order_sn').value = '';">
+                            	<option value="">{$lang.select_please}</option>
+                            </select>
+                            <p class="bf100 fl"><label class="blue_label ml0">{$lang.notice_order_sn}</label></p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="label">{$lang.from_order_sn}</td>
+                        <td>
+                            <input name="from_order_sn" type="text" id="from_order_sn" class="text text_2 mr10">
+                            <select name="from_list" class="select" onchange="if (this.value != '') document.getElementById('from_order_sn').value = this.value; else document.getElementById('from_order_sn').value = '';">
+                            	<option value="">{$lang.select_please}</option>
+                            </select>
+                        </td>
+                      </tr>
+                      <tr class="no-line">
+                        <td class="label">&nbsp;</td>
+                        <td class="pt20"><input name="merge" type="submit" id="merge" value="{$lang.merge}" class="button" onclick="merge_order()" /></td>
+                      </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script>
+    /**
+     * 合并
+     */
+    function merge_order()
+    {
+        if (confirm('您确定合并这两个订单么？ ')) {
+            var fromOrderSn = document.getElementById('from_order_sn').value;
+            var toOrderSn = document.getElementById('to_order_sn').value;
+            Ajax.call('order.php?is_ajax=1&act=ajax_merge_order','from_order_sn=o' + fromOrderSn + '&to_order_sn=o' + toOrderSn, merge_orderResponse, 'POST', 'JSON');
+        }
+    }
+
+    function merge_orderResponse(result)
+    {
+      if (result.message.length > 0)
+      {
+        alert(result.message);
+      }
+      if (result.error == 0)
+      {
+        //成功则清除用户填写信息
+        document.getElementById('from_order_sn').value = '';
+        document.getElementById('to_order_sn').value = '';
+        location.reload();
+      }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<form action="order.php?act=operate" method="post" name="theForm">
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+				{include file ='library/seller_menu_tab.lbi'}
+            	<div class="ecsc-order-show">
+                	<div class="ecsc-order-info">
+                    	<div class="ecsc-order-details ecsc-order-details-w100">
+                            <div class="content">
+                                <dl>
+                                  <dt>{$lang.return_time}</dt>
+                                  <dd>{$back_order.apply_time}</dd>
+                                </dl>
+                                <dl>
+                                  <dt>{$lang.delivery_sn_number}</dt>
+                                  <dd>{$back_order.return_sn}</dd>
+                                </dl>
+                                <dl><dt>{$lang.label_shipping_time}</dt><dd>{$back_order.formated_update_time}</dd></dl>
+                                <dl><dt>{$lang.label_order_sn}</dt><dd>{$back_order.order_sn}{if $back_order.extension_code eq "group_buy"}<a href="group_buy.php?act=edit&id={$back_order.extension_id}">{$lang.group_buy}</a>{elseif $back_order.extension_code eq "exchange_goods"}<a href="exchange_goods.php?act=edit&id={$back_order.extension_id}">{$lang.exchange_goods}</a>{/if}</dd></dl>
+                                <dl><dt><strong>{$lang.label_order_time}</dt><dd>{$back_order.formated_add_time}</dd></dl>
+                                <dl><dt>{$lang.label_user_name}</dt><dd>{$back_order.user_name|default:$lang.anonymous}</dd></dl>
+                                <dl><dt>{$lang.label_shipping}</dt><dd>{$back_order.back_shipp_shipping}</dd></dl>
+                                <dl><dt>{$lang.label_shipping_fee}</dt><dd>{$back_order.shipping_fee}</dd></dl>
+                                <dl><dt>{$lang.label_invoice_no}</dt><dd>{$back_order.back_invoice_no}</dd></dl>
+                                <dl><dt>{$lang.label_all_status}</dt><dd>{$lang.rf.0}</dd></dl>
+                                <dl>&nbsp;</dl><dl>&nbsp;</dl>
+                                <dl><dt>{$lang.label_consignee}</dt><dd>{$back_order.addressee|escape}</dd></dl>
+                                <dl><dt>{$lang.label_zipcode}</dt><dd>{$back_order.zipcode}</dd></dl>
+                                <dl><dt>{$lang.label_address}</dt><dd>[{$back_order.region}] {$back_order.address|escape}</dd></dl>
+                                <dl><dt>{$lang.label_mobile}</dt><dd>{$back_order.phone|escape}</dd></dl>
+                                <dl><dt>{$lang.problem_desc}：</dt><dd>{$back_order.return_brief}</dd></dl>
+                                <dl><dt>{$lang.label_postscript}</dt><dd>{$back_order.remark}</dd></dl>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ecsc-order-contnet">
+                        <table class="ecsc-default-table order">
+                        	<thead>
+                                <tr>
+                                    <th colspan="4">{$lang.goods_info}</th>
+                                </tr>
+                            	<tr>
+                                    <th width="50%">{$lang.goods_name_brand}</th>
+                                    <th width="15%">{$lang.goods_sn}</th>
+                                    <th width="10%">{$lang.product_sn}</th>
+                                    <th width="17%">{$lang.goods_attr}</th>
+                                    <th width="8%">{$lang.label_send_number}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {foreach from=$goods_list item=goods}
+                                <tr>
+                                    <td align="left">
+                                    {if $goods.goods_id gt 0 && $goods.extension_code neq 'package_buy'}
+                                        <a href="../goods.php?id={$goods.goods_id}" target="_blank">{$goods.goods_name} {if $goods.brand_name}[ {$goods.brand_name} ]{/if}
+                                    {/if}
+                                    </td>
+                                    <td align="center">{$goods.goods_sn}</td>
+                                    <td align="center">{$goods.product_sn}</td>
+                                    <td align="center">{$goods.goods_attr|nl2br}</td>
+                                    <td align="center">{$goods.send_number}</td>
+                                </tr>
+                                {/foreach}
+                            </tbody>
+                        </table>
+                         <table class="ecsc-default-table order">
+                        	<thead>
+                                <tr>
+                                    <th colspan="4">{if $back_order.return_type eq 0}{$lang.product_repair}{elseif $back_order.return_type eq 1}{$lang.product_return}{elseif $back_order.return_type eq 2}{$lang.product_change}{/if}</th>
+                                  </tr>
+                            	<tr>
+                                    <th width="45%">{$lang.goods_name_brand}</th>
+                                    <th width="12%">{$lang.goods_sn}</th>
+                                    <th width="6%">{$lang.product_sn}</th>
+                                    <th width="15%">{$lang.goods_attr}</th>
+                                    <th width="6%">{$lang.product_price}</th>
+                                    <th width="6%">{$lang.goods_number}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {foreach from=$goods_list item=goods}
+                                <tr>
+                                    <td>
+                                    {if $goods.goods_id gt 0 && $goods.extension_code neq 'package_buy'}
+                                    <a href="../goods.php?id={$goods.goods_id}" target="_blank">{$goods.goods_name} {if $goods.brand_name}[ {$goods.brand_name} ]{/if}
+                                    {/if}
+                                    </td>
+                                    <td align="center">{$goods.goods_sn}</td>
+                                    <td align="center">{$goods.product_sn}</td>
+                                    <td align="center">{$goods.goods_attr|nl2br}</td>
+                                    <td align="center">{if $goods.return_type eq 2}-{/if}{$goods.refound}</td>
+                                    <td align="center">{$goods.return_number}</td>
+                                </tr>
+                                
+                                {/foreach}
+                            </tbody>
+                        </table>
+                        <table class="ecsc-default-table order">
+                        	<thead>
+                                <tr>
+                                    {if $back_order.return_type eq 0 || $back_order.return_type eq 2}
+                                     <td colspan="5">
+                                       {$lang.seller_mail}：
+                                       {if $back_order.out_shipping_name}
+                                       <span style="font-weight: bolder">{$back_order.out_shipp_shipping}</span>
+                                       {$lang.courier_sz}：
+                                       <span style="font-weight: bolder">{$back_order.out_invoice_no}</span>
+                                       <a href="order.php?act=return_edit&ret_id={$back_order.ret_id}&order_id={$back_order.order_id}&step=back_shipping" class="blue">{$lang.edit}</a>
+                                       {else}
+                                       <select name="shipping_name">
+                                           <option value="0">{$lang.select_courier}</option>
+                                           {foreach from=$shipping_list item=shipping }
+                                           <option value="{$shipping.shipping_id}">{$shipping.shipping_name}</option>
+                                           {/foreach}
+                                       </select> 
+                                       {$lang.courier_sz}
+                                       <input type="text"  name="invoice_no"/><input type="submit" value="{$lang.button_submit}"  onclick="check_shipping()"  name="send_submit" />
+                                       {/if}
+                                     </td>
+                                     {/if}
+                                     {if $back_order.return_type > 0}
+                                     <td colspan="6" align="right"> 
+                                         <span class="pr20">{$lang.subtotal}：<span class="red">{$back_order.should_return}<input type="hidden" name="refound_amount" value="{$back_order.should_return1}"/></span></span>
+                                     </td>
+                                     {else}
+                                     <td colspan="6">&nbsp;</td>
+                                     {/if}
+                                     </tr>
+                                     <script>
+                                        function check_shipping(){
+                                            var frm =  document.forms['theForm'] ;
+                                            var shipping_name = frm['shipping_name'].value;
+                                              if( shipping_name <= 0 ){
+                                                  alert('请选择快递公司');
+                                                  return false;
+                                              }
+                                              var invoice_no = frm['invoice_no'].value ;
+                                              if(invoice_no == ''|| invoice_no ==NULL ){
+                                                  alert('请填写快递单号');
+                                                  return false;
+                                              }
+                                        }
+                                    </script>
+                                    <tr>
+                                        <td colspan="6" align="right"><span class="pr20">{$lang.buyers_return_reason}：<span class="red">{$back_order.return_cause}</span></span></td>
+                                    </tr>
+                            </tbody>
+                        </table>
+                        <table cellpadding="0" cellspacing="0" width="100%">
+                             {if $back_order.img_list}
+                                <tr>
+                                      <th colspan="4">{$lang.user_file_image}</th>
+                                </tr>
+                                <tr>
+                                      <td colspan="4">
+                                  {foreach from=$back_order.img_list item=img}
+                                      <a href="../{$img.img_file}" target="_blank"><img src="../{$img.img_file}" width="100" height="100" style="border:1px #ccc solid; padding:2px;" /></a>
+                                  {/foreach}
+                                  </td>
+                                </tr>
+                                {/if}
+                                <tr>
+                                      <th colspan="4">{$lang.action_info}</th>
+                                </tr>
+                                <tr>
+                                      <td>
+                                      <table cellpadding="0" cellspacing="0"  class="order_js_table">
+                                        <tr>
+                                           <td colspan="6">
+                                              <div class="caozuo_bz caozuo_bz_l">
+                                                      <div class="item">
+                                                      <strong>{$lang.operation_notes}：</strong>
+                                                  <textarea rows="3" cols="60" name="action_note"></textarea>
+                                                  </div>
+                                              </div>
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                              <td colspan="6">
+                                              <div class="caozuo_bz caozuo_bz_l">
+                                                      <div class="item">
+                                                      <strong class="lh">{$lang.current_executable_operation}：</strong>
+                                                  <div class="caozuo_btns caozuo_btns_left">
+                                                      {if $back_order.agree_apply neq 1}
+                                                        <input class="button mr10" type="submit" value="{$lang.agree_apply}" name="agree_apply">
+                                                      {/if}
+
+                                                      {if $back_order.return_status1 lt 1 }
+                                                        <input class="button mr10" type="submit" value="{$lang.receive_goods}" name="receive_goods">
+                                                      {/if}
+
+                                                      {if $back_order.return_type eq 1}
+                                                          {if $back_order.refound_status1 eq 0 }
+                                                          <input class="button mr10" type="submit" value="{$lang.refound}" name="refound">
+                                                          {/if}
+                                                      {/if}
+
+                                                      {if $back_order.return_type neq 1}
+                                                          {if $back_order.return_status1 lt 2 }
+                                                          <input class="button mr10" type="submit" value="{$lang.swapped_out_single}" name="swapped_out_single">
+                                                          <input class="button mr10" type="submit" value="{$lang.swapped_out}" name="swapped_out">
+                                                          {/if}
+                                                      {/if}    
+
+                                                      {if $back_order.return_status1 >= 2 }
+                                                          {if $back_order.return_status1 lt 4 }
+                                                          <input class="button mr10" type="submit" value="{$lang.complete}" name="complete">
+                                                          {/if}
+                                                      {/if}    
+                                                      <input class="button mr10" type="submit" value="{$lang.after_service}" name="after_service">
+                                                      <input type="hidden" value="{$back_order.order_id}" name="order_id">
+                                                      <input type="hidden" value="{$back_order.rec_id}" name="rec_id" />
+                                                      <input type="hidden" value="{$back_order.ret_id}" name="ret_id" />
+                                                  </div>
+                                                  </div>
+                                              </div>
+                                          </td>
+                                        </tr>
+                                      </table>
+                                  </td>
+                                </tr>
+                                <tr>
+                                      <th colspan="4">{$lang.action_jilu}</th>
+                                </tr>
+                                <tr>
+                                <table cellpadding="1" cellspacing="1" border="1"  width="100%">
+                                <tr>
+                                    <th width="15%"><div style="text-align:center;">{$lang.action_user}</div></th>
+                                    <th width="15%"><div style="text-align:center;">{$lang.action_time}</div></th>
+                                    <th width="20%"><div style="text-align:center;">{$lang.return_status}</div></th>
+                                    <th width="15%"><div style="text-align:center;">{$lang.refound_status}</div></th>
+                                    <th width="35%"><div style="text-align:center;">{$lang.action_note}</div></th>
+                                </tr>
+                                {foreach from=$action_list item=action}
+                                <tr>
+                                    <td align="center">{$action.action_user}</td>
+                                    <td align="center">{$action.action_time}</td>
+                                    <td align="center">{$action.return_status}</td>
+                                    <td align="center">{$action.refound_status}</td>
+                                    <td align="center">{$action.action_note|nl2br}</td>
+                                </tr>
+                                {/foreach}
+                            </table>
+                          </tr>
+                        </table>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+{include file ='library/seller_footer.lbi'}
+</body>
+</html>

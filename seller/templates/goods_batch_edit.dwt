@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <!--start-->
+				<ul class="mt10">
+					<li class="start_li">{$lang.notice_edit}</li>
+				</ul>
+				<div style="background-color: #F4FAFB;"></div>
+				<div class="list-div mt16">
+				<form action="goods_batch.php?act=update" method="post" name="theForm">
+				<table class="ecsc-default-table">
+				  {if $edit_method eq "each"}
+                  <thead>
+				  <tr>
+                  	<th width="3"></th>
+					<th width="10%">{$lang.goods_sn}</th>
+					<th width="30%">{$lang.goods_name}</th>
+					<th width="10%">{$lang.market_price}</th>
+					<th width="10%">{$lang.shop_price}</th>
+					<th width="9%">{$lang.integral}</th>
+					<th width="9%">{$lang.give_integral}</th>
+					<th width="9%">{$lang.goods_number}</th>
+					<th width="10%">{$lang.brand}</th>
+				  </tr>
+                  </thead>
+                  <tbody>
+				  {foreach from=$goods_list item=goods}
+				  <tr class="bd-line">
+                  	<td><i class="tip icon-plus-sign" ectype="GoodsList" style="color: #C8C8C8; cursor:pointer;" title="点击查看更多信息"></i></td>
+					<td>{$goods.goods_sn}</td>
+					<td class="tl"><span class="blue2">{$goods.goods_name}</span></td>
+					<td><input name="market_price[{$goods.goods_id}]" type="text" value="{$goods.market_price}" size="8" class="text_3 tc" /></td>
+					<td><input name="shop_price[{$goods.goods_id}]" type="text" value="{$goods.shop_price}" size="8" class="text_3 tc" /></td>
+					<td><input name="integral[{$goods.goods_id}]" type="text" value="{$goods.integral}" size="8" class="text_3 tc"/></td>
+					<td><input name="give_integral[{$goods.goods_id}]" type="text" id="give_integral[{$goods.goods_id}]" value="{$goods.give_integral}" size="8" class="text_3 tc" /></td>
+					<td><input name="goods_number[{$goods.goods_id}]" type="text" value="{$goods.goods_number}" size="8" class="text_3 tc" {if $goods.is_real eq 0}readonly="readonly"{/if} /></td>
+					<td><select name="brand_id[{$goods.goods_id}]" style="float:none; margin:0;"><option value="0" {if $goods.brand_id eq 0}selected{/if}>{$lang.select_please}</option>{html_options options=$goods.brand_list selected=goods.brand_id}</select></td>
+				  </tr>
+                  <tr style="display:none;">
+                    <td colspan="10" style="padding:0;">
+                    <div class="ecsc-goods-sku ps-container_2">
+                    	{foreach from=$rank_list item=rank}
+                        <dl>
+                            <dt style="width:80px;">{$rank.rank_name}:</dt>
+                            <dd><input name="member_price[{$goods.goods_id}][{$rank.rank_id}]" type="text" value="{$member_price_list[$goods.goods_id][$rank.rank_id]|default:-1}" size="8" style="text-align:center" /></dd>
+                        </dl>
+                        {/foreach}
+                    </div>
+                    </td>
+                  </tr>
+				  {if product_exists}
+					  {foreach from=$product_list[$goods.goods_id] item=products}
+					  <tr class="bd-line">
+                      	<td>&nbsp;</td>
+						<td>{$products.product_sn}</td>
+						<td><span class="blue2">{$products.goods_attr}</span></td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td><input name="product_number[{$goods.goods_id}][{$products.product_id}]" type="text" value="{$products.product_number}" size="8" style="text-align:center"/></td>
+						<td>&nbsp;</td>
+					  </tr>
+					  {/foreach}
+					{/if}
+				  {/foreach}
+				  {else}
+				  <tr>
+					<th colspan="102" class="tc"><strong>{$lang.goods_name}</strong></th>
+				  </tr>
+				  <tr>
+					<td colspan="102">{foreach from=$goods_list item=goods}<p class="tl mt5 blue3">{$goods.goods_name}</p>{/foreach}</td>
+				  </tr>
+				  <tr>
+					<th class="tc">{$lang.market_price}</th>
+					<th class="tc">{$lang.shop_price}</th>
+					{foreach from=$rank_list item=rank}
+					<th class="tc">{$rank.rank_name}</th>
+					{/foreach}
+					<th class="tc">{$lang.integral}</th>
+					<th class="tc">{$lang.give_integral}</th>
+					<th class="tc">{$lang.goods_number}</th>
+					<th class="tc">{$lang.brand}</th>
+				  </tr>
+				  <tr align="center">
+					<td><input name="market_price" type="text" value="" size="8" class="tc text_5" /></td>
+					<td><input name="shop_price" type="text" size="8" class="tc text_5" /></td>
+					{foreach from=$rank_list item=rank}
+					<td><input name="member_price[{$rank.rank_id}]" type="text" size="8" class="tc text_5" /></td>
+					{/foreach}
+					<td><input name="integral" type="text" size="8" class="tc text_5" /></td>
+					<td><input name="give_integral" type="text" id="give_integral" class="tc text_5" size="8" /></td>
+					<td><input name="goods_number" type="text" size="8" class="tc text_5" /></td>
+					<td><select name="brand_id" style="margin:0; float:none;"><option value="0" selected>{$lang.select_please}</option>{html_options options=$brand_list}</select></td>
+				  </tr>
+				  {/if}
+                  </tbody>
+                  <tfoot>
+				  <tr>
+					<td colspan="20" class="td_border">
+                    	<div class="shenhe tc">
+                            <input type="submit" name="submit" value="{$lang.button_submit}" class="button" />
+                            <input type="reset" name="reset" value="{$lang.button_reset}" class="button button_reset" />
+                            <input type="hidden" name="edit_method" value="{$edit_method}" />
+                            {foreach from=$goods_list item=goods}
+                            <input type="hidden" name="goods_id[]" value="{$goods.goods_id}" />
+                            {/foreach}
+                            {foreach from=$rank_list item=rank}
+                            <input type="hidden" name="rank_id[]" value="{$rank.rank_id}" />
+                            {/foreach}
+                        </div>
+					</td>
+				  </tr>
+                  </tfoot>
+				</table>
+				</form>
+				</div>
+                <!--end-->
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+$(function(){
+	// 获取商品列表
+	$('i[ectype="GoodsList"]').on("click",function(){
+			if($(this).hasClass("icon-plus-sign")){
+				$(this).removeClass('icon-plus-sign').addClass('icon-minus-sign');
+				var parenttr = $(this).parents('tr');
+				parenttr.next().show()
+			}else{
+				$(this).removeClass('icon-minus-sign').addClass('icon-plus-sign');
+				$(this).parents('tr').next().hide();
+			}
+		}
+	);
+				
+	$('.tip').poshytip({
+		className: 'tip-yellowsimple',
+		showTimeout:300,
+		alignTo: 'target',
+		alignX: 'center',
+		alignY: 'top',
+		offsetY: 5,
+	});
+});
+</script>
+</body>
+</html>

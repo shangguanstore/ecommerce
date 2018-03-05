@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<link rel="shortcut icon" href="{__ROOT__}favicon.ico" type="image/png">
+<title>ECTouch控制台登录</title>
+<link href="{__TPL__}css/style.css" rel="stylesheet">
+<link href="{__TPL__}css/style-responsive.css" rel="stylesheet">
+<!--[if lt IE 9]>
+<script src="{__TPL__}js/html5shiv.js"></script>
+<script src="{__TPL__}js/respond.min.js"></script>
+<![endif]-->
+</head>
+
+<body class="login-body">
+	<div class="container">
+		<form class="form-signin" method="post" action="{U('index/index')}">
+			<div class="form-signin-heading text-center">
+				<img src="{__TPL__}images/login-logo.png" alt="" />
+			</div>
+			<div class="login-wrap">
+				<input type="text" class="form-control" placeholder="Name" autofocus>
+				<input type="password" class="form-control" placeholder="Password">
+				<button class="btn btn-lg btn-login btn-block" type="submit">
+					<i class="fa fa-check"></i>
+				</button>
+			</div>
+		</form>
+	</div>
+	<script src="{__TPL__}js/jquery-1.10.2.min.js"></script>
+	<script src="{__TPL__}js/bootstrap.min.js"></script>
+	<script src="{__TPL__}js/modernizr.min.js"></script>
+</body>
+</html>

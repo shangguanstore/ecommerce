@@ -1,0 +1,90 @@
+{if $full_page}
+<!doctype html>
+<html>
+{include file='pageheader.dwt'}
+<div class="content">
+	<div class="title">{$page_title}</div>
+    <div class="explanation" id="explanation">
+        <i class="sc_icon"></i>
+        <ul>
+            <li>门店商品默认为网店所有的商品，通过增加库存添加门店商品，门店商品库存根据门店实际库存添加，与系统库存无关。</li>
+            <li>请详细填写有属性的商品库存，以免影响下单。</li>
+        </ul>
+    </div>
+    <div class="common-head">
+    	<div class="search">
+        	<input type="text" class="text" name="keyword" placeholder="请输入关键字" />
+            <button class="btn" name="search" onclick="searchGoods()">搜索</button>
+        </div>
+    </div>
+    <div class="list-div" id="listDiv">
+	{/if}  
+	<table class="table">
+        <thead>
+            <tr>
+            	<th width="8%" class="first">编号</th>
+                <th width="48%" class="tl">{$lang.goods_name}</th>
+                <th width="12%">{$lang.goods_sn}</th>
+                <th width="12%">{$lang.shop_price}</th>
+                <th width="10%">{$lang.store_inventory}</th>
+                <th width="10%" class="last">{$lang.handler}</th>
+            </tr>
+        </thead>
+        <tbody>
+        	{foreach from=$goods_list item=goods key=key}
+        	<tr>
+            	<td class="first">{$key}</td>
+                <td class="tl">
+                	<div class="product">
+                    	<div class="img"><img src="../{$goods.goods_thumb}" width="45" height="45" /></div>
+                    	<div class="name">
+                            <a href="../goods.php?id={$goods.goods_id}" target="_blank">{$goods.goods_name}</a>
+                            {if $goods.have_goods_attr}<span style="color:red;">（{$lang.have_attr}）</span>{/if}
+                        </div>
+                    </div>
+                </td>
+                <td>{$goods.goods_sn}</td>
+                <td>{$goods.formated_shop_price}</td>
+                <td>{$goods.store_goods_number}</a></td>
+                <td class="handle last"><a href="goods.php?act=info&goods_id={$goods.goods_id}" class="btn_pencil"><i class="icon icon-pencil"></i>库存</a></td>
+            </tr>
+            {foreachelse}
+            <tr class="tfoot"><td class="no-records" colspan="11">{$lang.no_records}</td></tr>
+            {/foreach}
+        </tbody>
+        <tfoot>
+        	<tr>
+            	<td colspan="10">{include file='page.dwt'}</td>
+            </tr>
+        </tfoot>
+	</table>
+	{if $full_page}
+	</div>
+</div>
+<script>
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+  
+  function searchGoods()
+  {
+    var keyword = $("input[name=keyword]").val();
+    listTable.filter['keyword'] = Utils.trim(keyword);
+	listTable.filter['page'] = 1;
+	listTable.loadList();
+  }
+  function resize(){
+	var height = $(".content").height();
+	var wheight = $(window).height();
+	if(wheight>height){
+		$(".footer").css({"position":"absolute","bottom":0});
+	}else{
+		$(".footer").css({"position":"static","bottom":0});
+	}
+  }
+</script>
+{include file='pagefooter.dwt'}
+{/if}

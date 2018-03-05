@@ -1,0 +1,22 @@
+{include file="header"}
+<div class="title">微信通设置</div>
+<div class="content_tips">
+	<div class="flexilist">
+		<div class="main-info">
+			<form method="post" action="{url('wechat/setting')}">
+			{loop $setting $key $vo}
+			<div class="item">
+				<div {if $key==0} width="160"{/if} class="label-t">{$vo['name']}</div>
+				<div class="label_value">{$vo['html']}</div>
+			</div>
+			{/loop}
+			<div class="item">
+				<div class="label-t">&nbsp;</div>
+				<div class="label_value info_btn"><input type="submit" name="submit" value="提 交" class="button"></div>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+</body>
+</html>

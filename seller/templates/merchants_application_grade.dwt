@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+				{include file ='library/seller_menu_tab.lbi'}
+                <form method="post" enctype="multipart/form-data" action="merchants_upgrade.php" name="theForm"  onsubmit="return validate();">
+                    <table border="0" cellpadding='1' cellspacing='1' class="ecsc-default-table ecsc-table-seller application_grade mt20">
+                    {if $seller_apply_info.apply_status eq 2}
+                        <tr>
+                        	<th colspan="2" class="red">审核未通过</th>
+                        </tr>
+                        <tr>
+                            <td class="label">未通过原因：</td>
+                            <td class="total">{$seller_apply_info.reply_seller}</td>
+                        </tr>
+                    {/if}
+                    {if $seller_grade}
+                        <tr>
+                        	<th colspan="2">{$lang.grade_info}</th>
+                        </tr>
+                        <tr>
+                            <td class="label">{$lang.now_grade}：</td>
+                            <td class="red">{$seller_grade.grade_name}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">{$lang.in_time}：</td>
+                            <td>{$seller_grade.addtime}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">{$lang.end_time}：</td>
+                            <td>{$seller_grade.end_time}</td>
+                        </tr>
+                    {if $seller_grade.refund_price > 0 || $seller_apply_info.refund_price > 0}
+                        <tr>
+                            <td class="label">{$lang.refund_grade}：</td>
+                            <td class="total">￥<em>{if $seller_apply_info.refund_price}{$seller_apply_info.refund_price}{else}{$seller_grade.refund_price}{/if}</em>
+                            <input type="hidden" value="{if $seller_apply_info.refund_price}{$seller_apply_info.refund_price}{else}{$seller_grade.refund_price}{/if}" name='refund_price'>
+                            </td>
+                        </tr>
+                    {/if}
+                    {/if}
+
+                    {foreach from = $entry_criteriat_info item = info}
+                    {if $info.child}
+                        <tr>
+                            <th colspan="2">{$info.criteria_name}</th>
+                        </tr>
+                        {foreach from=$info.child  item=child}
+                        <tr>
+                            <td class="label">
+                                {if $child.is_mandatory eq 1}{$lang.require_field}&nbsp;{/if}{$child.criteria_name}：
+                            </td>
+                            {if $child.type eq 'text'}
+                            <td><input name='value[{$child.id}]' type='text' class="text text_2"  value="{$apply_criteria.$child.id}"/></td>
+                            {elseif $child.type eq 'select'}
+                            <td><select name='value[{$child.id}]' class="select"/>
+                                <option >{$lang.select_please}</option>
+                                {foreach from=$child.option_value item=value}
+                                <option value="{$value}" {if $apply_criteria.$child.id = '$value'} selected="selected" {/if}>{$value}</option>
+                                {/foreach}
+                                </select>
+                            </td>
+                            {elseif $child.type eq 'textarea'}
+                            <td>
+                                <textarea name='value[{$child.id}]'/>{$apply_criteria.$child.id}</textarea>
+                            </td>
+                            {elseif $child.type eq 'file'}
+                            <td>
+                                <input  name='value[{$child.id}]' type='file'/>
+                                {if $apply_criteria.$child.id}
+                                <a href='../{$apply_criteria.$child.id}' target="_blank"/><img src="../{$apply_criteria.$child.id}" width="80" height='80'/></a>
+                                <input type="hidden" value="{$apply_criteria.$child.id}" name='file_url[{$child.id}]'>
+                                {/if}
+                                <input type="hidden" value="{$child.id}" name='file_id[]'>
+                            </td>
+                            {elseif $child.type eq 'charge' &&  $child.charge > 0}
+                            <td>
+                                <span class="red">{$child.charge}/年</span>
+                            </td>
+                            {/if}
+                        </tr>
+                        {/foreach}
+                    {/if}
+                    {/foreach}
+                    {if $entry_criteriat_info.count_charge > 0}
+                        <tr>
+                        	<th colspan="2">{$lang.information_count}</th>
+                        </tr>
+                        <tr>
+                            <td class="label">入驻年限：</td>
+                            <td>
+                            	<input type="button" value="-" class="jian" onclick="add_charge('reduce')" >
+                                <input type='text' class="nian_number" value="{if $seller_apply_info.fee_num}{$seller_apply_info.fee_num}{else}1{/if}" name="fee_num" value="1" onkeyup="add_charge('keyup')">
+                                <input type="button" class="jia" value="+" onclick="add_charge('add')">
+                                <input type="hidden" value="{$entry_criteriat_info.count_charge}" name='count_charge'>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="label">{$lang.require_field}&nbsp;支付方式：</td>
+                            <td align="left" >
+                            <!--{foreach from=$pay item=pay name=payName}-->
+                                {if $pay.pay_code neq 'onlinepay' && $pay.pay_code neq 'chunsejinrong'}
+                                <span id="{$pay.pay_id}" class="sub_pay sub_border {if $seller_apply_info.pay_id eq $pay.pay_id}sub_border2{/if}" >{$pay.pay_name}</span>
+                                { /if}
+                            <!--{/foreach}-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">合计：</td>
+                            <td class="total">￥<em id="count_charge">{$entry_criteriat_info.count_charge}</em></td>
+                        </tr>
+                    {/if}
+                    {if $seller_apply_info.pay_online && $seller_apply_info.pay_status eq 0}
+                        <tr>
+                            <th colspan="2" style="background-color: #fff;height:40px;">{$seller_apply_info.pay_online}</th>
+                        </tr>
+                    {/if}
+
+                        <tr>
+                            <td colspan="2" class="grade_btn">
+                                {if $seller_apply_info.pay_status eq 0 && $seller_apply_info.apply_status eq 0}
+                                <input type="submit" class="button" name="sub" value="{$lang.button_submit}" />
+                                <input type="reset"onclick="add_charge('reset')"  class="button button_reset" value="{$lang.button_reset}" />
+                                {/if}
+                                <input type="hidden" name="grade_id" value="{$grade_id}"/>
+                                <input type="hidden" name="all_count_charge"  value="{$seller_apply_info.total_amount}"/>
+                                <input type="hidden" name="pay_id" id="pay_id" value="{$seller_apply_info.pay_id}">
+                                <input type="hidden" name="apply_id"  value="{$seller_apply_info.apply_id}">
+                                <input type="hidden" name="apply_sn"  value="{$seller_apply_info.apply_sn}">
+                                <input type="hidden" name="act"  value="{if $act eq 'application_grade'}insert_submit{else}update_submit{/if}">
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+{insert_scripts files="../js/utils.js,validator.js"}
+<script language="JavaScript">
+    function validate()
+{
+    var validator  = new Validator("theForm");
+    
+    {foreach from = $entry_criteriat_info item = info}
+        {if $info.child}
+            {foreach from=$info.child  item=child}
+                {if $child.is_mandatory eq 1 && $child.type neq 'charge'}
+                    var name="value[{$child.id}]";
+                    var prompt  = "{$child.criteria_name}不能为空"
+                    validator.required(name,  prompt);
+                {/if}
+            {/foreach}
+        {/if}
+    {/foreach}
+    
+    var count_charge = "{$entry_criteriat_info.count_charge}"
+    if(count_charge > 0){
+        validator.required("pay_id",  "请选择支付方式");
+    }
+    return validator.passed();
+}
+
+window.onload = function()
+{
+    // 开始检查订单
+    startCheckOrder();
+    add_charge();
+}
+    /*年限操作发生事件*/
+   function add_charge(i){
+        var re = /^[1-9]+[0-9]*]*$/; //大于0整数数字
+        var all_count_charge = document.forms['theForm'].elements['all_count_charge'];
+        var price_one = document.forms['theForm'].elements['count_charge'].value;
+        var num = document.forms['theForm'].elements['fee_num'];
+        var count = document.getElementById('count_charge');
+        if(i == 'reduce'){
+            if(num.value == 1){
+                alert("缴纳年限不能小于1");
+            }else{
+                num.value = parseInt(num.value)-1;
+                all_count_charge.value = count.innerHTML = Number(count.innerHTML) - Number(price_one);
+            }
+        }else if(i == 'reset'){
+             all_count_charge.value = count.innerHTML = Number(price_one);
+        }else if (i == 'add'){
+           
+            num.value = parseInt(num.value)+1;
+            all_count_charge.value  = count.innerHTML = Number(count.innerHTML) + Number(price_one);
+        }else if(i == 'keyup'){
+            if(!re.test(num.value)){
+                alert('输入内容不合法');
+            }else{
+                all_count_charge.value =  count.innerHTML = parseInt(num.value) * Number(price_one);
+            }
+        }else{
+            all_count_charge.value =  count.innerHTML = parseInt(num.value) * Number(price_one);
+        }
+   }
+ 
+</script>
+<script language="JavaScript">
+$(function(){
+    $(".sub_pay").click(function(){
+         var pay_id = $(this).attr('id');
+         $("#pay_id").val(pay_id);
+        $(this).addClass("sub_border2").siblings().removeClass('sub_border2');
+    })
+});     
+</script>
+</body>
+</html>

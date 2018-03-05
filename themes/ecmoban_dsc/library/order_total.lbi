@@ -1,0 +1,184 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<div class="order-summary">
+    <div class="statistic">
+        <div class="list">
+            <span>{$lang.goods_all_price}：</span>
+            <em class="price" id="warePriceId">{$total.goods_price_formated}</em>
+        </div>
+        <!-- {if $total.discount gt 0} 折扣 -->
+        <div class="list">
+            <span>{$lang.discount}：</span>
+            <em class="price" id="cachBackId"> -{$total.discount_formated}</em>
+        </div>
+        <!-- {/if} -->
+        <!-- {if $total.tax gt 0} 税 -->
+        <div class="list">
+            <span>{$lang.tax}：</span>
+            <em class="price" id="cachBackId"> +{$total.tax_formated}</em>
+        </div>
+        <!-- {/if} -->
+        <!-- {if $total.shipping_fee > 0} 配送费用 -->
+        <div class="list">
+            <span>{$lang.shipping_fee}：</span>
+            <em class="price" id="freightPriceId">
+                 +{$total.shipping_fee_formated}
+            </em>
+        </div>
+        <!-- {/if} -->
+        
+        <!-- {if $total.shipping_insure > 0} 保价费用 -->
+        <div class="list">
+            <span>{$lang.insure_fee}：</span>
+            <em class="price" id="cachBackId"> +{$total.shipping_insure_formated}</em>
+        </div>
+        <!-- {/if} -->
+        <!-- {if $total.pay_fee > 0} 支付费用 -->
+        <div class="list">
+            <span>{$lang.pay_fee}：</span>
+            <em class="price" id="cachBackId"> +{$total.pay_fee_formated}</em>
+        </div>
+        <!-- {/if} -->
+        <!-- {if $total.pack_fee > 0} 包装费用-->
+        <div class="list">
+            <span>{$lang.pack_fee}：</span>
+            <em class="price" id="cachBackId"> +{$total.pack_fee_formated}</em>
+        </div>
+        <!-- {/if} -->
+        <!-- {if $total.card_fee > 0} 贺卡费用-->
+        <div class="list">
+            <span>{$lang.card_fee}：</span>
+            <em class="price" id="cachBackId"> +{$total.card_fee_formated}</em>
+        </div>
+        <!-- {/if} -->
+        
+        <!-- {if $total.surplus > 0 or $total.integral > 0 or $total.bonus > 0 or $total.coupons>0} 使用余额或积分或红包或优惠券 -->
+            <!-- {if $total.surplus > 0} 使用余额 -->
+            <div class="list">
+                <span>{$lang.use_surplus}：</span>
+                <em class="price" id="cachBackId"> -{$total.surplus_formated}</em>
+            </div>
+            <!-- {/if} -->
+            <!-- {if $total.integral > 0} 使用积分 -->
+            <div class="list">
+                <span>{$lang.use_integral}：</span>
+                <em class="price" id="cachBackId"> -{$total.integral_formated}</em>
+            </div>
+            <!-- {/if} -->
+            <!-- {if $total.bonus > 0} 使用红包 -->
+            <div class="list">
+                <span>{$lang.use_bonus}：</span>
+                <em class="price" id="cachBackId"> -{$total.bonus_formated}</em>
+            </div>
+            <!-- {/if} -->
+            <!-- {if $total.coupons > 0} 使用优惠券 -->
+            <div class="list">
+                <span>使用优惠券：</span>
+                <em class="price" id="cachBackId"> -{$total.coupons_formated}</em>
+            </div>
+            <!-- {/if} -->
+        <!-- {/if} 使用余额或积分或红包或优惠券 -->
+    </div>
+</div>
+<div class="trade-foot">
+    <div class="checkout-buttons">
+        <div class="sticky-wrap">
+            <div class="inner">
+                <input name="goods_flow_type" value="{$goods_flow_type}" type="hidden">
+                <input name="rec_number_str" value="" type="hidden">
+                 <input type="hidden" id="store_id" name='store_id' value="{$store_id}"/>
+				<input type="hidden" id="store_seller" value="{$store_seller}" name="store_seller">
+                <div class="btn-area">
+                    <input type="submit" class="submit-btn" value="提交订单"/>
+                </div>
+                <span class="total">
+                    <!--{if $total.exchange_integral }消耗积分-->
+                    <span class="txt flow_exchange_goods">{$lang.notice_eg_integral}</span>
+                    <strong id="payPriceId" class="flow_exchange_goods">{$total.exchange_integral}</strong>
+                    <span class="txt" style="padding-left:15px; display:none">
+                        使用支付类型：
+                        <select name="pay_type" id="sel_pay_type">
+                            <option value="0">RMB支付</option>
+                            <option value="1" {if $is_exchange_goods eq 1}selected{/if}>积分支付</option>
+                        </select>
+                    </span>
+                    &nbsp;&nbsp;
+                    <!--{/if}-->
+                    
+                    <span class="txt flow_general_goods">{$lang.total_fee}：</span>
+                    <strong id="payPriceId" class="flow_general_goods">{$total.amount_formated}</strong>
+                </span>
+                <div class="amount-sum">已选择<em>{$cart_goods_number}</em>件商品</div>
+                {if $is_group_buy}<div class="amount-sum"><strong>{$lang.notice_gb_order_amount}</strong></div>{/if}
+            </div>
+        </div>
+    </div>
+    <div class="consignee-foot {if $is_address eq 1}hide{/if}">
+        {if $goods_flow_type eq 101}
+        <p>寄送至：{$consignee.consignee_address}</p>
+        {/if}
+        <p>收货人：{$consignee.consignee} {$consignee.mobile}</p>
+    </div>
+</div>    
+<script type="text/javascript">
+$(function(){
+	$("input[name='rec_number']").each(function(index, element) {
+        if($(element).val() == 1){
+                        var store_id = document.getElementById('store_id').value;
+                        (store_id > 0) ? store_id : 0;
+			$(".inner .btn-area").addClass('no_goods');
+			$(".inner .btn-area").attr('data-url', 'ajax_dialog.php?act=goods_stock_exhausted&warehouse_id={$warehouse_id|default:0}&area_id={$area_id|default:0}&store_id='+store_id+'&store_seller={$store_seller}');
+			$(".inner .btn-area").html('<input type="button" class="submit-btn" value="提交订单"/>');
+			return false;
+		}
+    });
+	
+	var rec_number = new Array();
+	$("input[name='rec_number']").each(function(index, element) {	
+		if($(element).val() == 1){
+			rec_number.push($(element).attr('id'));
+		}
+    });
+	
+	$("input[name='rec_number_str']").val(rec_number);
+	
+	<!--{if $is_exchange_goods eq 1 || $total.real_goods_count eq 0}-->
+	$('.flow_exchange_goods').show();
+			
+	$('#sel_pay_type').change(function(){
+		var T = $(this);
+		var val = T.val();
+		if(val == 1){
+			$('.payment-list').parent().parent('.step-complete').hide();
+			$('.flow_general_goods').hide();
+			$('.flow_exchange_goods').show();
+		}else{
+			$('.payment-list').parent().parent('.step-complete').show();
+			$('.flow_general_goods').show();
+			$('.flow_exchange_goods').hide();
+		}
+	});
+	<!--{/if}-->
+	
+	function checkScroll(){
+		var winHeight = $(window).height();
+		var checkout = $(".checkout-buttons");
+		var checkoutTop = checkout.offset().top;
+		$(window).resize(function(){
+			winHeight = $(window).height();
+		});
+		
+		if(checkoutTop>winHeight){
+			checkout.addClass("ui-ceilinglamp-current");
+		}
+		$(window).scroll(function(){
+			var scrollTop = $(document).scrollTop();
+			if(scrollTop+winHeight>checkoutTop){
+				checkout.removeClass("ui-ceilinglamp-current");
+			}else{
+				checkout.addClass("ui-ceilinglamp-current");
+			}
+		});
+	}
+	checkScroll();
+});
+</script>

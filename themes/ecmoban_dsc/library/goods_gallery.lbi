@@ -1,0 +1,39 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<div class="preview">
+    <div class="gallery_wrap">
+        <a href="{if $pictures.0.img_url}{$pictures.0.img_url}{else}{$goods.goods_img}{/if}" class="MagicZoomPlus" id="Zoomer" rel="hint-text: ; selectors-effect: false; selectors-class: img-hover; zoom-distance: 10;zoom-width: 400; zoom-height: 474;"><img src="themes/ecmoban_dsc/images/loadGoods3.gif" id="J_prodImg" alt="{$goods.goods_name|escape:html}" width="405" height="405" class="lazy" data-original="{if $pictures.0.img_url}{$pictures.0.img_url}{else}{$goods.goods_img}{/if}"/></a>
+    </div>
+    <div class="spec-list">
+        <a href="javascript:void(0);" class="spec-prev"></a>
+        <a href="javascript:void(0);" class="spec-next"></a>
+        <div class="spec-items">
+            <ul>
+            	{if !$pictures.0.img_url && $goods.goods_img}
+                <li><a href="{$goods.goods_img}" rel="zoom-id: Zoomer" rev="{$goods.goods_img}"><img src="themes/ecmoban_dsc/images/loadGoods.gif" alt="{$goods.goods_name}" width="60" height="60" class="lazy" data-original="{$goods.goods_img}"/></a></li>
+                {/if}
+            	<!-- {if $pictures}--> 
+                <!-- {foreach from=$pictures item=picture name=foo}-->
+                <li><a href="{if $picture.img_url}{$picture.img_url}{else}{$picture.thumb_url}{/if}" rel="zoom-id: Zoomer" rev="{if $picture.img_url}{$picture.img_url}{else}{$picture.thumb_url}{/if}"><img src="themes/ecmoban_dsc/images/loadGoods.gif" alt="{$goods.goods_name}" width="60" height="60" class="lazy" data-original="{if $picture.thumb_url}{$picture.thumb_url}{else}{$picture.img_url}{/if}"/></a></li>
+                <!--{/foreach}--> 
+              	<!-- {/if}-->
+            </ul>
+        </div>
+    </div>
+    <div class="short-share">
+        <div class="short-share-r"><!-- {if $cfg.show_goodssn} 显示商品货号-->{$lang.bar_code}<em id="bar_code"></em><!-- {/if} --></div>
+    	<div id="compare">
+          <a href="javascript:;" class="btn-compare" id="compareLink" style=" margin-left:10px;">
+       	  	<input id="{$goods.goods_id}" type="checkbox" onClick="Compare.add(this, {$goods.goods_id},'{$goods.goods_name|escape:"html"}','{$goods.goods_type}', '{$goods.goods_thumb}', '{$goods.shop_price}', '{$goods.market_price}')" style=" vertical-align:middle; margin-left:8px;"/>&nbsp;&nbsp;<label for="{$goods.goods_id}" style=" line-height:25px; height:25px;">对比</label>
+          </a>
+        </div>
+        <div class="collecting"><a href="javascript:void(0);" class="choose-btn-coll {if $goods.is_collect}selected{/if}"  data-dialog="goods_collect_dialog" data-divid="goods_collect" data-url="user.php?act=collect" data-goodsid="{$goods.goods_id}" data-width="455" data-height="58" data-title="提示"><b></b>收藏<em id="collect_count">({$goods.collect_count})</em></a></div>
+        <div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare" style="float:right;"><a class="bds_more" href="#none" style="background:url(../images/fx.png) 0px 10px no-repeat !important;color: #666;line-height: 25px;height: 25px;margin: 4px 15px 4px 10px;padding-left: 20px; padding-top:5px;display: block; float:right;">分享</a></div>
+    </div>
+</div>
+
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=692785" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+	document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + new Date().getHours();
+</script>

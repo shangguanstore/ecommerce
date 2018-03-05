@@ -1,0 +1,140 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div class="search-form">
+                    <form action="javascript:searchSnatch()" name="searchForm">
+                    	<div class="fr">
+                        <label>{$lang.snatch_name}</label>
+                        <input type="text" name="keyword" class="text text_2 mr10" />
+                        <label class="submit-border">
+                        	<input type="submit" value="{$lang.button_search}" class="button" />
+                        </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="list-div" id="listDiv">
+                {/if}
+                    <table class="ecsc-default-table">
+                        <thead>
+                            <tr>
+                                <th width="8%">编号</th>
+                                <th width="30%">活动名称</th>
+                                <!--<th class="tl">商品名称</th>-->
+                                <th width="15%">活动开始时间</th>
+                                <th width="15%">活动结束时间</th>
+                                <th width="8%">价格下限</th>
+                                <th width="8%">消耗积分</th>
+                                <th width="8%">是否热销</th>
+                                <th width="15%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {foreach from=$snatch_list item=snatch}
+                        <tr class="bd-line">
+                            <td>
+                                <label>{$snatch.act_id}</label>
+                            </td>
+                            <td class="tl"><span class="activity_name w290" title="{$snatch.snatch_name}">{$snatch.snatch_name}</span></td>
+                            <!--<td>{$snatch.goods_name}</td>-->
+                            <td>{$snatch.start_time}</td>
+                            <td>{$snatch.end_time}</td>
+                            <td>{$snatch.start_price}</td>
+                            <td>{$snatch.cost_points}</td>
+                            <td><img src="images/{if $snatch.is_hot eq 1}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_hot', {$snatch.act_id})" /></td>
+                            <td>
+                            <a href="snatch.php?act=view&amp;snatch_id={$snatch.act_id}" class="btn-green"><i class="icon icon-search"></i></a>
+                            <a href="snatch.php?act=edit&amp;id={$snatch.act_id}" class="btn-blue"><i class="icon icon-edit"></i></a>
+                            <a href="javascript:;" onclick="listTable.remove({$snatch.act_id},'{$lang.drop_confirm}')" title="{$lang.remove}" ectype="btn_del_xianshi" data-xianshi-id="8" class="btn-red"><i class="icon icon-trash"></i></a>
+                            </td>
+                        </tr>
+                        {foreachelse}
+                        <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+                        {/foreach}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="20">
+                                {include file="page.dwt"}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    {if $full_page}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+<!--
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+
+  {literal}
+  onload = function()
+  {
+      // 开始检查订单
+      startCheckOrder();
+  }
+  
+  {if $priv_ru eq 1}
+    function get_store_search(val){
+        if(val == 1){
+            document.forms['searchForm'].elements['merchant_id'].style.display = '';
+            document.forms['searchForm'].elements['store_keyword'].style.display = 'none';
+            document.forms['searchForm'].elements['store_type'].style.display = 'none';
+        }else if(val == 2){
+            document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+            document.forms['searchForm'].elements['store_keyword'].style.display = '';
+            document.forms['searchForm'].elements['store_type'].style.display = 'none';
+        }else if(val == 3){
+            document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+            document.forms['searchForm'].elements['store_keyword'].style.display = '';
+            document.forms['searchForm'].elements['store_type'].style.display = '';
+        }else{
+            document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+            document.forms['searchForm'].elements['store_keyword'].style.display = 'none';
+            document.forms['searchForm'].elements['store_type'].style.display = 'none';
+        }
+    }
+    {/if}
+
+  /**
+   * 搜索文章
+   */
+  function searchSnatch()
+  {
+      {if $priv_ru eq 1}
+        listTable.filter['store_search'] = Utils.trim(document.forms['searchForm'].elements['store_search'].value);
+        listTable.filter['merchant_id'] = Utils.trim(document.forms['searchForm'].elements['merchant_id'].value);
+        listTable.filter['store_keyword'] = Utils.trim(document.forms['searchForm'].elements['store_keyword'].value);
+        listTable.filter['store_type'] = Utils.trim(document.forms['searchForm'].elements['store_type'].value);
+        {/if}
+        
+    var keyword = Utils.trim(document.forms['searchForm'].elements['keyword'].value);
+    listTable.filter.keywords = keyword;
+    listTable.filter.page = 1;
+    listTable.loadList();
+  }
+  {/literal}
+//-->
+</script>
+</body>
+</html>
+{/if}

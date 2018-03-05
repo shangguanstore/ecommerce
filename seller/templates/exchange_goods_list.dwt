@@ -1,0 +1,146 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div class="search-form">
+                  <form action="javascript:searchArticle()" name="searchForm">
+                  	<div class="fr">
+                    <label>{$lang.title}</label>
+                    <input type="text" name="keyword" id="keyword" class="text text_2" />
+                    <label class="submit-border"><input type="submit" value="{$lang.button_search}" class="button" /></label>
+                    </div>
+                  </form>
+                </div>
+
+                <form method="POST" action="exchange_goods.php?act=batch_remove" name="listForm">
+                <!-- start cat list -->
+                <div class="list-div" id="listDiv">
+                {/if}
+                <table class="ecsc-default-table">
+                    <thead>
+                        <tr>
+                            <th width="8%">
+                                <div class="first_all">
+                                    <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" class="checkbox"><a href="javascript:listTable.sort('goods_id'); ">{$lang.goods_id}</a>
+                                    <div class="img">{$sort_goods_id}</div>
+                                </div>
+                            </th>
+                            <th width="42%"><a href="javascript:listTable.sort('goods_name'); ">{$lang.goods_name}</a><div class="img">{$sort_goods_name}</div></th>
+                            <th width="10%"><a href="javascript:listTable.sort('exchange_integral'); ">{$lang.exchange_integral}</a><div class="img">{$sort_exchange_integral}</div></th>
+                            <th width="10%"><a href="javascript:listTable.sort('is_exchange'); ">{$lang.is_exchange}</a><div class="img">{$sort_is_exchange}</div></th>
+                            <th width="10%"><a href="javascript:listTable.sort('is_hot'); ">{$lang.is_hot}</a><div class="img">{$sort_is_hot}</div></th>
+                            <th width="10%"><a href="javascript:listTable.sort('is_best'); ">{$lang.is_best}</a><div class="img">{$sort_is_best}</div></th>
+                            <th width="10%">{$lang.handler}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {foreach from=$goods_list item=list}
+                      <tr class="bd-line">
+                        <td class="first_td_checkbox"><div class="first_all"><input name="checkboxes[]" type="checkbox" value="{$list.goods_id}" id="{$list.goods_id}" class="checkbox"/><label for="{$list.goods_id}">{$list.goods_id}</label></div></td>
+                        <td class="tl"><span class="activity_name w410">{$list.goods_name|escape:html}</span></td>
+                        <td align="center"><span onclick="listTable.edit(this, 'edit_exchange_integral', {$list.goods_id})">{$list.exchange_integral}</span></td>
+                        <td align="center"><img src="images/{if $list.is_exchange eq 1}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_exchange', {$list.goods_id})" /></td>
+                        <td align="center"><img src="images/{if $list.is_hot eq 1}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_hot', {$list.goods_id})" /></td>
+                        <td align="center"><img src="images/{if $list.is_best eq 1}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_best', {$list.goods_id})" /></td>
+                        <td align="center" class="handler_icon">
+                          <a href="../exchange.php?id={$list.goods_id}&act=view" target="_blank" title="{$lang.view}"><i class="icon icon-search"></i></a>
+                          <a href="exchange_goods.php?act=edit&id={$list.goods_id}" title="{$lang.edit}"><i class="icon icon-edit"></i></a>
+                          <a href="javascript:;" onclick="listTable.remove({$list.goods_id}, '{$lang.drop_confirm}')" title="{$lang.remove}"><i class="icon icon-trash"></i></a>
+                        </td>
+                       </tr>
+                       {foreachelse}
+                        <tr><td class="no-records" colspan="7">{$lang.no_records}</td></tr>
+                      {/foreach}
+                    </tbody>
+                    <tfoot>
+                    	<tr>
+                        	<td class="td_border" colspan="7">
+                                <div class="shenhe">
+                                	<input type="submit" name="drop" id="btnSubmit" value="{$lang.drop}" class="button btn_disabled" disabled="true" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="20">
+                            {include file="page.dwt"}
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                {if $full_page}
+              </div>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+<!--
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+  {literal}
+
+  onload = function()
+  {
+    // 开始检查订单
+    startCheckOrder();
+  }
+  
+  {if $priv_ru eq 1}
+  function get_store_search(val){
+    if(val == 1){
+      document.forms['searchForm'].elements['merchant_id'].style.display = '';
+      document.forms['searchForm'].elements['store_keyword'].style.display = 'none';
+      document.forms['searchForm'].elements['store_type'].style.display = 'none';
+    }else if(val == 2){
+      document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+      document.forms['searchForm'].elements['store_keyword'].style.display = '';
+      document.forms['searchForm'].elements['store_type'].style.display = 'none';
+    }else if(val == 3){
+      document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+      document.forms['searchForm'].elements['store_keyword'].style.display = '';
+      document.forms['searchForm'].elements['store_type'].style.display = '';
+    }else{
+      document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+      document.forms['searchForm'].elements['store_keyword'].style.display = 'none';
+      document.forms['searchForm'].elements['store_type'].style.display = 'none';
+    }
+  }
+  {/if}
+
+ /* 搜索文章 */
+ function searchArticle()
+ {
+   {if $priv_ru eq 1}
+    listTable.filter['store_search'] = Utils.trim(document.forms['searchForm'].elements['store_search'].value);
+    listTable.filter['merchant_id'] = Utils.trim(document.forms['searchForm'].elements['merchant_id'].value);
+    listTable.filter['store_keyword'] = Utils.trim(document.forms['searchForm'].elements['store_keyword'].value);
+    listTable.filter['store_type'] = Utils.trim(document.forms['searchForm'].elements['store_type'].value);
+    {/if}
+    
+    listTable.filter.keyword = Utils.trim(document.forms['searchForm'].elements['keyword'].value);
+    listTable.filter.page = 1;
+    listTable.loadList();
+ }
+  {/literal}
+//-->
+</script>
+</body>
+</html>
+{/if}

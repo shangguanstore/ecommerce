@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+    	{include file ='library/seller_menu_left.lbi'}
+		<div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div class="wrapper-list ecsc-form-default">
+                <form method="post" action="seller_shop_slide.php" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
+                <dl>
+                	<dt>{$lang.require_field}&nbsp;{$lang.adv_image}：</dt>
+                    <dd>
+                    	<input type="file" name="img_url" id="logo" size="45" class="file mt5 mb5">
+                        <label class="blue_label" id="warn_brandlogo">(建议图片尺寸1900x500)</label><br />
+                        {if $slide.img_url neq ""}<div class="seller_img2"><img src="{$slide.img_url}" width="230" height="60"/></div>{/if}
+                    </dd>
+                </dl>
+                <dl>
+                	<dt>{$lang.sort_order}：</dt>
+                    <dd><input type="text" name="img_order" maxlength="40" size="15" value="{$slide.img_order}" class="text text_5" /></dd>
+                </dl>
+                 <dl>
+                	<dt>{$lang.require_field}&nbsp;{$lang.adv_href}：</dt>
+                    <dd>
+                    	<input type="text" name="img_link" size="50" value="{$slide.img_link}" class="text" />
+                        <label class="blue_label">{$lang.adv_href_notice}</label>
+                    </dd>
+                </dl>
+                <dl>
+                	<dt>{$lang.whether_display}：</dt>
+                    <dd>
+                    	<label class="mr10"><input type="radio" name="is_show" value="1" class="checkbox" {if $slide.is_show eq 1}checked="checked"{/if} />{$lang.yes}</label>
+                        <label><input type="radio" name="is_show" value="0" class="checkbox" {if $slide.is_show eq 0}checked="checked"{/if} />{$lang.no}</label>
+                    </dd>
+                </dl>
+                <dl>
+                	<dt>{$lang.image_transform}：</dt>
+                    <dd>
+                    	<label class="mr10"><input type="radio" name="slide_type" value="shade" class="checkbox" {if $slide.slide_type eq 'shade'}checked="checked"{/if} />{$lang.gradient}</label>
+                        <label><input type="radio" name="slide_type" value="roll" class="checkbox" {if $slide.slide_type eq 'roll'}checked="checked"{/if} />{$lang.roll}</label>
+                        <label class="blue_label">{$lang.image_transform_notice}</label>
+                    </dd>
+                </dl>
+                <dl>
+                	<dt>{$lang.images_explain}：</dt>
+                    <dd><textarea name="img_desc" class="textarea">{$slide.img_desc}</textarea></dd>
+                </dl>
+                <div class="bottom">
+                	<div class="button_info">
+                        <input type="submit" class="button" value="{$lang.button_submit}" />
+                        <input type="reset" class="button button_reset ml10" value="{$lang.button_reset}" />
+                        <input type="hidden" name="act" value="{$form_action}" />
+                        <input type="hidden" name="id" value="{$slide.id}" />
+                        <input type="hidden" name="old_img" value="{$slide.img_url}">
+                    </div>
+                </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="library/seller_footer.lbi"}
+{literal}
+<script language="JavaScript">
+<!--
+onload = function()
+{
+    // 开始检查订单
+    startCheckOrder();
+}
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+    validator = new Validator("theForm");
+//    validator.required("img_url",'必须上传图片');
+//    return validator.passed();
+}
+//-->
+</script>
+{/literal}
+</body>

@@ -1,0 +1,118 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+{include file ='library/seller_html_head.lbi'}
+{insert_scripts files='./sms/sms.js'}
+</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+				{include file ='library/seller_menu_tab.lbi'}
+                {/if}
+                <form method="post" action="merchants_account.php" name="listForm" onsubmit="return accountCheck();">
+                <div class="table_list security-form" id="listDiv">
+                    <table class="table_item" width="95%">
+                        <tr>
+                            <td class="label">{$lang.label_deposit_balance}：</td>
+                            <td colspan="3" style="color:#ff5256" id="seller_money">
+                            	{$seller_shopinfo.seller_money}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">{$lang.label_real_name}：</td>
+                            <td colspan="3">
+                            	{$real.real_name}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">{$lang.label_self_num}：</td>
+                            <td colspan="3">
+                                {$real.self_num}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">{$lang.label_bank_name}：</td>
+                            <td colspan="3">
+                                 {$real.bank_name}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">{$lang.label_bank_card}：</td>
+                            <td colspan="3">
+                                {$real.bank_card}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">{$lang.label_bank_mobile}：</td>
+                            <td colspan="3">
+                                {$real.bank_mobile}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">{$lang.label_deposit_account}：</td>
+                            <td colspan="3">
+                                <input name="deposit" type="text" id="deposit" class="text" style="width:68px; height:24px;">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">{$lang.label_deposit_mode}：</td>
+                            <td colspan="3">
+                                <select name="deposit_mode">
+                                	<option value="0">{$lang.label_offline_money}</option>
+                                    <option value="1">{$lang.label_user_balance}</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">{$lang.label_deposit_desc}：</td>
+                            <td colspan="3">
+                                <textarea name="deposit_note" cols="50" rows="10"></textarea>
+                                <p class="hint">{$lang.label_deposit_instructions}</p>
+                            </td>
+                        </tr>
+                        <tr class="no-line">
+                            <td>&nbsp;</td>
+                            <td class="pt20 pb20" colspan="3">
+                                <input name="query" type="submit" class="button" id="query" value="{$lang.button_submit}" />
+                                <input name="reset" type="reset" class='button button_reset' value='{$lang.button_reset}' />
+                                <input type="hidden" name="real_id" value="{$real.real_id}"/>
+                                <input type="hidden" name="act" value="{$form_act}"/>
+                                <input type="hidden" name="submit_act" value="1"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                </form>
+                {if $full_page}
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+function accountCheck(){
+	var deposit = $("#deposit").val();
+	var seller_money = $("#seller_money").html();
+	seller_money = Number(seller_money);
+	
+	if(deposit == ''){
+		alert("提现金额不能为空");
+		return false;
+	}else if(deposit > seller_money){
+		alert("提现金额不能大于当前可提现余额");
+		return false;
+	}
+	
+	return true;
+}
+</script>
+{include file ='library/seller_footer.lbi'}
+</body>
+</html>
+{/if}

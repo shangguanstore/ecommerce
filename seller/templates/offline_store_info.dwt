@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div class="ecsc-form-default">
+                    <form method="post" action="offline_store.php" name="theForm"  onsubmit="return validate()" enctype="multipart/form-data">
+                        <table cellspacing="0" cellpadding="0" width="100%" class="table_item">
+                            <tr>
+                                <td class="label">{$lang.require_field}&nbsp;{$lang.stores_user}：</td>
+                                <td><input type="text" class="text" name="stores_user" maxlength="60" size = "30" value="{$offline_store.stores_user}" /></td>
+                            </tr>
+                             {if $act eq "insert"}
+                            <tr>
+                                <td class="label">{$lang.require_field}&nbsp;{$lang.stores_pwd}：</td>
+                                <td><input type="password" class="text" name="stores_pwd" maxlength="60" size = "30"/></td>
+                            </tr>
+                            <tr>
+                                <td class="label">{$lang.require_field}&nbsp;{$lang.confirm_pwd}：</td>
+                                <td><input type="password" class="text" name="confirm_pwd" maxlength="60" size = "30" /></td>
+                            </tr>
+                            {elseif $act eq "update"}
+                            <tr>
+                              <td class="label">{$lang.newpass}：</td>
+                              <td><input type="password" name="newpass" maxlength="20" value="{$offline_store.stores_name}" size="20" class="text" /></td>
+                            </tr>
+                            <tr>
+                              <td class="label">{$lang.confirm_pwd}：</td>
+                              <td><input type="password" name="newconfirm_pwd" maxlength="20" size="20" class="text" /></td>
+                            </tr>
+                            {/if}
+                            <tr>
+                                <td class="label">{$lang.require_field}&nbsp;{$lang.stores_name}：</td>
+                                <td><input type="text" class="text" name="stores_name" maxlength="60" size = "30" value="{$offline_store.stores_name}" /><p class="hint">{$lang.stores_name_dsc}</p></td>
+                            </tr>
+                            <tr>
+                                <td class="label">{$lang.require_field}&nbsp;{$lang.area_info}：</td>
+                                <td>
+                                    <select name="country" id="selCountries" onchange="region.changed(this, 1, 'selProvinces')" class="select">
+                                        <option value=''>{$lang.select_please}</option>
+                                        {foreach from=$countries item=region}
+                                        <option value="{$region.region_id}" {if $region.region_id eq $offline_store.country}selected{/if}>{$region.region_name}</option>
+                                        {/foreach}
+                                    </select>                
+                                    <select name="province" id="selProvinces" onchange="region.changed(this, 2, 'selCities')" class="select">
+                                        <option value=''>{$lang.select_please}</option>
+                                        {foreach from=$provinces item=region}
+                                        <option value="{$region.region_id}" {if $region.region_id eq $offline_store.province}selected{/if}> {$region.region_name}</option>
+                                        {/foreach}
+                                    </select>
+
+                                    <select name="city" id="selCities" onchange="region.changed(this, 3, 'selDistricts')" class="select">
+                                        <option value=''>{$lang.select_please}</option>
+                                        {foreach from=$cities item=region}
+                                        <option value="{$region.region_id}" {if $region.region_id eq $offline_store.city}selected{/if}>{$region.region_name}</option>
+                                        {/foreach}
+                                    </select>
+
+                                    <select name="district" id="selDistricts" class="select">
+                                        <option value=''>{$lang.select_please}</option>
+                                        {foreach from=$city item=region}
+                                        <option value="{$region.region_id}" {if $region.region_id eq $offline_store.district}selected{/if}>{$region.region_name}</option>
+                                        {/foreach}
+                                    </select>
+                                    <p class="hint">{$lang.area_info_dsc}</p>
+                                    </td>
+                            </tr>
+                            <tr>
+                                <td class="label">{$lang.require_field}&nbsp;{$lang.stores_address}：</td>
+                                <td><input type="text" class="text" name="stores_address" maxlength="60" size = "30" value="{$offline_store.stores_address}" /><p class="hint">{$lang.stores_address_dsc}</p></td>
+                            </tr>
+                            <tr>
+                                <td class="label">{$lang.require_field}&nbsp;{$lang.stores_tel}：</td>
+                                <td><input type="text" class="text" name="stores_tel" maxlength="60" size = "30" value="{$offline_store.stores_tel}" /><p class="hint">{$lang.stores_tel_dsc}</p></td>
+                            </tr>
+                            <tr>
+                                <td class="label">{$lang.require_field}&nbsp;{$lang.stores_email}：</td>
+                                <td><input type="text" class="text" name="email" maxlength="60" size = "30" value="{$offline_store.email}" /><p class="hint">{$lang.stores_email_dsc}</p></td>
+                            </tr>
+                            <tr>
+                                <td class="label">{$lang.require_field}&nbsp;{$lang.stores_opening_hours}：</td>
+                                <td><input type="text" class="text" name="stores_opening_hours" maxlength="60" size = "30" value="{$offline_store.stores_opening_hours}" /><p class="hint">{$lang.stores_opening_hours_dsc}</p></td>
+                            </tr>
+                            <tr>
+                                <td class="label">{$lang.stores_traffic_line}：</td>
+                                <td><textarea class="textarea" maxlength="50" rows="2" name="stores_traffic_line">{$offline_store.stores_traffic_line}</textarea><p class="hint">{$lang.stores_traffic_line_dsc}</p></td>
+                            </tr>
+                            <tr>
+                                <td class="label">{$lang.require_field}&nbsp;{$lang.stores_img}：</td>
+                                <td><input type="file" name="stores_img" class="file" />{$lang.file_url}&nbsp;<input type="text" name="file_url" class="text_2" value="{$offline_store.stores_img|escape}"><p class="hint">{$lang.stores_img_dsc}</p></td>
+                            </tr>
+                            <tr>
+                                <td class="label">{$lang.is_confirm}：</td>
+                                <td>
+                                	<label><input type="radio" name="is_confirm" value="0" {if $offline_store.is_confirm eq 0}checked=""{/if} class="radio"/>关闭</label>
+                                    &nbsp;
+                                    <label><input type="radio" name="is_confirm" value="1" class="radio" {if $offline_store.is_confirm eq 1}checked=""{/if}/>开启</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td class="pt10 pb20">
+                                  <input type="submit" class="button" name="sub" value="{$lang.button_submit}" />
+                                  <input type="reset" class="button button_reset" value="{$lang.button_reset}" />
+                                  <input type="hidden" name="act" value="{$act}"/>
+                                  <input type="hidden" name="id" value="{$offline_store.id}"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+{insert_scripts files="../js/utils.js,validator.js"}
+<script>
+<!--
+{literal}
+
+onload = function()
+{
+  {/literal}
+  get_value = '{$bonus_arr.send_type}';
+  {literal}
+  
+  startCheckOrder();
+}
+
+var action = '{$act}';
+function validate()
+{
+	
+    validator = new Validator("theForm");
+	validator.required("stores_user",  stores_user_null);
+	if(action ==  "insert"){
+		validator.required("stores_pwd",  stores_pwd_null);
+		validator.required("confirm_pwd",  confirm_pwd_null);
+	}
+    validator.required("stores_name",  stores_name_null);
+    validator.required("country",  country_null);
+    validator.required("province",  province_null);
+    validator.required("city",  city_null);
+    validator.required("district",  district_null);
+    validator.required("stores_address",  stores_address_null);
+    validator.required("stores_tel",stores_tel_null);
+    validator.required("email",  email_null);
+    validator.required("stores_opening_hours",  stores_opening_hours_null);
+	
+	var file_url = $("input[name='file_url']").val();
+	if(file_url == ''){
+		validator.required("stores_img",  stores_img_null);
+	}
+    
+    return validator.passed();
+}
+</script>
+{/literal}
+
+</body>
+</html>

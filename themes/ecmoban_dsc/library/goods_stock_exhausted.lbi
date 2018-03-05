@@ -1,0 +1,116 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<div class="tip-box icon-box">
+    <span class="warn-icon m-icon"></span>
+    <div class="item-fore">
+        <h3><strong>下手慢了~部分商品被抢空，继续结算其它商品？</strong></h3>
+    </div>
+</div>
+<div class="goods-items" id="out-skus">
+<!-- {foreach from=$goods_list item=goodsRu} 第一层 商家层 -->
+	<!-- {foreach from=$goodsRu.new_list item=activity key=key name=nogoods } 活动开始 -->
+    	<!-- {if $activity.act_id gt 0} -->
+        	<div class="goods-suit">
+                <div class="goods-suit-tit">
+                	<strong>
+                    	【{$activity.act_type_txt}】
+                        <!-- {if $activity.act_type eq 0} 如果是满赠 -->
+                        	<!-- {if $activity.act_type_ext eq 0} -->
+                            	<!-- {if $activity.available} 满足最低消费-->
+                                	活动商品已购满{$activity.min_amount}元 ，可领取赠品{if $activity.cart_favourable_gift_num gt 0}，已领取{$activity.cart_favourable_gift_num}件{/if} 
+                                <!-- {else} -->
+                                	活动商品购满{$activity.min_amount}元即可领取赠品，先到先得
+                                <!-- {/if} -->
+                            <!-- {else} -->
+                            	<!-- {if $activity.available} 满足最低消费-->
+                                	活动商品已购满{$activity.min_amount}元 ，{if $activity.cart_favourable_gift_num gt 0}您已经领取了赠品{else}您可以返回购物车领取赠品{/if}
+                                <!-- {else} -->
+                                	活动商品购满{$activity.min_amount}元即可领取赠品，先到先得
+                                <!-- {/if} -->
+                            <!-- {/if} -->   
+                        <!-- {elseif $activity.act_type eq 1} 满减 -->
+                        	<!-- {if $activity.available} 满足最低消费-->
+                            	活动商品已购满{$activity.min_amount}元 ,已减{$activity.act_type_ext_format}元现金
+                            <!-- {else} -->
+                            	活动商品购满{$activity.min_amount}元， 即可享受满减优惠
+                            <!-- {/if} -->
+                        <!-- {elseif $activity.act_type eq 2} 折扣 -->
+                        	<!-- {if $activity.available} 满足最低消费-->
+                            	活动商品已购满{$activity.min_amount}元 ，已享受{$activity.act_type_ext_format}折优惠
+                            <!-- {else} -->
+                            	活动商品购满{$activity.min_amount}元， 即可享受折扣
+                            <!-- {/if} -->
+                        <!-- {/if} -->             
+                    </strong>
+                </div>
+                <!-- {foreach from=$activity.act_cart_gift item=goods}  赠品 -->
+                <div class="goods-item nostock-item">
+                    <div class="p-img"><a href="{$goods.url}" target="_blank"><img src="{$goods.goods_thumb}" width="80" height="80"></a></div>
+                    <div class="goods-msg">
+                    	<div class="p-name">
+                        	<em class="s-ico">赠品</em>
+                            <a href="{$goods.url}" target="_blank">{$goods.goods_name}</a>
+                        </div>
+                    </div>
+                    <div class="p-stock">
+                    	<!-- {if $goods.attr_number} -->
+                            有货
+                        <!-- {else} -->
+                            <span class="ftx-01">无货</span>
+                        <!-- {/if} -->
+                    </div>
+                </div>
+                <!-- {/foreach} 赠品结束 -->
+                
+                <!-- {foreach from=$activity.act_goods_list item=goods}  优惠活动商品 -->
+                <div class="goods-item nostock-item">
+                    <div class="p-img"><a href="{$goods.url}" target="_blank"><img src="{$goods.goods_thumb}" width="80" height="80"></a></div>
+                    <div class="goods-msg">
+                    	<div class="p-name">
+                        	<em class="s-ico">赠品</em>
+                            <a href="{$goods.url}" target="_blank">{$goods.goods_name}</a>
+                        </div>
+                    </div>
+                    <div class="p-stock">
+                    	<!-- {if $goods.attr_number} -->
+                            有货
+                        <!-- {else} -->
+                            <span class="ftx-01">无货</span>
+                        <!-- {/if} -->
+                    </div>
+                </div>
+                <!-- {/foreach} 赠品结束 -->
+            </div>
+        <!-- {else} -->
+        	<!-- {foreach from=$activity.act_goods_list item=goods}  普通商品开始 -->
+                <div class="goods-item nostock-item">
+                    <div class="p-img"><a href="{$goods.url}" target="_blank"><img src="{$goods.goods_thumb}" width="80" height="80"></a></div>
+                    <div class="goods-msg">
+                    	<div class="p-name">
+                        	<em class="s-ico">赠品</em>
+                            <a href="{$goods.url}" target="_blank">{$goods.goods_name}</a>
+                        </div>
+                    </div>
+                    <div class="p-stock">
+                    	<!-- {if $goods.attr_number} -->
+                            有货
+                        <!-- {else} -->
+                            <span class="ftx-01">无货</span>
+                        <!-- {/if} -->
+                    </div>
+                </div>
+            <!-- {/foreach} 普通商品结束 -->
+        <!-- {/if} -->
+    <!-- {/foreach} 活动结束 -->
+<!-- {/foreach} -->    
+</div>
+
+<div class="hide">
+<form action="flow.php" method="post" name="stockFormCart">
+    <input type="submit" value="去结算" class="submit-btn" name="goPay">
+    <input type="hidden" value="checkout" name="step">
+    <input type="hidden" value="{$store_seller}" name="store_seller">
+    <input type="hidden" value="{$store_id}" name="store_id">
+    <input type="hidden" value="{$cart_value}" id="cart_value" name="cart_value">
+</form>
+</div>

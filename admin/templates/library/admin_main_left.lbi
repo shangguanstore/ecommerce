@@ -1,0 +1,27 @@
+<div class="admin-main-left">
+    <div class="admincj_nav">
+        <div class="item current">
+        	<div class="tit"><a href="javascript:void(0);" data-url="index.php?act=main" data-param="index|main" target="workspace"><i class="nav_icon i_home"></i><h4>首页</h4></a></div>
+        </div>
+        {foreach from=$nav_top item=nav}
+        <div class="navLeftTab" id="adminNavTabs_{$nav.type}" style="display:none;">
+            {foreach from=$nav.children item=menu key=k name=foo}
+            {if !$menu.action}
+            <div class="item">
+                <div class="tit"><a href="javascript:void(0)"><i class="nav_icon icon_{$k}"></i><h4>{$menu.label}</h4></a></div>
+                {if $menu.children}
+                <div class="sub-menu">
+                    <ul>
+                        {foreach from=$menu.children item=child name=childfoo key=key}
+                        <li {if $smarty.foreach.childfoo.first}class="curr"{/if}><s></s><a href="javascript:void(0);" data-url="{$child.action}" data-param="{$nav.type}|{$key}" target="workspace">{$child.label}</a></li>
+                        {/foreach}
+                    </ul>
+                </div>
+                {/if}
+            </div>
+            {/if}
+            {/foreach}
+        </div>
+        {/foreach}
+    </div>
+</div>

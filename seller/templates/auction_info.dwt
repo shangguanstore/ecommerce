@@ -1,0 +1,334 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                <div class="tabmenu">
+                    <ul class="tab">
+                        <li class="active"><a href="javascript:;">基本信息</a></li>
+                        <li><a href="javascript:;">拍卖介绍</a></li>
+                        <li><a href="javascript:;">服务保障</a></li>
+                        <li><a href="javascript:;">竞拍攻略</a></li>
+                    </ul>
+                    {if $action_link}
+                    <a href="{$action_link.href}" class="ecsc-btn ecsc-btn-ecblue" title="{$action_link.text}"><i class="icon-plus-sign"></i>{$action_link.text}</a>
+                    {/if}
+                </div>
+                <div class="ecsc-form-default">
+                	<div class="items-info">
+                    <form method="post" action="auction.php" name="theForm" enctype="multipart/form-data" onSubmit="return validate()">
+                        <div class="wrapper-list wrapper-list2">
+                            <dl>
+                                <dt>{$lang.label_act_name}</dt>
+                                <dd>
+                                    <input name="act_name" type="text" id="act_name" value="{$auction.act_name}" maxlength="60" class="text"/>
+                                    <label class="blue_label">{$lang.notice_act_name}</label>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>{$lang.label_search_goods}：</dt>
+                                <dd>
+                                    <input name="keyword" type="text" id="keyword" class="text mr10">
+                                    <input type="hidden" name="ru_id" value="{$ru_id}" />
+                                    <input name="search" type="button" id="search" value="{$lang.button_search}" class="button button_red" onclick="searchGoods()" />
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>{$lang.label_goods_name}</dt>
+                                <dd>
+                                    <select name="goods_id" id="goods_id" onchange="javascript:change_good_products();" class="select">
+                                        <option value="{$auction.goods_id}" selected="selected">{$auction.goods_name}</option>
+                                    </select>
+                                    <select name="product_id" {if $auction.product_id <= 0}style="display:none"{/if} class="select">
+                                        {html_options options=$good_products_select selected=$auction.product_id}
+                                    </select>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>{$lang.label_start_end_time}</dt>
+                                <dd>
+                                    <div class="text_time" id="text_time1">
+                                    <input name="start_time" type="text" id="start_time" value="{$auction.start_time}" readonly="readonly" />
+                                    <input name="selbtn1" type="button" id="selbtn1"/>
+                                    </div>
+                                    <span class="bolang">&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+                                    <div class="text_time" id="text_time2">
+                                    <input name="end_time" type="text" id="end_time" value="{$auction.end_time}" readonly="readonly" />
+                                    <input name="selbtn2" type="button" id="selbtn2"/>
+                                    </div>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>{$lang.label_start_price}</dt>
+                                <dd><input name="start_price" type="text" id="start_price" value="{$auction.start_price}" class="text"></dd>
+                            </dl>
+                            <dl>
+                                <dt>{$lang.label_end_price}</dt>
+                                <dd>
+                                    <input name="end_price" type="text" class="text" id="end_price"  {if $auction.no_top}disabled="true" {else}value="{$auction.end_price}"{/if}>
+                                    <span class="gouxuan">
+                                    <input name="no_top" type="checkbox" class="checkbox" value="1" id="no_top" onClick="checked_no_top(this);" onChange="checked_no_top(this);" {if $auction.no_top}checked{/if}/><label for="no_top" class="blue_label" style="margin-left:0;cursor:pointer;">{$lang.label_no_top}</label>
+                                    </span>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>{$lang.label_amplitude}</dt>
+                                <dd><input name="amplitude" type="text" class="text" id="amplitude" value="{$auction.amplitude}"></dd>
+                            </dl>
+                            <dl>
+                                <dt>{$lang.label_deposit}</dt>
+                                <dd><input name="deposit" type="text" class="text" id="deposit" value="{$auction.deposit}"></dd>
+                            </dl>
+                            {if $auction.act_id gt 0}
+                            <dl>
+                                <dt>{$lang.label_status}</dt>
+                                <dd><p class="mt8 red">{$auction.status}</p><p class="mt8">{$bid_user_count} <a href="auction.php?act=view_log&id={$auction.act_id}" class="blue"> [ {$lang.view} ]</a></p></dd>
+                            </dl>
+                            {/if}
+                            <dl>
+                                <dt>{$lang.require_field}&nbsp;{$lang.is_hot}：</dt>
+                                <dd>
+                                    <div class="checkbox_items" style="margin-left:5px;">
+                                    <label><input type="radio" class="checkbox" name="is_hot" value="1" {if $auction.is_hot eq 1}checked{/if}><span>{$lang.ishot}</span></label>
+                                    <label><input type="radio" class="checkbox" name="is_hot" value="0" {if $auction.is_hot eq 0}checked{/if}><span>{$lang.isnothot}</span></label>
+                                    </div>
+                                </dd>
+                            </dl>
+                         </div>
+                        <div class="wrapper-list wrapper-list-bjq" style="display:none">
+                            <dl>
+                                <dt>{$lang.auction_desc}：</dt>
+                                <dd>{$act_desc}</dd>
+                            </dl>
+                        </div>
+                        <div class="wrapper-list wrapper-list-bjq" style="display:none">
+                            <dl>
+                                <dt>{$lang.promise}：</dt>
+                                <dd>{$act_promise}</dd>
+                            </dl>
+                        </div>
+                        <div class="wrapper-list wrapper-list-bjq" style="display:none">
+                            <dl>
+                                <dt>{$lang.ensure}：</dt>
+                                <dd>{$act_ensure}</dd>
+                            </dl>
+                        </div>
+                        <div class="bottom tc">
+                            <div class="button_info">
+                                {if $auction.act_id eq 0 or $auction.status_no eq "0" or $auction.status_no eq "1"}
+                                    <input type="submit" class="button" value="{$lang.button_submit}" />
+                                    <input type="reset" class="button button_reset" value="{$lang.button_reset}" />
+                                    <input type="hidden" name="act" value="{$form_action}" />
+                                {elseif $auction.status_no eq "2"}
+                                    {if $auction.deposit gt 0}
+                                        <label style="display:block; margin-bottom:15px;">{$lang.settle_frozen_money}</label>
+                                        <input type="submit" class="button mr10" value="{$lang.unfreeze}" name="unfreeze" />
+                                        <input type="submit" class="button" value="{$lang.deduct}" name="deduct" />
+                                        <input type="hidden" name="act" value="settle_money" />
+                                    {/if}
+                                {else}
+                                   <input type="button" class="button btn_disabled" value="{$lang.auction_status.3}" name="" disabled="disabled" />
+                                {/if}
+                                <input type="hidden" name="id" value="{$auction.act_id}" /> 
+                            </div>
+                        </div>
+                        </form>
+                    </div>    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+<!--
+var display_yes = (Browser.isIE) ? 'block' : 'table-row-group';
+
+onload = function()
+{
+    // 开始检查订单
+    startCheckOrder();
+}
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+    validator = new Validator("theForm");
+    validator.isNumber('start_price', start_price_not_number, false);
+    validator.isNumber('end_price', end_price_not_number, false);
+
+    if (document.forms['theForm'].elements['no_top'].checked == false)
+    {
+      validator.gt('end_price', 'start_price', end_gt_start);
+    }
+    validator.isNumber('amplitude', amplitude_not_number, false);
+    validator.isNumber('deposit', deposit_not_number, false);
+    validator.islt('start_time', 'end_time', start_lt_end);
+    return validator.passed();
+}
+function checked_no_top(o)
+{
+  if (o.checked)
+  {
+    o.form.elements['end_price'].value = '';
+    o.form.elements['end_price'].disabled = true;
+  }
+  else
+  {
+    o.form.elements['end_price'].disabled = false;
+  }
+}
+function searchGoods()
+{
+  var filter = new Object;
+  filter.keyword  = document.forms['theForm'].elements['keyword'].value;
+  filter.ru_id = document.forms['theForm'].elements['ru_id'].value;
+
+  Ajax.call('auction.php?is_ajax=1&act=search_goods', filter, searchGoodsResponse, 'GET', 'JSON');
+}
+
+function searchGoodsResponse(result)
+{
+  if (result.error == '1' && result.message != '')
+  {
+    alert(result.message);
+    return;
+  }
+
+  var frm = document.forms['theForm'];
+  var sel = frm.elements['goods_id'];
+  var sp = frm.elements['product_id'];
+
+  if (result.error == 0)
+  {
+    /* 清除 options */
+    sel.length = 0;
+    sp.length = 0;
+
+    /* 创建 options */
+    var goods = result.content.goods;
+    if (goods)
+    {
+      for (i = 0; i < goods.length; i++)
+      {
+          var opt = document.createElement("OPTION");
+          opt.value = goods[i].goods_id;
+          opt.text  = goods[i].goods_name;
+          sel.options.add(opt);
+      }
+    }
+    else
+    {
+      var opt = document.createElement("OPTION");
+      opt.value = 0;
+      opt.text  = search_is_null;
+      sel.options.add(opt);
+    }
+
+    /* 创建 product options */
+    var products = result.content.products;
+    if (products)
+    {
+      sp.style.display = display_yes;
+
+      for (i = 0; i < products.length; i++)
+      {
+        var p_opt = document.createElement("OPTION");
+        p_opt.value = products[i].product_id;
+        p_opt.text  = products[i].goods_attr_str;
+        sp.options.add(p_opt);
+      }
+    }
+    else
+    {
+      sp.style.display = 'none';
+
+      var p_opt = document.createElement("OPTION");
+      p_opt.value = 0;
+      p_opt.text  = search_is_null;
+      sp.options.add(p_opt);
+    }
+  }
+
+  return;
+}
+
+function change_good_products()
+{
+  var filter = new Object;
+  filter.goods_id = document.forms['theForm'].elements['goods_id'].value;
+
+  Ajax.call('snatch.php?is_ajax=1&act=search_products', filter, searchProductsResponse, 'GET', 'JSON');
+}
+
+function searchProductsResponse(result)
+{
+  var frm = document.forms['theForm'];
+  var sp = frm.elements['product_id'];
+
+  if (result.error == 0)
+  {
+    /* 清除 options */
+    sp.length = 0;
+
+    /* 创建 product options */
+    var products = result.content.products;
+    if (products.length)
+    {
+      sp.style.display = display_yes;
+
+      for (i = 0; i < products.length; i++)
+      {
+        var p_opt = document.createElement("OPTION");
+        p_opt.value = products[i].product_id;
+        p_opt.text  = products[i].goods_attr_str;
+        sp.options.add(p_opt);
+      }
+    }
+    else
+    {
+      sp.style.display = 'none';
+
+      var p_opt = document.createElement("OPTION");
+      p_opt.value = 0;
+      p_opt.text  = search_is_null;
+      sp.options.add(p_opt);
+    }
+  }
+
+  if (result.message.length > 0)
+  {
+    alert(result.message);
+  }
+}
+
+//日期选择插件调用start sunle
+var opts1 = {
+  'targetId':'start_time',//时间写入对象的id
+  'triggerId':['start_time','selbtn1'],//触发事件的对象id
+  'alignId':'text_time1',//日历对齐对象
+  'format':'-'//时间格式 默认'YYYY-MM-DD HH:MM:SS'
+},opts2 = {
+  'targetId':'end_time',
+  'triggerId':['end_time','selbtn2'],
+  'alignId':'text_time2',
+  'format':'-'
+}
+
+xvDate(opts1);
+xvDate(opts2);
+//日期选择插件调用end sunle
+  
+//-->
+{/literal}
+</script>
+</body>
+</html>

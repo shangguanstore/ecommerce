@@ -1,0 +1,69 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  {include file ='library/seller_html_head.lbi'}
+  <link href="css/nms_style.css" rel="stylesheet" type="text/css" />
+  {insert_scripts files="../js/utils.js,listtable.js"}
+</head>
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+  <div class="site wrapper">
+    {include file ='library/seller_menu_left.lbi'}
+      <div class="ecsc-layout-right">
+        <div class="main-content" id="mainContent">                  
+          {include file ='library/seller_menu_tab.lbi'}            
+          <div class="tab-div" style="margin-top: 15px;">
+            <div id="tabbody-div" class="tbbg" >              
+              <form method="POST" action="nms_getrate.php?act=insert_comment_list" name="listForm" >
+                <div class="list-div" id="listDiv">
+                  <table width="90%" id="general-table">
+                    <div class="shuoming" style="display:none"> 
+                      1、打开某个店铺的商品宝贝列表（一般是点击：所有分类），全选页面（按Ctrl-A），复制页面全部图文内容粘贴进来即可<br />
+                      2、目前只提供店铺“页面采集”方式，暂不支持输入店铺链接来采集<br />
+                      3、每次采集一个页面的商品（约60个商品），如需采集整页商品，请在“采集数量”栏输入大于该页商品的数量
+                    </div>
+                    <table cellpadding="3" cellspacing="1">
+                      <tr>
+                        <th width="5%">
+                          <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox">
+                          {$lang.record_id}</th>
+                        <th width="15%">用户名</th>
+                        <th width="60%">评论内容</th>
+                        <th width="20%">评论时间</th>
+                      </tr>
+                      {foreach from=$comment_list item=comment name=no }
+                      <tr>
+                        <td><input value="{$comment.id}" name="checkboxes[]" type="checkbox">{$comment.id}</td>
+                        <td align="center">{$comment.user_name}</td>
+                        <td><font color="#0000FF">{$comment.content}</font></td>
+                        <td align="center">{$comment.rdate}</td>
+                      </tr>
+                        {foreachelse}
+                        <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+                        {/foreach}
+                    </table>
+                    <table cellpadding="4" cellspacing="0">
+                      <tr>
+                        <td>
+                        <div>                    
+                          <textarea style="display:none" name="comment_list_data" cols="80" rows="4" wrap="VIRTUAL" >{$comment_list_data}</textarea>
+                          <input type="submit" name="drop" id="btnSubmit" value="采集" class="button" disabled="true" /></div>
+                        </td>
+                      </tr>
+                    </table>
+                  </table>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+</body>
+</html>
+{/if}

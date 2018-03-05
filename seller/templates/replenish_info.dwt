@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <!--start-->
+				<div class="info_warp">
+				<form method="post" action="virtual_card.php" name="theForm"  onsubmit="return validate()">
+				<table width="100%" cellpadding="0" cellspacing="0" class="table_item">
+				  <tr>
+					<td class="label">{$lang.lab_goods_name}：</td>
+					<td><input type="text" name="goods_name" maxlength="60"  value="{$card.goods_name}" disabled="true" class="text text_2" /></td>
+				  </tr>
+				  <tr>
+					<td class="label">{$lang.require_field}&nbsp;{$lang.lab_card_sn}：</td>
+					<td><input type="text" name="card_sn" maxlength="60" size="40" value="{$card.card_sn}" class="text " /></td>
+				  </tr>
+				  <tr>
+					<td class="label">{$lang.lab_card_password}：</td>
+					<td><input type="text" name="card_password" maxlength="60" size="40" value="{$card.card_password}" class="text " /></td>
+				  </tr>
+				  <tr>
+					<td class="label">{$lang.lab_end_date}：</td>
+					<td>{html_select_date prefix="end_date" field_order="YMD" month_format="%m"  day_value_format="%02d" start_year="-1" end_year="+10" display_days=yes time=$card.end_date}</td>
+				  </tr>
+				  <tr class="no-line">
+					<td class="label"><input type="hidden" name="act" value="action" /><input type="hidden" name="goods_id" value="{$card.goods_id}" /><input type="hidden" name="old_card_sn" value="{$card.card_sn}" /><input type="hidden" name="card_id" value="{$card.card_id}" /></td>
+					<td class="pt20 pb20"><input type="submit" value="{$lang.button_submit}" class="button"  /></td>
+				  </tr>
+				</table>
+				</form>
+				</div>
+                <!--end-->
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<!--start-->
+<script language="javascript" src="js/validator.js"></script>
+<script language="JavaScript">
+<!--
+{literal}	
+
+onload = function()
+{
+    // 开始检查订单
+    startCheckOrder();
+}
+
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+  var frm = document.forms['theForm'];
+  if ((frm.elements['card_sn'].value.length > 0) || (frm.elements['card_password'].value.length > 0))
+  {
+    return true;
+  }
+  else
+  {
+    alert(no_card_sn);
+    return false;
+  }
+}
+//-->
+{/literal}
+</script>
+<!--end-->
+</body>
+</html>

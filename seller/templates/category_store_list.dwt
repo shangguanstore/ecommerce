@@ -1,0 +1,75 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                {/if}
+                <form method="post" action="" name="listForm">
+                <div id="listDiv" class="list-div">
+                <table id="list-table" class="ecsc-default-table ecsc-table-cate">
+                    <tbody>
+                        <tr>
+                            <th width="30%">{$lang.cat_name}</th>
+                            <th width="13%">{$lang.goods_number}</th>
+                            <th width="12%">{$lang.measure_unit}</th>
+                            <th width="10%">{$lang.short_grade}</th>
+                            <th width="10%">{$lang.sort_order}</th>
+                            <th width="5%">{$lang.is_show}</th>
+                            <th width="20%">{$lang.handler}</th>
+                        </tr>
+                        {foreach from=$cat_info item=cat}
+                        <tr align="center" class="{$cat.level}" id="{$cat.level}_{$cat.cat_id}">
+                          <td align="left" class="first-cell" id="level_{$cat.level}_{$cat.cat_id}">
+                              <div class="first_column">
+                                <i class="up" id="icon_{$cat.level}_{$cat.cat_id}" data-level="{$cat.level}" data-catid="{$cat.cat_id}" data-isclick="0"></i><span><a href="goods.php?act=list&cat_id={$cat.cat_id}&cat_type=seller">{$cat.cat_name}</a></span>
+                              </div>
+                              {if $cat.cat_image}
+                              <img src="../{$cat.cat_image}" border="0" style="vertical-align:middle;" width="60px" height="21px">
+                              {/if}
+                          </td>
+                          
+                          <td>{$cat.goods_num}</td>
+                          <td>
+                          <span onclick="listTable.edit(this, 'edit_measure_unit', {$cat.cat_id})"><!-- {if $cat.measure_unit} -->{$cat.measure_unit}<!-- {else} -->&nbsp;&nbsp;&nbsp;&nbsp;<!-- {/if} --></span></td>
+                          
+                          <td><span onclick="listTable.edit(this, 'edit_grade', {$cat.cat_id})">{$cat.grade}</span></td>
+                          <td align="center"><span onclick="listTable.edit(this, 'edit_sort_order', {$cat.cat_id})">{$cat.sort_order}</span></td>
+						  <td align="center"><img src="images/{if $cat.is_show eq '1'}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_is_show', {$cat.cat_id})" title="点击" class="pointer" /></td>
+                          <td align="center">
+                            
+                              {if $cat.ru_id && $ru_id}
+                              <a href="category_store.php?act=move&cat_id={$cat.cat_id}" class="blue">{$lang.move_goods}</a>
+                              {else}
+                              <font class="red">{$lang.no_permission}</font>
+                              {/if}
+                            {if $cat.ru_id && $ru_id} |
+                            <a href="category_store.php?act=edit&amp;cat_id={$cat.cat_id}" class="blue">{$lang.edit}</a> |
+                            <a href="javascript:;" onclick="listTable.remove({$cat.cat_id}, '{$lang.drop_confirm}')" title="{$lang.remove}" class="blue">{$lang.remove}</a>
+                            {/if}
+                          </td>
+                        </tr>
+                        {foreachelse}
+                        <tr><td class="no-records" colspan="11">{$lang.no_records}</td></tr>
+                        {/foreach}		
+                    </tbody>
+                </table>
+                </div>
+                </form>
+                {if $full_page}
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+</body>
+</html>
+{/if}

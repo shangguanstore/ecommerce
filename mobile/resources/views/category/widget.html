@@ -1,0 +1,14 @@
+<!-- 商品分类 -->
+<block name="childcategory">
+    {if isset($cat_id)}
+    <a href="{U('category/index/products', array('id'=>$id))}"><h5>{$name}</h5></a>
+    <!--<ul class="mune-no-img">-->
+    <ul>
+        {foreach $cat_id as $cat}
+        <li class="w-3"><a href="{U('category/index/products', array('id'=>$cat['id']))}"></a><img src="{$cat['cat_img']}" alt="{$cat['name']}" /><span>{$cat['name']}</span></li>
+        {/foreach}
+    </ul>
+    {else}
+    <li class="w-3"><a href="{U('category/index/products', array('id'=>$id))}"></a><img src="{$cat_img}" alt="{$name}" /><span>{$name}</span></li>
+    {/if}
+</block>

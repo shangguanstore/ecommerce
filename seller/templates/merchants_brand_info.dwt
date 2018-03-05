@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div class="ecsc-form-default">
+                    <form method="post" action="merchants_brand.php" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
+                      <table width="100%" class="table_item">
+                        <tr>
+                          <td class="label">{$lang.require_field}&nbsp;{$lang.brand_name_cn}：</td>
+                          <td><input type="text" name="brand_name" maxlength="60" value="{$brand.brand_name}" class="text text_2" /></td>
+                        </tr>
+                        <tr>
+                          <td class="label">{$lang.require_field}&nbsp;{$lang.brand_name_en}：</td>
+                          <td><input type="text" name="brank_letter" maxlength="60" value="{$brand.bank_name_letter}" class="text text_2" /></td>
+                        </tr>
+                        <tr>
+                          <td class="label">{$lang.site_url}：</td>
+                          <td><input type="text" name="site_url" maxlength="60" size="40" value="{$brand.site_url}" class="text" /></td>
+                        </tr>
+                        <tr>
+                          <td class="label">{$lang.brand_logo}：</td>
+                          <td>
+                          <input type="file" name="brand_logo" id="logo" size="45" class="file mt5 mb5">
+                          {if $brand.brand_logo neq ""}<input type="button" value="{$lang.drop_brand_logo}" onclick="if (confirm('{$lang.confirm_drop_logo}'))location.href='merchants_brand.php?act=drop_logo&id={$brand.brand_id}'">{/if}
+                          <label class="blue_label" id="warn_brandlogo">
+                          {if $brand.brand_logo eq ''}
+                          {$lang.up_brandlogo}
+                          {else}
+                          {$lang.warn_brandlogo}
+                          {/if}
+                          </label>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="label">{$lang.brand_desc}：</td>
+                          <td><textarea  name="brand_desc" cols="60" rows="4" class="textarea">{$brand.brand_desc}</textarea></td>
+                        </tr>
+                        <tr>
+                          <td class="label">{$lang.sort_order}：</td>
+                          <td><input type="text" name="sort_order" maxlength="40" size="15" value="{$brand.sort_order}" class="text text_5"/></td>
+                        </tr>
+                        <tr>
+                          <td class="label">{$lang.is_show}：</td>
+                          <td>
+                            <div class="checkbox_items">
+                                <label><input type="radio" name="is_show" value="1" class="checkbox" {if $brand.is_show eq 1}checked="checked"{/if} />{$lang.yes}</label>
+                                <label><input type="radio" name="is_show" value="0" class="checkbox" {if $brand.is_show eq 0}checked="checked"{/if} />{$lang.no}</label>
+                          	</div>
+                          	<label class="blue_label" style="line-height:normal;">({$lang.visibility_notes})</label>
+                          </td>
+                        </tr>
+                        {if $brand_list}
+                        <tr>
+                          <td class="label">{$lang.associated_platform_brands}：</td>
+                          <td>
+                 
+                            <select name="link_brand" class="select" id="link_brand" >
+                                <option value="0">{$lang.select_please}</option>
+                                {foreach from=$brand_list item=brand}
+                                <option value="{$brand.brand_id}" {if $link_brand.brand_id eq $brand.brand_id}selected="selected"{/if}>{$brand.brand_name}</option>
+                                  {/foreach}
+                              </select>
+                              <input width="20" name="keyword_brand" type="text" id="keyword_brand" class="text text_2 mr10">
+                              <input name="search_brand" type="button" id="search_brand" value=" 搜索 " class="button fl" onclick="searchBrand()">
+                         
+                          </td>
+                        </tr>
+                        <script type="text/javascript">
+                          // 搜索品牌 -qin
+                          function searchBrand()
+                          {
+                            var search_keyword  = document.forms['theForm'].elements['keyword_brand'].value
+                            Ajax.call('goods.php?is_ajax=1&act=search_brand', "search_keyword=" + search_keyword, searchBrandResponse, 'GET', 'JSON');
+                          }
+                          function searchBrandResponse(result)
+                          {
+                            $('#link_brand').html(result);
+                          }
+                        </script>
+                        {/if}
+                        {if $priv_ru}
+                        <tr>
+                          <td class="label">{$lang.adopt_brand}：</td>
+                          <td>
+                            <div class="checkbox_items">
+                            <label><input type="radio" name="audit_status" value="0" class="checkbox" {if $brand.audit_status eq 0}checked="checked"{/if} />{$lang.not_audited}</label>
+                              <label><input type="radio" name="audit_status" value="1" class="checkbox" {if $brand.audit_status eq 1}checked="checked"{/if} />{$lang.have_audited}</label>
+                              <label><input type="radio" name="audit_status" value="2" class="checkbox" {if $brand.audit_status eq 2}checked="checked"{/if} />{$lang.audited_not_adopt}</label>
+                              </div>
+                          </td>
+                        </tr>
+                        {/if}
+                        {if $ru_id > 0}
+                        <tr style="display:none">
+                          <td class="label">{$lang.setup_main_brand}：</td>
+                          <td>
+                            {if $major_brand && $major_brand neq $brand.brand_id}
+                                <span class="lh red">{$lang.store_main_brand}</span>
+                              {else}
+                                <div class="checkbox_items">
+                                <label><input type="radio" name="major_business" value="0" class="checkbox" {if $brand.major_business eq 0}checked="checked"{/if} />{$lang.close}</label>
+                                <label><input type="radio" name="major_business" value="1" class="checkbox" {if $brand.major_business eq 1}checked="checked"{/if} />{$lang.open}</label>
+                                  </div>
+                              {/if}
+                          </td>
+                        </tr>
+                        <tr class="no-line">
+                        	<td></td>
+                            <td class="pt20">
+                            	<input type="submit" class="button" value="{$lang.button_submit}" />
+                                <input type="reset" class="button button_reset" value="{$lang.button_reset}" />
+                                <input type="hidden" name="ubrand" value="{$ubrand}" />
+                                <input type="hidden" name="act" value="{$form_action}" />
+                                <input type="hidden" name="old_brandname" value="{$brand.brand_name}" />
+                                <input type="hidden" name="id" value="{$brand.brand_id}" />
+                                <input type="hidden" name="old_brandlogo" value="{$brand.brand_logo}">
+                            </td>
+                        </tr>
+                        {/if}
+                      </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script>
+<!--
+onload = function()
+{
+    // 开始检查订单
+    startCheckOrder();
+}
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+    validator = new Validator("theForm");
+    validator.required("brand_name",  no_brandname);
+    validator.isNumber("sort_order", require_num, true);
+    return validator.passed();
+}
+//-->
+
+{/literal}
+</script>
+</body>
+</html>

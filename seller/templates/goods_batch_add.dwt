@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        <div class="site wrapper">
+			{include file ='library/seller_menu_left.lbi'}
+            <div class="ecsc-layout-right">
+                <div class="main-content" id="mainContent">
+					{include file ='library/seller_menu_tab.lbi'}
+					<form action="goods_batch.php?act=upload" method="post" enctype="multipart/form-data" name="theForm" onsubmit="return formValidate()">
+					<table width="100%" cellpadding="0" cellspacing="0" class="table_item">
+					<tr class="no-line">
+						<td colspan="2" style="padding:0;"><div class="alert-info">{$lang.use_help}</div></td>
+					</tr>
+					<tr>
+						<td class="label">{$lang.export_format}：</td>
+						<td>
+							<select name="data_cat" id="data_cat" class="select">
+							  <option value="0">{$lang.select_please}</option>
+							  {html_options options=$data_format}
+							</select>
+						</td>
+					  </tr>
+					  <tr>
+						<td class="label">{$lang.goods_cat}</td>
+						<td>
+						  <select name="catList1" id="cat_list1" onchange="catList(this.value, 1)" class="select">
+							  <option value="0">{$lang.goods_cat}</option>
+                              {foreach from=$cat_list item=cat}
+                              <option value="{$cat.cat_id}">{$cat.cat_name}</option>
+                              {/foreach}
+						  </select>
+						  <input type="hidden" name="cat" id="cat" value="0" />
+						</td>
+					  </tr>
+					  <tr>
+						<td class="label">{$lang.file_charset}</td>
+						<td>
+							<select name="charset" id="charset" class="select">
+							  {html_options options=$lang_list}
+							</select>
+						</td>
+					  </tr>
+					  <tr class="no-line">
+						<td class="label">{$lang.csv_file}</td>
+						<td style="padding-bottom:0;">
+							<input name="file" type="file" size="40" class="file mt5">
+							<p class="fl bf100"><label class="blue_label ml0">{$lang.notice_file}</label></p>
+						</td>
+					  </tr>
+					  <tr class="no-line">
+						<td>&nbsp;</td>
+						<td>{foreach from=$download_list item=download key=charset}<a href="goods_batch.php?act=download&charset={$charset}" class="mr10">{$download}</a>{/foreach}</td>
+					  </tr>
+                      <tr class="no-line">
+                      	<td></td>
+                        <td><input name="submit" type="submit" id="submit" value="{$lang.button_submit}" class="button" /></td>
+                      </tr>
+					</table>
+					</form>	
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{literal}
+<script language="JavaScript">
+    var elements;
+    onload = function()
+    {
+        // 文档元素对象
+        elements = document.forms['theForm'].elements;
+
+        // 开始检查订单
+        startCheckOrder();
+    }
+
+    /**
+     * 检查是否底级分类
+     */
+    function checkIsLeaf(selObj)
+    {
+        if (selObj.options[selObj.options.selectedIndex].className != 'leafCat')
+        {
+            alert(goods_cat_not_leaf);
+            selObj.options.selectedIndex = 0;
+        }
+    }
+
+    /**
+     * 检查输入是否完整
+     */
+    function formValidate()
+    {
+        if (elements['cat'].value <= 0)
+        {
+            alert(please_select_cat);
+            return false;
+        }
+        if (elements['file'].value == '')
+        {
+            alert(please_upload_file);
+            return false;
+        }
+        return true;
+    }
+	// 分类分级 by qin
+	function catList(val, level)
+	{
+		var cat_id = val;
+		document.getElementById('cat').value = cat_id;
+		Ajax.call('goods.php?is_ajax=1&act=sel_cat', 'cat_id='+cat_id+'&cat_level='+level, catListResponse, 'GET', 'JSON');
+	}
+
+	function catListResponse(result)
+	{
+		if (result.error == '1' && result.message != '')
+		{
+		  alert(result.message);
+		  return;
+		}
+		var response = result.content;
+		var cat_level = result.cat_level; // 分类级别， 1为顶级分类
+		for(var i=cat_level;i<10;i++)
+		{
+		  $("#cat_list"+Number(i+1)).remove();
+		}
+		if(response)
+		{
+			$("#cat_list"+cat_level).after(response);
+		}
+	  return;
+	}
+</script>
+{/literal}
+
+{include file ='library/seller_footer.lbi'}
+</body>
+</html>

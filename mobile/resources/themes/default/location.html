@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<meta name="format-detection" content="telephone=no" />
+		<meta charset="utf-8">
+		<title>定位地址</title>
+		<link rel="stylesheet" href="css/ectouch.css" />
+		<link rel="stylesheet" href="fonts/iconfont.css" />
+	</head>
+
+	<body>
+		<div class="con am-left">
+
+			<header class="user-address-search dis-box j-search-address">
+				<label class="b-color-f"><i class="iconfont icon-sousuo"></i>请输入城市名或字母查询</label>
+			</header>
+			<div class="user-add-title dis-box b-color-f" id="link_pos">
+				<div class="box-flex">
+					<h4 class="padding-all">当前:上海</h4>
+				</div>
+				<div class="user-add-list ptb-1 f-07 ec-titc text-c">
+					<div class="county-select-box">
+						<select>
+							<option value="all">切换县区</option>
+							<option value="all">全城</option>
+							<option value="saab">新津县</option>
+							<option value="opel">锦江区</option>
+							<option value="audi">金牛区</option>
+							<option value="saab">新津县</option>
+							<option value="opel">锦江区</option>
+							<option value="audi">金牛区</option>
+							<option value="all">切换县区</option>
+							<option value="all">全城</option>
+							<option value="saab">新津县</option>
+							<option value="opel">锦江区</option>
+							<option value="audi">金牛区</option>
+							<option value="saab">新津县</option>
+							<option value="opel">锦江区</option>
+							<option value="audi">金牛区</option>
+						</select>
+						<i class="iconfont icon-more tf-90 ts-5"></i>
+
+					</div>
+
+				</div>
+			</div>
+			<section class="user-pos-left-maxbox">
+
+				<div class="user-add-title user-pos-box">
+					<h4>当前定位城市</h4>
+					<ul class="of-hidden">
+						<li class="ect-select dis-flex fl">
+							<label class="ts-1">上海</label>
+						</li>
+					</ul>
+				</div>
+				<div class="user-add-title user-pos-box">
+					<h4>最近访问城市</h4>
+					<ul class="of-hidden">
+						<li class="ect-select dis-flex fl">
+							<label class="ts-1">上海</label>
+						</li>
+						<li class="ect-select dis-flex fl">
+							<label class="ts-1">北京</label>
+						</li>
+						<li class="ect-select dis-flex fl">
+							<label class="ts-1">成都</label>
+						</li>
+					</ul>
+				</div>
+				<div class="user-add-title user-pos-box" id="link_shop">
+					<h4>热门城市</h4>
+					<ul class="of-hidden">
+						<li class="ect-select dis-flex fl">
+							<label class="ts-1">上海</label>
+						</li>
+						<li class="ect-select dis-flex fl">
+							<label class="ts-1">北京</label>
+						</li>
+						<li class="ect-select dis-flex fl">
+							<label class="ts-1">成都</label>
+						</li>
+						<li class="ect-select dis-flex fl">
+							<label class="ts-1">广州</label>
+						</li>
+					</ul>
+				</div>
+			</section>
+
+			<!--弹出搜索-->
+			<!--遮罩层-->
+		<div class="ec-fresh-bg ts-3">
+		</div>
+		<section class=" t-search-footer">
+			<form action="location_list.html" method="post">
+				<div class="user-address-search dis-box j-text-all">
+					<div class="box-flex">
+						<div class="user-search-input position-rel">
+							<i class="iconfont icon-sousuo"></i>
+							<input class="j-input-text ts-5" name="name" type="text" placeholder="请输入地址" id="newinput" autofocus="autofocus">
+							<i class="iconfont icon-guanbi1 is-null j-is-null now-top"></i>
+						</div>
+
+					</div>
+					<div class="user-right-search">
+						<div class="search-box b-color text-c"><button>搜索</button></div>
+					</div>
+				</div>
+				</from>
+		</section>
+			<div class="brand-list-page brand-list-page brand-list-page-n" data-spy="scroll" data-target="#navbar-example" data-offset="0">
+				<a class="b-l-a-id" id="link_a">A</a>
+				<ul>
+					<li>
+						<a href="#"><span>鞍山</span></a>
+					</li>
+					<li>
+						<a href="#"><span>安庆</span></a>
+					</li>
+					<li>
+						<a href="#"><span>安阳</span></a>
+					</li>
+					<li>
+						<a href="#"><span>安康</span></a>
+					</li>
+					<li>
+						<a href="#"><span>安丘</span></a>
+					</li>
+					<li>
+						<a href="#"><span>安顺</span></a>
+					</li>
+					<li>
+						<a href="#"><span>阿克苏</span></a>
+					</li>
+					<li>
+						<a href="#"><span>阿拉善盟</span></a>
+					</li>
+					<li>
+						<a href="#"><span>安吉</span></a>
+					</li>
+					<li>
+						<a href="#"><span>安宁</span></a>
+					</li>
+				</ul>
+				<a class="b-l-a-id brand-status" id="link_b">B</a>
+				<ul>
+					<li>
+						<a href="#"><span>北京</span></a>
+					</li>
+					<li>
+						<a href="#"><span>保定</span></a>
+					</li>
+					<li>
+						<a href="#"><span>包头</span></a>
+					</li>
+					<li>
+						<a href="#"><span>宝鸡</span></a>
+					</li>
+					<li>
+						<a href="#"><span>滨州</span></a>
+					</li>
+					<li>
+						<a href="#"><span>毫州</span></a>
+					</li>
+				</ul>
+				<a class="b-l-a-id" id="link_c">C</a>
+				<ul>
+					<li>
+						<a href="#"><span>成都</span></a>
+					</li>
+					<li>
+						<a href="#"><span>重庆</span></a>
+					</li>
+					<li>
+						<a href="#"><span>北京</span></a>
+					</li>
+					<li>
+						<a href="#"><span>保定</span></a>
+					</li>
+					<li>
+						<a href="#"><span>包头</span></a>
+					</li>
+					<li>
+						<a href="#"><span>宝鸡</span></a>
+					</li>
+					<li>
+						<a href="#"><span>滨州</span></a>
+					</li>
+					<li>
+						<a href="#"><span>毫州</span></a>
+					</li>
+					<li>
+						<a href="#"><span>北京</span></a>
+					</li>
+					<li>
+						<a href="#"><span>保定</span></a>
+					</li>
+					<li>
+						<a href="#"><span>包头</span></a>
+					</li>
+					<li>
+						<a href="#"><span>宝鸡</span></a>
+					</li>
+					<li>
+						<a href="#"><span>滨州</span></a>
+					</li>
+					<li>
+						<a href="#"><span>毫州</span></a>
+					</li>
+				</ul>
+				<a class="b-l-a-id" id="link_d">D</a>
+				<ul>
+					<li>
+						<a href="#"><span>成都</span></a>
+					</li>
+					<li>
+						<a href="#"><span>重庆</span></a>
+					</li>
+					<li>
+						<a href="#"><span>北京</span></a>
+					</li>
+					<li>
+						<a href="#"><span>保定</span></a>
+					</li>
+					<li>
+						<a href="#"><span>包头</span></a>
+					</li>
+					<li>
+						<a href="#"><span>宝鸡</span></a>
+					</li>
+					<li>
+						<a href="#"><span>滨州</span></a>
+					</li>
+					<li>
+						<a href="#"><span>毫州</span></a>
+					</li>
+					<li>
+						<a href="#"><span>北京</span></a>
+					</li>
+					<li>
+						<a href="#"><span>保定</span></a>
+					</li>
+					<li>
+						<a href="#"><span>包头</span></a>
+					</li>
+					<li>
+						<a href="#"><span>宝鸡</span></a>
+					</li>
+					<li>
+						<a href="#"><span>滨州</span></a>
+					</li>
+					<li>
+						<a href="#"><span>毫州</span></a>
+					</li>
+				</ul>
+				<a class="b-l-a-id" id="link_e">E</a>
+				<ul>
+					<li>
+						<a href="#"><span>成都</span></a>
+					</li>
+					<li>
+						<a href="#"><span>重庆</span></a>
+					</li>
+					<li>
+						<a href="#"><span>北京</span></a>
+					</li>
+					<li>
+						<a href="#"><span>保定</span></a>
+					</li>
+					<li>
+						<a href="#"><span>包头</span></a>
+					</li>
+					<li>
+						<a href="#"><span>宝鸡</span></a>
+					</li>
+					<li>
+						<a href="#"><span>滨州</span></a>
+					</li>
+					<li>
+						<a href="#"><span>毫州</span></a>
+					</li>
+					<li>
+						<a href="#"><span>北京</span></a>
+					</li>
+					<li>
+						<a href="#"><span>保定</span></a>
+					</li>
+					<li>
+						<a href="#"><span>包头</span></a>
+					</li>
+					<li>
+						<a href="#"><span>宝鸡</span></a>
+					</li>
+					<li>
+						<a href="#"><span>滨州</span></a>
+					</li>
+					<li>
+						<a href="#"><span>毫州</span></a>
+					</li>
+				</ul>
+			</div>
+			<div id="bs-example" class="b-l-page-pos-n">
+				<ul class="nav bs-docs-sidenav" role="tablist">
+					<li>
+						<a href="#link_pos">#</a>
+					</li>
+					<li>
+						<a href="#link_shop">热门</a>
+					</li>
+					<li>
+						<a href="#link_a">A</a>
+					</li>
+					<li>
+						<a href="#link_b">B</a>
+					</li>
+					<li>
+						<a href="#link_c">C</a>
+					</li>
+					<li>
+						<a href="#link_d">D</a>
+					</li>
+					<li>
+						<a href="#link_e">E</a>
+					</li>
+					<li>
+						<a>F</a>
+					</li>
+					<li>
+						<a>G</a>
+					</li>
+					<li>
+						<a>H</a>
+					</li>
+					<li>
+						<a>J</a>
+					</li>
+					<li>
+						<a>K</a>
+					</li>
+					<li>
+						<a>L</a>
+					</li>
+					<li>
+						<a>M</a>
+					</li>
+					<li>
+						<a>N</a>
+					</li>
+					<li>
+						<a>P</a>
+					</li>
+					<li>
+						<a>Q</a>
+					</li>
+					<li>
+						<a>R</a>
+					</li>
+					<li>
+						<a>S</a>
+					</li>
+					<li>
+						<a>T</a>
+					</li>
+					<li>
+						<a>W</a>
+					</li>
+					<li>
+						<a>X</a>
+					</li>
+					<li>
+						<a>Y</a>
+					</li>
+					<li>
+						<a>Z</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<script type="text/javascript " src="js/jquery-2.1.4.min.js "></script>
+		<script type="text/javascript " src="js/swiper.min.js "></script>
+		<script type="text/javascript " src="js/bootstrap.min.js"></script>
+		<script type="text/javascript " src="js/ectouch.js "></script>
+		<script>
+			$(function($) {
+				$('body').scrollspy({
+					target: '#bs-example'
+				})
+
+				$(".county-select-box").click(function() {
+					$(".county-select-box i").toggleClass("active");
+				});
+			});
+		</script>
+	</body>
+
+</html>

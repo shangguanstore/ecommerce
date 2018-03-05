@@ -1,0 +1,104 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+{include file ='library/seller_html_head.lbi'}
+{insert_scripts files='./sms/sms.js'}
+</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+				{include file ='library/seller_menu_tab.lbi'}
+                <form action="javascript:searchUser()" name="searchForm">
+                    <div class="search-form">
+                        <label>{$lang.handler}</label>
+                        <select name="handler" class="select">
+                            <option value="0">请选择</option>
+                            <option value="1">{$lang.off_stocks}</option>
+                            <option value="2">{$lang.stay_dispose}</option>
+                        </select>
+                        <label class="submit-border"><input type="submit" class="submit" value="搜索"></label>
+                    </div>
+                </form>
+                {/if}
+                <div class="list-div mt10" id="listDiv">
+                  <table class="ecsc-default-table ecsc-table-seller">
+                    <tr>
+                      <th width="10%">{$lang.record_id}</th>
+                      <th width="15%">{$lang.label_total_fee}</th>
+                      <th width="15%">{$lang.label_log_type}</th>
+                      <th width="15%">{$lang.label_add_time}</th>
+                      <th width="15%">{$lang.handler}</th>
+                    </tr>
+                    {foreach from=$log_list item=log name=nolog}
+                    <tr>
+                      <td class="left">{$log.log_id}</td>
+                      <td align="center">{$log.amount}</td>
+                      <td align="center">
+                        {$lang.label_deposit}
+                        <br/>
+                        <em style="color:#e23435">(
+                        {if $log.deposit_mode}
+                        	{$lang.label_user_balance}
+                        {else}
+                        	{$lang.label_offline_money}
+                        {/if}
+                        )</em>
+                      </td>  
+                      <td align="center">{$log.add_time}</td>  
+                      <td align="center">
+                      {if $log.is_paid eq 1}
+                      	{$lang.off_stocks}
+                      {else}
+                      	{$lang.stay_dispose}
+                      {/if}
+                      {if $log.certificate_img}
+                      &nbsp;
+                      <a href="../{$log.certificate_img}" target="_blank">{$lang.transfer_certificate}</a>
+                      {/if}
+                      </td>  
+                    </tr>
+                    {foreachelse}
+                    <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+                    {/foreach}
+                    <tfoot>
+                        <tr>
+                            <td colspan="10">{include file="page.dwt"}</td>
+                        </tr>
+                    </tfoot>
+                  </table>
+                </div>
+                {if $full_page}
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+listTable.recordCount = {$record_count};
+listTable.pageCount = {$page_count};
+
+{foreach from=$filter item=item key=key}
+listTable.filter.{$key} = '{$item}';
+{/foreach}
+
+/**
+ * 搜索用户
+ */
+function searchUser()
+{
+	listTable.filter['handler'] = Utils.trim(document.forms['searchForm'].elements['handler'].value);
+	
+    listTable.filter['page'] = 1;
+    listTable.loadList();
+}
+</script>
+</body>
+</html>
+{/if}

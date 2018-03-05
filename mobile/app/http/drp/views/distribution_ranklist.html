@@ -1,0 +1,197 @@
+{include file="page_header"}
+<body class="rank-bg">
+		<div class="rank-img-box">
+			<div class="n-dis-box"></div>
+			<div class="header-dis-p-img">
+				<div class="rank-img-box"><img src="{__TPL__}img/fx-peihangbao.png" /></div>
+				<div class="rank-list-cont f-03">您的排名:<span>{$rank}</span>名</div>
+				<div class="hsse-bg">
+					<div class="rank-list"><img src="{__TPL__}img/fx-list.png"></div>
+					<div class="huangse-bg ">
+						<div class="huangse-bg-1  p-r">
+							<div class="l-line p-a"></div>
+							<div class="l-line-1 p-a"></div>
+							<div class="rank-height next-bg-1">
+								<div class="rank-cont-box">
+
+                                    <div class="info">
+                                    <script id="j-product" type="text/html">
+                                    <%if list%>
+                                    <%each list as key num%>
+									<section class="rank-cont">
+										<a href="{U('team_detail')}&uid=<%key.user_id%>">
+											<ul class="dis-box">
+												<li class="rank-one">
+													<div class="ranklist">
+                                                        <%if key.img%>
+                                                        <img src="<%key.img%>">
+                                                        <%else if key.span%>
+                                                        <span><%key.span%></span>
+                                                        <%/if%>
+                                                    </div>
+												</li>
+												<li class="rank-two">
+													<div class="r-headerimg"><img src="<%if key.headimgurl%><%key.headimgurl%><%else%>{__TPL__}img/no_image.jpg<%/if%>"></div>
+												</li>
+												<li class="box-flex">
+													<h2><%if key.nickname%><%key.nickname%><%else%><%key.user_name%><%/if%></h2>
+													<p>获得佣金:<span><%#key.money%></span></p>
+												</li>
+												<li class="rank-stree">
+													<div class="rank-jt"><img src="{__TPL__}img/fx-four.png"></div>
+												</li>
+											</ul>
+										</a>
+									</section>
+                                    <%/each%>
+                                    <%/if%>
+
+                                    </script>
+                                    </div>
+
+									</div>
+									</div>
+									</div>
+									</div>
+									</div>
+								</div>
+							</div>
+	</body>
+	<!--引用js-->
+
+<script type="text/javascript" src="{__PUBLIC__}script/jquery.json.js"></script>
+<script type="text/javascript" src="{__PUBLIC__}script/template.js"></script>
+<script>
+    /*!
+
+     @Name：ECTouch infinite js v0.1
+     $Author：carson
+     $Site：http://www.ectouch.cn
+     @Date：2016-01-16
+     @License：MIT
+     $('.aa').infinite({url:'', params:'a=b&c=d'})
+     */
+    ;(function($) {
+        "use strict";
+        var target = null;
+        var locked = false;
+        var opts = {
+            "url": '',
+            "pager": '1',
+            "size": '10',
+            "params": '',
+            "template": '',
+            "type": 'post',
+            "format": 'json',
+            "offset": '100'
+        }
+        var totalPage = 0;
+
+        var methods = {
+            // 初始化
+            init: function(options) {
+                target = $(this);
+                if (options) {
+                    $.extend(opts, options);
+                }
+                methods.getData();
+                $(".next-bg-1").scroll(methods.checkScroll);
+
+                var method = {};
+                //获取当前页码
+                return method.getPager = function() {
+                    return opts.pager;
+                },
+                    //刷新当前页
+                        method.reload = function() {
+                            methods.getData();
+                        },
+                    //重新加载
+                        method.onload = function(options) {
+                            if (options) {
+                                opts.params = options;
+                            }
+                            opts.pager = 1;
+                            methods.getData();
+                        },
+                    //获取总页数
+                        method.getTotalPage = function() {
+                            return totalPage;
+                        },
+                        method
+            },
+
+            // 请求参数
+            getParam: function() {
+                var param = "page=" + opts.pager + "&size=" + opts.size;
+                param = param + "&" + opts.params;
+                return param;
+            },
+
+            // 请求数据
+            getData: function() {
+                locked = true;
+                var depr = (opts.url.indexOf('?') > 0) ? '&' : '?';
+                var url = opts.url + depr + "ts=" + Math.random();
+                $.ajax({
+                    url: url,
+                    type: opts.type,
+                    dataType: opts.format,
+                    data: methods.getParam(),
+                    async: false,
+                    success: function(data) {
+                        totalPage = data.totalPage == 'undefind' ? 0 : data.totalPage;
+                        template.config('openTag', '<%');
+                        template.config('closeTag', '%>');
+                        var html = template(opts.template, data);
+                        if (opts.pager > 1) {
+                            target.append(html);
+                        } else {
+                            target.html(html);
+                        }
+                        opts.pager++;
+                        locked = false;
+                    }
+                });
+            },
+
+            // 监听滚动
+            checkScroll: function() {
+                var nScrollHight = 0; //滚动距离总长(注意不是滚动条的长度)
+                var nScrollTop = 0;   //滚动到的当前位置
+                var nDivHight = $(".next-bg-1").height();
+                $(".next-bg-1").scroll(function(){
+                    nScrollHight = $(this)[0].scrollHeight;
+                    nScrollTop = $(this)[0].scrollTop;
+                    if(nScrollTop + nDivHight >= nScrollHight && opts.pager <= totalPage && locked == false) {
+                       methods.getData();
+                    }
+                });
+            },
+
+        }
+
+        // $.fn.infinite = function(options) {
+        // return init(options, $(this));
+        // }
+
+        $.fn.infinite = function(method) {
+            if (methods[method]) {
+                return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+            } else if (typeof method == 'object' || !method) {
+                return methods.init.apply(this, arguments);
+            } else {
+                $.error('Method ' + method + ' does not exist!');
+            }
+        }
+    })(jQuery)
+    </script>
+<script>
+ var url="{U('rank_list')}";
+ $('.info').infinite({url: url, template: 'j-product'});
+
+
+
+</script>
+
+</html>

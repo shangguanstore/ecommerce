@@ -1,0 +1,278 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<form action="order.php?act=operate_post" method="post" name="theForm">
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+				{include file ='library/seller_menu_tab.lbi'}
+            	<div class="ecsc-order-show">
+                	<div class="ecsc-order-info">
+                    	<div class="ecsc-order-details ecsc-order-details-w100">
+                        	<div class="title">{$lang.op_split}</div>
+                            <div class="content">
+                                <dl>
+                                  <dt>{$lang.label_order_sn}</dt>
+                                  <dd>{$order.order_sn|escape}</dd>
+                                </dl>
+                                <dl>
+                                  <dt>{$lang.label_order_time}</dt>
+                                  <dd>{$order.formated_add_time}</dd>
+                                </dl>
+                            	<dl>
+                                  <dt>{$lang.label_consignee}</dt>
+                                  <dd>{$order.consignee|escape}</dd>
+                                </dl>
+                                <dl>
+                                  <dt>{$lang.label_address}</dt>
+                                  <dd>[{$order.region}] {$order.address|escape}</dd>
+                                </dl>
+                                <dl>
+                                  <dt>{$lang.label_shipping}</dt>
+                                  <dd>{if $exist_real_goods}{if $order.shipping_id > 0}{$order.shipping_name}{else}{$lang.require_field}{/if} {if $order.insure_fee > 0}（{$lang.label_insure_fee}{$order.formated_insure_fee}）{/if}{/if}</dd>
+                                </dl>
+                                <dl>
+                                  <dt>{$lang.label_shipping_fee}</dt>
+                                  <dd>{$order.shipping_fee}</dd>
+                                </dl>
+                                <dl>
+                                  <dt>{$lang.label_insure_yn}</dt>
+                                  <dd>{if $insure_yn}{$lang.yes}{else}{$lang.no}{/if}</dd>
+                                </dl>
+                                <dl>
+                                  <dt>{$lang.label_insure_fee}</dt>
+                                  <dd>{$order.insure_fee|default:0.00}</dd>
+                                </dl>
+                                <dl>
+                                  <dt>{$lang.label_email}</dt>
+                                  <dd>{$order.email}</dd>
+                                </dl>
+                                <dl>
+                                  <dt>{$lang.label_zipcode}</dt>
+                                  <dd>{if $order.zipcode}{$order.zipcode|escape}{else}<span class="grey">{$lang.wu}</span>{/if}</dd>
+                                </dl>
+                                <dl>
+                                  <dt>{$lang.label_insure_fee}</dt>
+                                  <dd>{$order.insure_fee|default:0.00}</dd>
+                                </dl>
+
+                                <dl>
+                                  <dt>{$lang.label_tel}</dt>
+                                  <dd>{if $order.tel}{$order.tel}{else}<span class="grey">{$lang.wu}</span>{/if}</dd>
+                                </dl>
+                                <dl>
+                                  <dt>{$lang.label_mobile}</dt>
+                                  <dd>{if $order.mobile}{$order.mobile|escape}{else}<span class="grey">{$lang.wu}</span>{/if}</dd>
+                                </dl>
+                                <dl>
+                                  <dt>{$lang.buyer_message}：</dt>
+                                  <dd>{if $order.postscript neq ''}{$order.postscript}{else}<span class="grey">{$lang.wu}</span>{/if}</dd>
+                                </dl>
+                                <dl>
+                                  <dt>{$lang.label_best_time}</dt>
+                                  <dd>{if $order.best_time neq ''}{$order.best_time|escape}{else}<span class="grey">{$lang.wu}</span>{/if}</dd>
+                                </dl>
+                                <dl>
+                                  <dt>{$lang.seller_message}：</dt>
+                                  <dd>{if $order.postscript neq ''}{$order.postscript}{else}<span class="grey">{$lang.wu}</span>{/if}</dd>
+                                </dl>
+                                <dl>
+                                  <dt>{$lang.label_sign_building}</dt>
+                                  <dd>{if $order.sign_building neq ''}{$order.sign_building|escape}{else}<span class="grey">{$lang.wu}</span>{/if}</dd>
+                                </dl>
+                                <dl>
+                                  <dt></dt>
+                                  <dd></dd>
+                                </dl>
+                                <dl class="line">
+                                	<dt>{$lang.label_order_sn}</dt>
+                                    <dd>{$order.order_sn}
+                                        <a href="javascript:void(0);">{$lang.more}<i class="icon-angle-down"></i>
+                                        <div class="more"><span class="arrow"></span>
+                                            <ul>
+                                                <li>{$lang.label_payment}<span>{if $order.pay_id > 0}{$order.pay_name}{else}{$lang.require_field}{/if}</span></li>
+                                                <li>{$lang.label_order_time}<span>{$order.formated_add_time}</span></li>
+                                                <li>{$lang.label_pay_time}<span>{$order.pay_time}</span></li>
+                                                <li>{$lang.label_shipping_time}<span>{$order.shipping_time}</span></li>
+                                            </ul>
+                                        </div>
+                                        </a>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="order-step" class="ecsc-order-step">
+                        <dl class="step-first current">
+                          <dt>{$lang.submit_order}</dt>
+                          <dd class="bg"></dd>
+                          <dd class="date" title="{$lang.label_order_time}">{$order.formated_add_time}</dd>
+                        </dl>
+                        <dl {if $order.pay_status eq 2}class="current"{/if}>
+                          <dt>{$lang.payment_order}</dt>
+                          <dd class="bg"></dd>
+                          <dd class="date" title="{$lang.label_pay_time}">{$order.pay_time}</dd>
+                        </dl>
+                            <dl {if $order.shipping_status eq 1}class="current"{/if}>
+                          <dt>{$lang.seller_shipping}</dt>
+                          <dd class="bg"></dd>
+                          <dd class="date" title="{$lang.label_shipping_time}">{$order.shipping_time}</dd>
+                        </dl>
+                        <dl {if $order.shipping_status eq 2}class="current"{/if}>
+                          <dt>{$lang.confirm_shipping}</dt>
+                          <dd class="bg"></dd>
+                          <dd class="date" title="{$lang.label_shipping_time}">{$order.shipping_time}</dd>
+                        </dl>
+                        <dl {if $order.is_comment eq 1}class="current"{/if}>
+                          <dt>{$lang.evaluate}</dt>
+                          <dd class="bg"></dd>
+                          <dd class="date">{$order.comment_time}</dd>
+                        </dl>
+                  	</div>
+                    <div class="ecsc-order-contnet">
+                        <table class="ecsc-default-table order">
+                            <thead>
+                                <tr>
+                                    <th width="34%">{$lang.goods_name_brand}</th>
+                                    <th width="9%">{$lang.goods_sn}</th>
+                                    <th width="9%">{$lang.product_sn}</th>
+                                    <th width="12%">{$lang.goods_attr}</th>
+                                    {if $suppliers_list neq 0}
+                                    <th width="8%">{$lang.suppliers_name}</th>
+                                    {/if}
+                                    <th width="6%">{$lang.storage}</th>
+                                    <th width="6%">{$lang.goods_number}</th>
+                                    <th width="7%">{$lang.goods_delivery}</th>
+                                    <th width="9%">{$lang.goods_delivery_curr}</th>
+                                  </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th colspan="6" style="border-right:0;">
+                                <div class="order-deliver">
+                                    <span>{$lang.label_shipping}：{if $exist_real_goods}{if $order.shipping_id > 0}<font id="shipping_name">{$order.shipping_name}</font>{else}{$lang.require_field}{/if}&nbsp;&nbsp;{if !$order.child_order}<a href="order.php?act=edit&order_id={$order.order_id}&step=shipping" class="blue">{$lang.edit}</a>{/if}&nbsp;&nbsp;<a href="order.php?act=info&order_id={$order.order_id}&shipping_print=1" target="_blank" class="blue">{$lang.print_shipping}</a> {if $order.insure_fee > 0}（{$lang.label_insure_fee}{$order.formated_insure_fee}）{/if}{/if}</li></span>
+                                    <span>{$lang.label_invoice_no} {if $order.shipping_id>0 and $order.shipping_status>0}<span id="invoice_no">{if $order.invoice_no}{$order.invoice_no}{else}N/A{/if}</span>&nbsp;&nbsp;{if !$order.child_order}<a href="order.php?act=edit&order_id={$order.order_id}&step=shipping" class="blue">{$lang.edit}</a>{/if}{/if}</span></span>
+                                </div>
+                                </th>
+                                <th colspan="3" style="border-left:0;"></th>
+                            </tr>
+                             {foreach from=$goods_list item=goods}
+                                <!--礼包-->
+                                {if $goods.goods_id gt 0 && $goods.extension_code eq 'package_buy'}
+                                    <tr>
+                                        <td colspan="6">{$goods.goods_name}<span class="red">{$lang.remark_package}</span></td>
+                                        <td align="center">{$goods.goods_number}</td>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                    {foreach from=$goods.package_goods_list item=package}
+                                    <tr>
+                                        <td><span class="red">{$lang.remark_package_goods}</span>&nbsp;&nbsp;<a href="../goods.php?id={$package.goods_id}" target="_blank">{$package.goods_name}</a></td>
+                                        <td align="center">{$package.goods_sn}</td>
+                                        <td align="center">{$package.product_sn}</td>
+                                        <td align="center">{$package.goods_attr_str}</td>
+                                        {if $suppliers_list neq 0}
+                                        <td align="center">{$suppliers_name[$package.suppliers_id]|default:$lang.restaurant}</td>
+                                        {/if}
+                                        <td align="center">{$package.storage}</td>
+                                        <td align="center">{$package.order_send_number}</td>
+                                        <td align="center">{$package.sended}</td>
+                                        <td align="center"><input name="send_number[{$goods.rec_id}][{$package.g_p}]" type="text" class="text_3" id="send_number_{$goods.rec_id}_{$package.g_p}" value="{$package.send}" size="10" maxlength="11" {$package.readonly}/></td>
+                                    </tr>
+                                    {/foreach}
+                                {else}
+                                <tr>
+                                    <td class="tl" style="padding-left:10px;">
+                                    {if $goods.goods_id gt 0 && $goods.extension_code neq 'package_buy'}
+                                    <a href="../goods.php?id={$goods.goods_id}" target="_blank">{$goods.goods_name} {if $goods.brand_name}[ {$goods.brand_name} ]{/if}
+                                    {if $goods.is_gift}{if $goods.goods_price > 0}{$lang.remark_favourable}{else}{$lang.remark_gift}{/if}{/if}
+                                    {if $goods.parent_id > 0}{$lang.remark_fittings}{/if}</a>
+                                    {/if}
+                                    </td>
+                                    <td align="center">{$goods.goods_sn}</td>
+                                    <td align="center">{$goods.product_sn}</td>
+                                    <td align="center">{$goods.goods_attr|nl2br}</td>
+                                    {if $suppliers_list neq 0}
+                                    <td align="center">{$suppliers_name[$goods.suppliers_id]|default:$lang.restaurant}</td>
+                                    {/if}
+                                    <td align="center">{$goods.storage}</td>
+                                    <td align="center">{$goods.goods_number}</td>
+                                    <td align="center">{$goods.sended}</td>
+                                    <td align="center"><input name="send_number[{$goods.rec_id}]" type="text" id="send_number_{$goods.rec_id}" class="text_3 tc" value="{$goods.send}" {$goods.readonly}/></td>
+                                </tr>
+                                {/if}
+                              {/foreach}
+                            </tbody>
+                        </table>
+                        <table cellpadding="0" cellspacing="0" width="100%">
+                        	<tr>
+                                <td>
+                                    <div class="caozuo_bz">
+                                       {if $suppliers_list neq 0}
+                                       <div class="item">
+                                            <strong>{$lang.label_suppliers}</strong>
+                                            <div class="r">
+                                                <select name="suppliers_id" id="suppliers_id" class="select">
+                                                    <option value="0" selected="true">{$lang.suppliers_no}</option>
+                                                    {foreach from=$suppliers_list item=suppliers}
+                                                    <option value="{$suppliers.suppliers_id}">{$suppliers.suppliers_name}</option>
+                                                    {/foreach}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        {/if}
+                                        <div class="item">
+                                            <strong>{$lang.label_action_note}</strong>
+                                            <div class="r"><textarea name="action_note" cols="80" rows="3" class="textarea">{$action_note}</textarea></div>
+                                        </div>
+                                        <div class="item">
+                                            <strong>&nbsp;</strong>
+                                            <div class="r">
+                                                <input name="delivery_confirmed" type="submit" value="{$lang.op_confirm}{$lang.op_split}" class="button"/>&nbsp;&nbsp;<input type="button" value="{$lang.cancel}" class="button" onclick="location.href='order.php?act=info&order_id={$order_id}'" />
+                                                <input name="order_id" type="hidden" value="{$order.order_id}">
+                                                <input name="delivery[order_sn]" type="hidden" value="{$order.order_sn}">
+                                                <input name="delivery[add_time]" type="hidden" value="{$order.order_time}">
+                                                <input name="delivery[user_id]" type="hidden" value="{$order.user_id}">
+                                                <input name="delivery[how_oos]" type="hidden" value="{$order.how_oos}">
+                                                <input name="delivery[shipping_id]" type="hidden" value="{$order.shipping_id}">
+                                                <input name="delivery[shipping_fee]" type="hidden" value="{$order.shipping_fee}">
+                                                <input name="delivery[consignee]" type="hidden" value="{$order.consignee}">
+                                                <input name="delivery[address]" type="hidden" value="{$order.address}">
+                                                <input name="delivery[country]" type="hidden" value="{$order.country}">
+                                                <input name="delivery[province]" type="hidden" value="{$order.province}">
+                                                <input name="delivery[city]" type="hidden" value="{$order.city}">
+                                                <input name="delivery[district]" type="hidden" value="{$order.district}">
+                                                <input name="delivery[sign_building]" type="hidden" value="{$order.sign_building}">
+                                                <input name="delivery[email]" type="hidden" value="{$order.email}">
+                                                <input name="delivery[zipcode]" type="hidden" value="{$order.zipcode}">
+                                                <input name="delivery[tel]" type="hidden" value="{$order.tel}">
+                                                <input name="delivery[mobile]" type="hidden" value="{$order.mobile}">
+                                                <input name="delivery[best_time]" type="hidden" value="{$order.best_time}">
+                                                <input name="delivery[postscript]" type="hidden" value="{$order.postscript}">
+                                                <input name="delivery[how_oos]" type="hidden" value="{$order.how_oos}">
+                                                <input name="delivery[insure_fee]" type="hidden" value="{$order.insure_fee}">
+                                                <input name="delivery[shipping_fee]" type="hidden" value="{$order.shipping_fee}">
+                                                <input name="delivery[agency_id]" type="hidden" value="{$order.agency_id}">
+                                                <input name="delivery[shipping_name]" type="hidden" value="{$order.shipping_name}">
+                                                <input name="operation" type="hidden" value="{$operation}">
+                                            </div>
+                                        </div>
+                                    </div>
+                              	</td>
+                        	</tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+{include file ='library/seller_footer.lbi'}
+</body>
+</html>

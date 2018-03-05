@@ -1,0 +1,205 @@
+<!doctype html>
+<html>
+<head>{include file ='library/admin_html_head.lbi'}</head>
+
+<body class="iframe_body">
+	<div class="warpper">
+    	<div class="title"><a href="{$action_link.href}" class="s-back">{$lang.back}</a>商品 - {$ur_here}</div>
+        <div class="content">
+        	<div class="tabs_info">
+            	<ul>
+                	<li id="linkgoods-tab" data-tab="linkgoods" class="curr"><a href="javascript:;">添加关联描述</a></li>
+					{if $form_act neq 'update_link_desc'}
+                	<li id="linklist-tab" data-tab="linklist"><a href="javascript:;">描述列表</a></li>
+					{/if}
+                </ul>
+            </div>		
+        	<div class="explanation" id="explanation">
+            	<div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span></div>
+                <ul>
+                	<li>选择需要统一修改的商品详情的商品分类。</li>
+                    <li>请合理编辑商品详情，以便让用户清晰了解该商品。</li>
+                </ul>
+            </div>
+			<!--添加关联描述 start-->
+            <div class="flexilist" id="linkgoods-table" data-table="linkgoods">
+                <div class="common-content">
+					<form enctype="multipart/form-data" action="goods.php" method="post" name="theForm" id="goods_desc_form">
+                    <div class="step" ectype="filter" data-filter="goods">
+                        <div class="step_content">
+							<div class="goods_search_div">
+								<!--通用部分 start-->
+								<div class="goods_search_div">
+									<div class="search_select">
+										<div class="categorySelect">
+											<div class="selection">
+												<input type="text" name="category_name" id="category_name" class="text w250 valid" value="请选择分类" autocomplete="off" readonly data-filter="cat_name" />
+												<input type="hidden" name="category_id" id="category_id" value="0" data-filter="cat_id" />
+											</div>
+											<div class="select-container" style="display:none;">
+												{include file="library/filter_category.lbi"}
+											</div>
+										</div>
+									</div>
+									<div class="search_select">
+										<div class="brandSelect">
+											<div class="selection">
+												<input type="text" name="brand_name" id="brand_name" class="text w120 valid" value="请选择品牌" autocomplete="off" readonly data-filter="brand_name" />
+												<input type="hidden" name="brand_id" id="brand_id" value="0" data-filter="brand_id" />
+											</div>
+											<div class="brand-select-container" style="display:none;">
+												{include file="library/filter_brand.lbi"}
+											</div>
+										</div>                            
+									</div>
+									<input type="text" name="keyword" class="text w150" value="" placeholder="请输入关键字" data-filter="keyword" autocomplete="off" />
+									<a href="javascript:void(0);" class="btn btn30" ectype="search"><i class="icon icon-search"></i>搜索</a>
+								</div>
+								<!--通用部分 end-->
+							</div>
+							<div class="move_div">
+								<div class="move_left">
+									<h4>待选列表</h4>
+									<div class="move_info">
+										<div class="move_list">
+											{include file="library/move_left.lbi"}
+										</div>
+									</div>
+									<div class="move_handle">
+										<a href="javascript:void(0);" class="btn btn25 moveAll" ectype="moveAll">全选</a>
+										<a href="javascript:void(0);" class="btn btn25 red_btn" ectype="sub" data-operation="add_link_desc">确定</a>
+									</div>
+								</div>
+								<div class="move_middle">
+									<div class="move_point" data-operation="add_link_desc"></div>
+								</div>
+								<div class="move_right">
+									<h4>已选列表</h4>
+									<div class="move_info">
+										<div class="move_list">
+											<ul>
+												{foreach from=$link_goods_list item=link_goods}
+												<li data-value="{$link_goods.goods_id}" data-text="{$link_goods.goods_name}"><i class="sc_icon sc_icon_no"></i><a href="javascript:void(0);">{$link_goods.goods_name}</a></li>
+												{/foreach}
+											</ul>
+										</div>
+									</div>
+									<div class="move_handle">
+										<a href="javascript:void(0);" class="btn btn25 moveAll" ectype="moveAll">全选</a>
+										<a href="javascript:void(0);" class="btn btn25 btn_red" ectype="sub" data-operation="drop_link_desc">移除</a>
+									</div>
+								</div>
+							</div>
+							<div class="mian-info">
+								<div class="switch_info">
+									<div class="item">
+										<div class="label" style="width:auto;">{$lang.require_field}&nbsp;{$lang.goods_desc_name}：</div>
+										<div class="label_value">
+											<input name="desc_name" type="text" class="text" value="{$goods.desc_name}" size="80" />
+                                            <div class="form_prompt"></div>
+										</div>
+									</div>
+									<div class="item">
+										<div class="label">&nbsp;</div>
+										<div class="label_value">
+											
+										</div>
+										{$goods_desc}
+									</div>									
+								</div>
+							</div>
+                            <div class="move_buttom_div pt30 tc info_btn">
+								<input type="hidden" name="MAX_FILE_SIZE" value="2097152" />
+								<input type="hidden" name="act" value="{$form_act}" />
+								<input type="hidden" name="id" value="{$goods.id|default:0}" />
+								<input type="hidden" name="goods_id" value="0" />
+								<input type="button" value="{$lang.button_submit}" class="button fn" id="submitBtn" />
+								<input type="reset" value="{$lang.button_reset}" class="button button_reset fn" />								
+                            </div>
+                        </div>
+                    </div>
+					</form>
+                </div>
+            </div>
+			<!--添加关联描述 end-->
+			<!--描述列表 start-->
+			{if $form_act neq 'update_link_desc'}
+            <div class="flexilist" id="linklist-table" data-table="linklist" style="display:none">
+                <div class="common-content">
+                	<div class="list-div" id="listDiv">
+                    	<table cellpadding="0" cellspacing="0" border="0">
+                        	<thead>
+                            	<tr>
+                                	<th width="10%" class="sign"><div class="tDiv">{$lang.record_id}</div></th>
+                                	<th width="70%"><div class="tDiv">{$lang.goods_desc_name}</div></th>
+                                    <th width="20%" class="handle">{$lang.handler}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+								{foreach from=$desc_list item=list}
+                            	<tr>
+                                    <td class="sign"><div class="tDiv">{$list.id}</div></td>
+                                    <td><div class="tDiv">{$list.desc_name}</div></td>
+                                    <td class="handle">
+                                        <div class="tDiv a2">
+                                            <a href="goods.php?act=edit_link_desc&id={$list.id}" class="btn_edit"><i class="icon icon-edit"></i>{$lang.modify}</a>
+                                            <a href="javascript:get_del_desc({$list.id});" class="btn_trash"><i class="icon icon-trash"></i>{$lang.drop}</a>									
+                                        </div>
+                                    </td>
+                                </tr>
+								{/foreach}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+			</div>
+			{/if}
+			<!--描述列表 end-->
+		</div>
+	</div>
+    {include file ='library/pagefooter.lbi'}	
+    {literal}
+	<script language="JavaScript">
+	//切换标签
+	$(".tabs_info li").click(function(){
+		var this_tab = $(this).data('tab');
+		$(".flexilist[data-table="+this_tab+"]").show();
+		$(".flexilist[data-table="+this_tab+"]").siblings(".flexilist").hide();
+	});
+	
+	function get_del_desc(id){
+		if (confirm('确实删除这条信息吗')){
+			location.href = 'goods.php?act=del_link_desc&id=' + id;
+		}
+	}
+	
+	$(function(){
+		//表单验证
+		$("#submitBtn").click(function(){
+			if($("#goods_desc_form").valid()){
+				$("#goods_desc_form").submit();
+			}
+		});
+	
+		$('#goods_desc_form').validate({
+			errorPlacement:function(error, element){
+				var error_div = element.parents('div.label_value').find('div.form_prompt');
+				element.parents('div.label_value').find(".notic").hide();
+				error_div.append(error);
+			},
+			rules:{
+				desc_name:{
+					required : true
+				}
+			},
+			messages:{
+				desc_name:{
+					required : '<i class="icon icon-exclamation-sign"></i>描述名称不能为空'
+				}
+			}			
+		});
+	});
+	</script>
+    {/literal}
+</body>
+</html>

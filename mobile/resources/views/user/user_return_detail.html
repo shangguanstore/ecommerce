@@ -1,0 +1,140 @@
+{include file="page_header"}
+<body>
+    <div class="con m-b7">
+        <header class="dis-box header-menu n-header-menu b-color color-whie">
+            <a class="" href="javascript:history.go(-1);"><i class="iconfont icon-back"></i></a>
+            <h3 class="box-flex">退换货详情</h3>
+            <a><i class="iconfont icon-13caidan j-nav-box"></i></a>
+        </header>
+        <header class="b-color-f padding-all" style="border-bottom:1px solid #f6f6f9">详细信息</header>
+        <ul class="padding-all user-cont-box b-color-f">
+            <li class="dis-box">
+                <div class="user-return-cont-left">退换货单号 : </div>
+                <div class="box-flex">
+                    <div class="user-return-cont-right position-rel f-06 col-6">
+                        {$return_detail.return_sn}
+                    </div>
+                </div>
+            </li>
+            <li class="dis-box">
+                <div class="user-return-cont-left">申请时间 :</div>
+                <div class="box-flex">
+                    <div class="user-return-cont-right position-rel  f-06 col-6">
+                        {$return_detail.apply_time}
+                    </div>
+                </div>
+            </li>
+            <li class="dis-box">
+                <div class="user-return-cont-left">退款类型 :</div>
+                <div class="box-flex">
+                    <div class="user-return-cont-right position-rel  f-06 col-6">
+                        {if $return_detail.return_type == 0}
+                        维修
+                        {elseif $return_detail.return_type == 1}
+                        退货
+                        {elseif $return_detail.return_type == 2}
+                        换货
+                        {/if}
+                    </div>
+                </div>
+            </li>
+            <li class="dis-box">
+                <div class="user-return-cont-left">订单状态 : </div>
+                <div class="box-flex">
+                    <div class="user-return-cont-right position-rel  f-06 col-6">
+                        {$return_detail.return_status}
+                    </div>
+                </div>
+            </li>
+            <li class="dis-box">
+                <div class="user-return-cont-left">退货原因 : </div>
+                <div class="box-flex">
+                    <div class="user-return-cont-right position-rel  f-06 col-6">
+                        {$return_detail.return_brief}
+                    </div>
+                </div>
+            </li>
+            <li class="dis-box">
+                <div class="user-return-cont-left">退款金额 : </div>
+                <div class="box-flex">
+                    <div class="user-return-cont-right position-rel  f-06 col-6">
+                        {$return_detail.refound_status}
+                    </div>
+                </div>
+            </li>
+            <li class="dis-box">
+                <div class="user-return-cont-left">联系人:</div>
+                <div class="box-flex user-return-cont-right  f-06 col-6">
+                    {$return_detail.addressee}
+                </div>
+            </li>
+            <li class="dis-box">
+                <div class="user-return-cont-left">联系地址:</div>
+                <div class="box-flex user-return-cont-right f-06 col-6">
+                    {$return_detail.address_detail}
+                </div>
+            </li>
+            <li class="dis-box">
+                <div class="user-return-cont-left">联系电话:</div>
+                <div class="box-flex user-return-cont-right  f-06 col-6">
+                    {$return_detail.phone}
+                </div>
+            </li>
+        </ul>
+        {if $return_detail.return_type == 2}
+        <header class="b-color-f padding-all" style="border-top:6px solid #f6f6f9;border-bottom:1px solid #f6f6f9">换货发货进度</header>
+        <ul class="padding-all user-cont-box b-color-f">
+            <li class="dis-box">
+                <div class="user-return-cont-left">订单号 : </div>
+                <div class="box-flex">
+                    <div class="user-return-cont-right position-rel f-06 col-6">
+                        {$return_detail.order_sn}
+                    </div>
+                </div>
+            </li>
+            <li class="dis-box">
+                <div class="user-return-cont-left">申请时间 :</div>
+                <div class="box-flex">
+                    <div class="user-return-cont-right position-rel  f-06 col-6">
+                        {$return_detail.apply_time}
+                    </div>
+                </div>
+            </li>
+            {if $return_detail.out_invoice_no}
+            <li class="dis-box">
+                <div class="user-return-cont-left">发货单号 :</div>
+                <div class="box-flex">
+                    <div class="user-return-cont-right position-rel  f-06 col-6">
+                        {$return_detail.out_invoice_no}
+                    </div>
+                </div>
+            </li>
+            {/if}
+        </ul>
+        {/if}
+        <section class="flow-checkout-pro j-flow-checkout-pro" >
+            <header class="b-color-f padding-all" style="border-top:6px solid #f6f6f9;border-bottom:1px solid #f6f6f9">商品列表</header>
+            <div class="product-list-small b-color-f dis-box">
+                <ul class="box-flex flow-checkout-bigpic" style="display:block;">
+                    <li>
+                        <div class="product-div">
+                            <a class="product-div-link" href="/dsc2/mobile/index.php?r=goods&amp;id={$return_detail.goods_id}"></a>
+                            <img class="product-list-img" src="{$return_detail.goods_thumb}">
+                            <div class="product-text">
+                                <h4>{$return_detail.goods_name}</h4>
+                                <p>
+                                    <span class="p-price t-first ">{$return_detail.goods_price}<small class="fr t-remark">x{$return_detail.return_number}</small></span>
+                                </p>
+                                <p class="dis-box p-t-remark">
+                                    {$return_detail.goods_attr}
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </div>
+    {include file="header_nav"}
+</body>
+</html>

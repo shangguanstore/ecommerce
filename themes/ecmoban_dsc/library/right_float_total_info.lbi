@@ -1,0 +1,34 @@
+<div class="tbar-panel-main">
+    <div class="tbar-panel-content">
+    	<div class="s-list">
+        	<div class="s-asset">
+                <span class="s-first-child">余额<em class="s-balance-num">￥{$user_info.user_money}</em></span>
+                <span>积分<em class="s-beans-num">{$user_info.integral}</em></span>
+                <span class="s-last-child">红包<em class="s-coupon-num">{$user_info.bouns_num}</em></span>
+            </div>
+            <ul class="s-li-con">
+            	{foreach from=$user_info.bouns_list item=bouns}
+            	<li class="s-coupon s-current">
+                	<div class="s-quota">{if $bouns.min_goods_amount}<span class="s-desc">满<em>{$bouns.min_goods_amount}</em>使用</span>{/if}<span class="s-num">¥<em>{$bouns.bouns_amount}</em></span></div>
+                    <div class="s-info"><p class="s-text">卡号：<em>{$bouns.bonus_sn}</em></p><p class="s-time">有效期：<em>{$bouns.use_startdate} - {$bouns.use_enddate}</em></p></div>
+                </li>
+                {/foreach}
+            </ul>
+            <a href="user.php?act=account_log" class="follow-bottom-more">查看更多>></a>
+        </div>
+    </div>
+</div>
+<script>
+//动态获取高度
+function winHeight(){
+	var winHeight =$(window).height();
+	$(".tbar-panel-content").css({"height":winHeight-48});
+	$(".tbar-panel-main").css({"height":winHeight-38});
+	$(window).resize(function(){
+		winHeight = $(this).height();
+		$(".tbar-panel-main").css({"height":winHeight-38});
+		$(".tbar-panel-content").css({"height":winHeight-48});
+	});
+}
+winHeight();
+</script>

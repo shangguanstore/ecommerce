@@ -1,0 +1,652 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="Keywords" content="{$keywords}" />
+<meta name="Description" content="{$description}" />
+<!-- TemplateBeginEditable name="doctitle" -->
+<title>{$page_title}</title>
+<!-- TemplateEndEditable -->
+<!-- TemplateBeginEditable name="head" -->
+<!-- TemplateEndEditable -->
+<link rel="shortcut icon" href="favicon.ico" />
+<link rel="icon" href="animated_favicon.gif" type="image/gif" />
+<link rel="stylesheet" type="text/css" href="themes/ecmoban_dsc/base.css" />
+<link href="{$ecs_css_path}" rel="stylesheet" type="text/css" />
+<link href="themes/ecmoban_dsc/select.css" rel="stylesheet" type="text/css" />
+<link rel="alternate" type="application/rss+xml" title="RSS|{$page_title}" href="{$feed_url}" />
+<link href="themes/ecmoban_dsc/area_stock.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="themes/ecmoban_dsc/quickLinks.css" />
+<link rel="stylesheet" href="themes/ecmoban_dsc/purebox.css">
+{* 包含脚本文件 *}
+{insert_scripts files='jquery-1.9.1.min.js,jquery.json.js,transport_jquery.js,common.js,compare.js,utils.js,cart_common.js,cart_quick_links.js'}
+
+
+<script type="text/javascript" src="themes/ecmoban_dsc/js/sc_common.js"></script>
+<script type="text/javascript" src="themes/ecmoban_dsc/js/jquery.SuperSlide.2.1.1.js"></script>
+<script type="text/javascript" src="themes/ecmoban_dsc/js/ecsc-nav.js"></script>
+<script type="text/javascript" src="themes/ecmoban_dsc/js/jquery.yomi.js"></script>
+<script type="text/javascript" src="themes/ecmoban_dsc/js/rotate3di.js"></script>
+<script type="text/javascript" src="themes/ecmoban_dsc/js/scroll_city.js"></script>
+<script type="text/javascript" src="themes/ecmoban_dsc/js/jquery.smint.js"></script>
+<script type="text/javascript" src="themes/ecmoban_dsc/js/magiczoomplus.js"></script>
+<script type="text/javascript" src="themes/ecmoban_dsc/js/floor.js"></script>
+<script type="text/javascript" src="themes/ecmoban_dsc/js/sc_memake.js"></script>
+<script type="text/javascript" src="themes/ecmoban_dsc/js/notLogin.js"></script>
+</head>
+
+<body>
+    {if $area_htmlType neq 'goods' && $area_htmlType neq 'exchange' && $area_htmlType neq 'presale' && $area_htmlType neq 'group_buy' }
+        {insert_scripts files='warehouse_area.js'}
+    {else}
+        {insert_scripts files='warehouse.js'}
+    {/if}
+    <!-- #BeginLibraryItem "/library/page_header.lbi" --><!-- #EndLibraryItem -->
+    <div class="nch-breadcrumb-layout">
+        <div class="nch-breadcrumb w1200" id="ur_here">{$ur_here}</div>
+    </div>
+    <div id="p-box">
+        <div class="w1200">
+            <div class="product-intro shared-goods preSale-goods">
+                <!-- #BeginLibraryItem "/library/goods_gallery.lbi" -->
+                <div class="preview">
+                    <div class="gallery_wrap">
+                        <a href="{$pictures.0.img_url}" class="MagicZoomPlus" id="Zoomer" rel="hint-text: ; selectors-effect: false; selectors-class: img-hover; zoom-distance: 10;zoom-width: 400; zoom-height: 474;"><img src="{$goods.goods_img}" alt="{$goods.goods_name|escape:html}" width="405" height="405" /></a>
+                    </div>
+                    <div class="spec-list">
+                        <a href="javascript:void(0);" class="spec-prev"></a>
+                        <a href="javascript:void(0);" class="spec-next"></a>
+                        <div class="spec-items">
+                            <ul>
+                                <!-- {foreach from=$pictures item=picture name=foo}-->
+                                <li><a href="{if $picture.img_url}{$picture.img_url}{else}{$picture.thumb_url}{/if}" rel="zoom-id: Zoomer" rev="{if $picture.img_url}{$picture.img_url}{else}{$picture.thumb_url}{/if}"><img src="{if $picture.thumb_url}{$picture.thumb_url}{else}{$picture.img_url}{/if}" width="60" height="60" /></a></li>
+                                <!--{/foreach}--> 
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="short-share">
+                        <div class="short-share-r">分享：<a href="#" class="share-list-xinlang"></a><a href="#" class="share-list-tenxun"></a></div>
+                        <div class="collecting"><span>收藏：</span><a href="#none" class="choose-btn-coll selected"><b></b>8</a></div>
+                    </div>
+                </div>
+                <!-- #EndLibraryItem -->
+                <div class="m-item-inner">
+                    <div class="itemInfo">
+                        <form action="presale.php?act=buy" method="post" name="ECS_FORMBUY" id="ECS_FORMBUY">
+                            <div class="name">
+                                <h1>{$presale.goods_name}</h1>
+                            </div>
+                            <div class="top-cd-banner">
+                                <div class="act-type"><i class="sprite-yy"></i><strong>预售</strong></div>
+                                <div class="activity-message">
+                                	<div class="activity-message-item">
+                                    	<i class="sprite-person"></i><em class="J-count">{$goods.sales_volume}</em>人预定
+                                    </div>
+                                    <div class="time-remain">
+                                        <i class="time-remain-icon"></i>
+                                        <!-- {if $presale.no_start eq 1} -->
+                                        <div class="time" data-time="{$presale.formated_start_date}">
+                                            <i>距离预售开始：</i><span class="days">00</span><i>天</i><span class="hours">00</span><i>时</i><span class="minutes">00</span><i>分</i><span class="seconds">00</span><i>秒</i>
+                                        </div>
+                                        <!-- {else} -->
+                                        <div class="time" data-time="{$presale.formated_end_date}">
+                                            <i>剩余时间：</i><span class="days">00</span><i>天</i><span class="hours">00</span><i>时</i><span class="minutes">00</span><i>分</i><span class="seconds">00</span><i>秒</i>
+                                        </div>
+                                        <!-- {/if} -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="summary">
+                            	<div class="summary-list">
+                                	<div class="summary-info">
+                                    	<dl class="sp-rule">
+                                            <dt>预售规则<i></i></dt>
+                                            <dd>
+                                                <i></i><em></em><b class="close"></b>
+                                                <ul id="presell-rule">
+                                                    <li><b>1.</b>定金下单后，请在30分钟内付款，超时将自动关闭订单。用户可选择先付定金或一次性支付全款；</li>
+                                                    <li><b>2.</b>定金付款后，若非{$dwt_shop_name}或商家责任（根据《售后政策》和客服判断为准），定金恕不退还；</li>
+                                                    <li><b>3.</b>预售结束时，由系统自动更新确认尾款价格，无论下单顺序先后均可享受相同的预售价格；</li>
+                                                    <li><b>4.</b>预售结束后，请至{$dwt_shop_name}“我的订单”内付尾款；</li>
+                                                    <li><b>5.</b>尾款开始支付时，请在要求的时间（72小时）内支付尾款，若超时将自动关闭订单，且定金不予退还，赠品不予赠送。请注意预售结束时间，并及时支付尾款，对此我们会有短信提醒；</li>
+                                                    <li><b>6.</b>如果提供赠品，赠品赠送依据的排序按照定金付款成功时间来计算，而不是定金下单时间；</li>
+                                                    <li><b>7.</b>发货时间请以预售商品详情页中的“发货时间”描述为准；</li>
+                                                </ul>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                	<div class="summary-price">
+                                        <div class="dt">预 售 价：</div>
+                                        <div class="dd"><span class="p-price" id="ECS_SHOPPRICE">{$presale.shop_price}</div>
+                                    </div>
+                                    <div class="summary-price">
+                                        <div class="dt">定　　金：</div>
+                                        <div class="dd">{$presale.formated_deposit}</div>
+                                    </div>
+                                    <div class="summary-price">
+                                        <div class="dt">尾　　款：</div>
+                                        <div class="dd">{$presale.formated_final_payment}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="summary-stock">
+                                    <div class="dt">配　　送：</div>
+                                    <div class="store-selector">
+                                        <div class="text-select" id="area_address">
+                                        </div>
+    								</div>
+                                    <div class="store-warehouse">
+                                    	<div class="store-warehouse-info"></div>
+                                        <div id="isHas_warehouse_num" class="store-prompt"></div>
+                                    </div>
+                                </div>
+                                <div class="summary-service">
+                                    <div class="dt">服　　务：</div>
+                                    {if $goods.user_id > 0}
+                                    <div class="dd">由&nbsp;<a href="{$goods.store_url}" target="_blank">{$goods.rz_shopName}</a>&nbsp;发货并提供售后服务。</div>
+                                    {else}
+                                    <div class="dd">由&nbsp;<a href="javascript:void(0)" class="ftx-05">{$basic_info.shop_name}</a>&nbsp;发货并提供售后服务。</div>
+                                    {/if}
+                                </div>
+                                {if $freight_model eq 1}  
+                                <div class="summary-freight">
+                                    <div class="dt">运　　费：</div>
+                                    {if $goods.is_shipping == 0}
+                                    <div class="dd">
+                                        {foreach from=$shipping_list item=list}
+                                        <span class="span_blue">{$list.shipping_name}({$list.shipping_fee})</span>
+                                        {/foreach}
+                                    </div>
+                                    {/if}
+                                </div>
+                                {/if}
+                            </div>
+                            <div class="choose p-choose-wrap">
+                                <!-- {foreach from=$specification item=spec key=spec_key} -->
+                                {if $spec.values}
+                                <div class="choose-version <!-- {if $spec.attr_type eq 1} -->attr-radio<!-- {else} -->attr-check<!-- {/if} --> li">
+                                    <div class="dt">{$spec.name}：</div>
+                                    <!-- {if $cfg.goodsattr_style eq 1} -->
+                                    <div class="dd">
+                                        <!-- {if $spec.is_checked > 0} -->
+                                        <!-- {foreach from=$spec.values item=value key=key name=attrvalues} -->  
+                                        <div class="item selected">
+                                            <b></b>
+                                            <a href="javascript:;" name="{$value.id}" title="{$value.format_price|abs}">
+                                                {if $value.img_flie}
+                                                <img src="{$value.img_flie}" width="25" height="25" />
+                                                {$value.label}
+                                                {else}
+                                                {$value.label}
+                                                {/if}
+                                            </a>
+                                            <input type="radio" name="spec_{$spec_key}" value="{$value.id}" id="spec_value_{$value.id}" {if $value.checked eq 1}checked="checked"{/if}/>
+                                        </div>
+                                        <!-- {/foreach} -->
+                                        <!-- {else} -->
+                                        <!-- {foreach from=$spec.values item=value key=key name=attrvalues} -->
+                                        <div class="item {if $key eq 0}selected{/if}">
+                                            <b></b>
+                                            <a href="javascript:;" name="{$value.id}" title="{$value.format_price|abs}">
+                                                {$value.label}
+                                                <input style="display:none" id="spec_value_{$value.id}" type="radio" name="spec_{$spec_key}" value="{$value.id}" {if $key eq 0}checked="checked"{/if} /></a>   
+                                            </a>
+                                        </div>
+                                        <!-- {/foreach} -->
+                                        <!-- {/if} -->
+                                    </div>
+                                    <!-- {else} 列表下拉-->
+                                        <!-- {if $spec.attr_type eq 1} -->
+                                        <!-- {/if} -->
+                                    <!-- {/if} -->
+                                </div>
+                                {/if}
+                                <!-- {/foreach} -->
+                                <div class="choose-num li">
+                                    <div class="dt">数　　量：</div>
+                                    <div class="dd">
+                                        <a class="btn-reduce" href="javascript:;">-</a>
+                                        <input class="text buy-num" id="quantity" onblur="changePrice()" value="1" name="number" defaultnumber="1">
+                                        <input type="hidden" id="perNumber" value="312">
+                                        <input type="hidden" id="perMinNumber" value="1">
+                                        <a class="btn-add" href="javascript:;">+</a>
+                                        {if !$presale.act_id}
+                                        <span>库存：<em  id="goods_attr_num">{$goods.measure_unit}</em>件</span>
+                                        {/if}
+                                    </div>
+                                </div>
+                                <div class="choose-btns">
+                                    <input name="warehouse_id" value="{$region_id}" type="hidden" />
+                                    <input name="area_id" value="{$area_id}" type="hidden" />
+                                    <input name="goods_spec" type="hidden" />
+                                    <input type="hidden" name="presale_id" value="{$presale.act_id}" />
+                                    <!-- 这里要判断预售有没有开始 -->
+                                    <!-- {if $presale.no_start eq 1} -->
+                                        <a href="javascript:;" class="btnEnd">预售未开始</a>
+									<!--{elseif $presale.already_over eq 1}-->
+										<a href="javascript:;" class="btnEnd">预售已结束</a>
+                                    <!-- {else} -->
+                                        <a href="javascript:presale_submit()" class="btn-append">立即预约</a>
+                                    <!-- {/if} -->
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    function presale_submit()
+                    {
+                        var status={$presale.status|default:0};
+                        var user_id = {$user_id};
+                        if(user_id >0){
+                            if(status != 1){
+                                var message = "对不起，该预售活动已经结束或尚未开始，现在不能参加！";
+                                var divId = 'presale_price';
+                                dialogPrompt(divId,message);
+                            }else{
+                                document.getElementById("ECS_FORMBUY").submit();
+                            }
+                            
+                        }else{
+                            var back_url = "presale.php?act=view&id=" + {$presale.act_id};
+                            $.notLogin("get_ajax_content.php?act=get_login_dialog",back_url);
+                        }
+                        
+                    }
+                </script>
+                <!-- #BeginLibraryItem "/library/goods_merchants.lbi" --><!-- #EndLibraryItem -->
+            </div>
+        </div>
+    </div>
+    <div class="w1200">
+        <div class="ecsc-goods-layout">
+            <div class="ecsc-layout-210">
+            
+                <!-- <form method="GET" action="merchants_store.php" class="sort" name="listform">
+                    <div id="sp-search" class="m">
+                        <div class="mt"><h2>店内搜索</h2></div>
+                        <div class="mc">
+                            <p class="sp-form-item1"><input type="text" name="keyword" id="sp-keyword" placeholder="关键字"></p>
+                            <p class="sp-form-item2"><input type="text" id="sp-price" name="price_min" placeholder="价格"><span>~</span><input type="text" name="price_max" id="sp-price1" placeholder="价格"></p>
+                            <p class="sp-form-item3"><i class="icon"></i><input type="submit" value="搜索" id="btnShopSearch"></p>
+                        </div>
+                    </div>
+                </form> -->
+
+                {if $goods_store_cat}
+                <div id="sp-category" class="m">
+                    <div class="mt"><h2>店内分类</h2></div>
+                    <div class="mc">
+                        <h2>查看全部商品</h2>
+                        {foreach from=$goods_store_cat item=cat key=key}
+                        <dl class="{if $key eq 0}open{/if}">
+                            <dt><s class="icon"></s><a href="javascript:void(0);" class="cate_name">{$cat.cat_name}</a></dt>
+                            {foreach from=$cat.child_array item=cat key=key name=nocat}
+                            <dd><a href="{$cat.url}" target="_blank">{$cat.cat_name}</a></dd>
+                            {/foreach}
+                        </dl>
+                        {/foreach}
+                    </div>
+                </div>
+                {/if}
+
+                <!-- TemplateBeginEditable name="左边区域（关联商品）" -->
+				<!-- #BeginLibraryItem "/library/goods_related.lbi" -->
+                 <!-- #EndLibraryItem -->
+                <!-- TemplateEndEditable -->
+            </div>
+            <div class="ecsc-goods-main">
+                <div class="ecsc-single-desc desc">
+                    <div class="goods-detail-title goods-detail-mt">
+                        <ul class="tabs">
+                            <li class="tab_item first current">商品详情</li>
+                            <li class="tab_item">商品评论</li>
+                            <li class="tab_item">网友讨论圈</li>
+                        </ul>
+                    </div>
+                    <div class="floors">
+                        <div class="ecsc-goods-item fment">
+                            <dl class="goods-para">
+                                <dd class="column"><span>商品名称：{$goods.goods_name|escape:html}</span></dd>
+                                <dd class="column"><span>商品编号：{$goods.goods_sn}</span></dd>
+                                <dd class="column"><span>店铺：<a href="{$goods.store_url}" title="{$goods.rz_shopName}" target="_blank">{$goods.rz_shopName}</a></span></dd>
+                                <!-- {if $cfg.show_goodsweight} 商品重量-->
+                                <dd class="column"><span>重量：{$goods.goods_weight}</span></dd>
+                                <!-- {/if} -->
+                                <!-- {if $cfg.show_addtime} 上架时间-->
+                                <dd class="column"><span>上架时间：{$goods.add_time}</span></dd>
+                                <!-- {/if} -->
+                            </dl>
+                            {if $properties}
+                            <dl class="goods-para" style="margin-top:0px;">
+                                <!-- {foreach from=$properties item=property_group key=key} -->	
+                                <dt class="hide">{$key}</dt>
+                                <!-- {foreach from=$property_group item=property} -->
+                                <dd class="column"><span title="{$property.value}">{$property.name|escape:html}：{$property.value}</span></dd>
+                                <!-- {/foreach}-->
+                                <!-- {/foreach}-->
+                            </dl>
+                            {/if}
+                            <div class="goods-detail-banner">
+                                {$goods.goods_desc}
+                            </div>
+                        </div>
+                        <div class="ecsc-goods-item fment pinglun">
+                            <div class="goods-detail-title">
+                                <h2>商品评价({$goods.comments_number})</h2>
+                                <a href="#" class="btn-comment" target="_blank">发表评论</a>
+                            </div>
+                            <div class="overview-detail">
+                                <div class="rate">
+                                    <strong>{$comment_all.goodReview}<span>%</span></strong>
+                                    <span class="hp">好评率</span>
+                                </div>
+                                <div class="percent">
+                                    <dl>
+                                        <dt>好评<span>({$comment_all.goodReview}%)</span></dt>
+                                        <dd><div style="width: {$comment_all.goodReview}px;"></div></dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>中评<span>({$comment_all.middlReview}%)</span></dt>
+                                        <dd><div style="width: {$comment_all.middlReview}px;"></div></dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>差评<span>({$comment_all.middlReview}%)</span></dt>
+                                        <dd><div style="width: {$comment_all.middlReview}px;"></div></dd>
+                                    </dl>
+                                </div>
+                                <!--{if $goods.impression_list}-->
+                                <div class="actor-new">
+                                    <dl>
+                                        <dt>买家印象：</dt>
+                                        <dd class="p-bfc">
+                                            <!--{foreach from=$goods.impression_list item=tag}-->
+                                            <p class="conmm-tags"><span>{$tag.txt}</span><em>({$tag.num})</em></p>
+                                            <!--{/foreach}-->
+                                        </dd>
+                                    </dl>
+                                </div>
+                                <!--{/if}-->
+                            </div>
+                            <div class="comments-list">
+                                {* ECSHOP 提醒您：动态载入goods_comment_title.lbi，显示首页分类小广告 *}{insert name='goods_comment_title' goods_id=$goods.goods_id}
+                                <div class="ratelist-content">
+                                    <!-- #BeginLibraryItem "/library/comments.lbi" --> <!-- #EndLibraryItem -->     
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ecsc-goods-item fment tiezi">
+                            {* ECSHOP 提醒您：动态载入goods_discuss_title.lbi，显示首页分类小广告 *}{insert name='goods_discuss_title' goods_id=$goods.goods_id}
+                            <div class="table" id="discuss_list_ECS_COMMENT">
+                                <div class="thead">
+                                    <div class="th td1">主题</div>
+                                    <div class="th td2">回复/浏览</div>
+                                    <div class="th td3">作者</div>
+                                    <div class="th td4">时间</div>
+                                </div>
+                                <div class="tbody">
+                                    {foreach from=$discuss_list.list item=list}
+                                    <div class="tr">
+                                        <div class="td td1">
+                                            {if $list.dis_type eq 1}
+                                            <i class="tie_icon tao"></i>
+                                            {elseif $list.dis_type eq 2}
+                                                <i class="tie_icon wen"></i>
+                                            {elseif $list.dis_type eq 3}
+                                                <i class="tie_icon quan"></i>
+                                            {elseif $list.dis_type eq 4}
+                                                <i class="tie_icon shai"></i>
+                                            {/if}
+                                            <div class="s1">
+                                                <a href="single_sun.php?act=discuss_show&did={$list.dis_id}" target="_blank">{$list.dis_title}</a>
+                                                {if $list.dis_type eq 4}
+                                                <img src="images/image_s.jpg">
+                                                {/if}
+                                            </div>
+                                        </div>
+                                        <div class="td td2">{$list.reply_num}/{$list.dis_browse_num}</div>
+                                        <div class="td td3"><a href="user.php">{$list.user_name}</a></div>
+                                        <div class="td td4">{$list.add_time}</div>
+                                    </div>
+                                    {/foreach}
+                                </div>
+                                <div class="tfoot">
+                                    <div class="fr"><span>共{$all_count}个话题</span><a href="category_discuss.php?id={$goods.goods_id}" target="_blank">点击浏览全部 ></a></div>
+                                </div>
+                            </div>
+                    	</div>
+                    </div>
+                </div>  
+            </div>
+        </div>
+        <!-- {if $guess_goods} -->
+        <div class="ecsc-goods-love ecsc-goods-love-new">
+            <div class="ec-title"><h3>猜你喜欢</h3><a href="javascript:void(0)" class="ec-huan" data-changepage="1"><i class="icon"></i>换一组</a></div>
+            <div class="clearance-content" id="goodsLove_content">
+                <!-- #BeginLibraryItem "/library/guess_goods_love.lbi" --><!-- #EndLibraryItem -->
+            </div>
+        </div>
+        <!-- {/if} -->
+    </div>
+    <!-- #BeginLibraryItem "/library/common_html.lbi" --><!-- #EndLibraryItem -->
+    
+    <!-- @authro guan start	添加对比文件 start -->	 
+	<!-- #BeginLibraryItem "/library/duibi.lbi" --><!-- #EndLibraryItem -->
+    <!-- @authro guan start	添加对比文件 end -->
+
+    <!-- #BeginLibraryItem "/library/page_footer.lbi" --><!-- #EndLibraryItem -->
+    
+{* ECSHOP 提醒您：动态载入user_menu_position.lbi，显示首页分类小广告 *}{insert name='user_menu_position'}
+<script type="text/javascript" src="themes/ecmoban_dsc/js/jquery.purebox.js"></script>
+<script type="text/javascript">
+region.detail = true;
+var goods_id = {$goods_id};
+var act_id = {$act_id};
+var goodsattr_style = {$cfg.goodsattr_style|default:1};
+var gmt_end_time = {$promote_end_time|default:0};
+{foreach from=$lang.goods_js item=item key=key}
+var {$key} = "{$item}";
+{/foreach}
+var goodsId = {$goods_id};
+
+var now_time = {$now_time};
+
+<!-- {literal} -->
+$(function(){
+	changePrice('onload');
+    change_group();
+	Compare.init();
+	fixpng();
+	goods_delivery_area();
+	try { onload_leftTime(); }
+	catch (e) {}
+});
+//倒计时
+$(".time").each(function(){
+    $(this).yomi();
+});
+
+{foreach from=$lang.compare_js item=item key=key}
+{if $key neq 'button_compare'}
+var {$key} = "{$item}";
+{else}
+var button_compare = '';
+{/if}
+{/foreach}
+
+/**
+ * 点选可选属性或改变数量时修改商品价格的函数
+ */
+function changePrice(onload)
+{
+  var attr = getSelectedAttributes(document.forms['ECS_FORMBUY']);
+  var qty = document.forms['ECS_FORMBUY'].elements['number'].value;
+  $("input[name='goods_spec']").val(attr);
+
+  if(onload != 'onload'){
+	   Ajax.call('presale.php', 'act=price&id=' + goodsId + '&attr=' + attr + '&number=' + qty + '&warehouse_id=' + {$region_id|default:0} + '&area_id=' + {$area_id|default:0}, changePriceResponse, 'GET', 'JSON');
+  }else{
+	  Ajax.call('presale.php', 'act=price&id=' + goodsId + '&attr=' + attr + '&number=' + qty + '&warehouse_id=' + {$region_id|default:0} + '&area_id=' + {$area_id|default:0} + '&onload=' + onload, changePriceResponse, 'GET', 'JSON');
+  }
+}
+
+/**
+ * 接收返回的信息
+ */
+function changePriceResponse(res)
+{
+  if (res.err_msg.length > 0)
+  {
+    alert(res.err_msg);
+  }
+  else
+  {
+	document.forms['ECS_FORMBUY'].elements['number'].value = res.qty;
+	//ecmoban模板堂 --zhuo satrt
+	if (document.getElementById('goods_attr_num')){
+	  document.getElementById('goods_attr_num').innerHTML = res.attr_number;  
+	}
+	
+	if(document.getElementById('ECS_SHOPPRICE')){
+            document.getElementById('ECS_SHOPPRICE').innerHTML = res.shop_price;  
+	}
+	
+	if(res.err_no == 2){
+		$('#isHas_warehouse_num').html("该地区暂不支持配送");
+	}else{
+            if (document.getElementById('isHas_warehouse_num')){
+              var isHas;
+              if(res.attr_number > 0){
+                      $('a.buynow').show();
+                      $('a.addcart').show();
+                      $('a').remove('#quehuo');
+					  
+					  if(res.act_id > 0){
+						  isHas = '<strong>有货</strong>，' + res.presale.str_time + '时发货';
+					  }else{
+					  	  isHas = '<strong>有货</strong>，下单后立即发货';
+					  }
+                      
+              }else{
+                    isHas = '<strong>无货</strong>，此商品暂时售完';
+                    $('a.buynow').hide();
+                    $('a.addcart').hide();
+              }
+              document.getElementById('isHas_warehouse_num').innerHTML = isHas;  
+            }
+	}
+	
+	$('.ECS_fittings_interval').html(res.shop_price);
+	//ecmoban模板堂 --zhuo end			
+  }
+}
+
+function goods_delivery_area(){
+	var area = new Object();
+
+	area.province_id = {$area.province_id|default:0};
+	area.city_id = {$area.city_id|default:0};
+	area.district_id = {$area.district_id|default:0};
+	area.goods_id = {$area.goods_id|default:0};
+	area.user_id = {$area.user_id|default:0};
+	area.region_id = {$area.region_id|default:0};
+	area.area_id = {$area.area_id|default:0};
+	area.merchant_id = {$area.merchant_id|default:0};
+	Ajax.call('ajax_dialog.php?act=goods_delivery_area', 'area=' + $.toJSON(area), goods_delivery_areaResponse, 'POST', 'JSON'); 
+}
+
+function goods_delivery_areaResponse(result){
+	$("#area_address").html(result.content);
+	$(".store-warehouse-info").html(result.warehouse_content);
+}
+
+region.changedDis_pre = function(district_id,user_id,d_null)
+{
+	var province_id = document.getElementById('province_id').value;
+	var city_id = document.getElementById('city_id').value;
+	var area_div = document.getElementById('area_list');
+	var goods_id = document.getElementById('good_id').value;
+	
+	if(d_null == 1){
+		var d_null = "&d_null=" + d_null;
+	}else{
+		d_null = '';
+	}
+	area_div.style.display = 'none';
+	Ajax.call('presale.php', 'act=in_stock&gid='+ goods_id + '&act_id='+ act_id + '&province=' + province_id + "&city=" + city_id + "&district=" + district_id + "&user_id=" + user_id + d_null, inStockResponse, "GET", "JSON");
+
+}
+
+inStockResponse = function(res)
+{
+    if(res.isRegion == 0){
+
+        if (confirm(res.message))  
+          {
+                var district_id = document.getElementById('district_id');
+                district_id.value = res.district;    
+                location.href = 'user.php?act=address_list';
+          }else{
+                location.href = "presale.php?act=view&id=" + res.act_id + "&t=" + parseInt(Math.random()*1000) + "#areaAddress";
+          }
+
+        return false;
+    }else{
+        location.href = "presale.php?act=view&id=" + res.act_id + "&t=" + parseInt(Math.random()*1000) + "#areaAddress";
+    }
+}
+
+/**
+ * 猜你喜欢-换一组
+ */
+function change_group(){
+    var page = 1;
+    $(".ecsc-goods-love .ec-huan").click(function(){
+            page++;
+            if(page == 4){
+                    page = 1;
+            }
+            Ajax.call('presale.php?act=guess_goods', 'page=' + page , guessGoodsResponse, 'GET', 'JSON');
+    });
+}
+function guessGoodsResponse(data){
+    $("#goodsLove_content").html(data.result);
+}
+</script>
+<script type="text/javascript">
+    $(".spec-list").slide({mainCell:".spec-items ul",effect:"left",trigger:"click",pnLoop:false,autoPage:true,scroll:1,vis:5,prevCell:".spec-prev",nextCell:".spec-next"});
+    $(".ecsc-goods-love-new").slide({mainCell:".clearance-content",effect:"fold",autoPlay:false,prevCell:".ec-huan"});
+    $(".ecsc-single-desc").jfloor(43,0);
+	//倒计时
+    $(".time").each(function(){
+        $(this).yomi();
+    });
+	
+    function quantity(){
+        var quantity = Number($("#quantity").val());
+        var perNumber = Number($("#perNumber").val());
+        var perMinNumber = Number($("#perMinNumber").val());
+        
+        $(".btn-reduce").click(function(){
+            if(quantity>perMinNumber){
+                quantity-=1;
+                $("#quantity").val(quantity);
+            }else{
+                $("#quantity").val(perMinNumber);
+            }
+        });
+        
+        $(".btn-add").click(function(){
+            if(quantity<perNumber){
+                quantity+=1;
+                $("#quantity").val(quantity);
+            }else{
+                $("#quantity").val(perNumber);
+            }
+        })
+    }
+    quantity();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,206 @@
+<div class="nav ecsc-woman">
+    <div class="w1200">
+        <div class="categorys channel woman">
+            <div class="dt">{if $cate_info.cat_icon}<i class="cat_icon"><img src="{$cate_info.cat_icon}" alt="图标" /></i>{else}<i class="icon woman-icon"></i>{/if}{$cate_info.cat_name}</div>
+            <div class="dd">
+            <div class="cata-nav" id="parent-cata-nav">
+                <!--{foreach from=$categories_child item=cat}-->
+                    <div class="item" data-catid="{$cat.id}">
+                        <div class="item-left">
+                        <div class="cata-nav-name" data-parentcat="{$cat.id}" parent_eveval="0">
+                                <h3><a href="{$cat.url}" target="_blank">{$cat.name|escape:html}</a></h3>
+                                <div class="ext">
+                                <!--{foreach from=$cat.cat_id item=child name=no}-->
+                                <!--{if $smarty.foreach.no.iteration < 6}-->
+                                  <a href="{$child.url}" target="_blank">{$child.name|escape:html}</a>
+                                <!--{/if}-->
+                                <!--{/foreach}-->
+                                </div>
+                            </div>
+                            <b>></b>
+                        </div>
+                        <div class="cata-nav-layer">
+                            <div class="cata-content">
+                                <h1>{$cat.name|escape:html}</h1>
+                                <div class="zfenlei">
+                                <!--{foreach from=$cat.cat_id item=child name=no}-->
+                                    <a href="{$child.url}" target="_blank">{$child.name|escape:html}</a>
+                                <!--{/foreach}-->
+                                </div>
+                                <div class="i-brand" id="brands_{$cat.id}">
+                            	
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+               <!--{/foreach}--> 
+                </div>
+            </div>
+        </div>
+        <div class="navitems" id="nav">
+            <ul>
+                <li><a href="../index.php" {if $navigator_list.config.index eq 1}class="selected"{/if}>首页</a></li>
+                <!-- {foreach name=nav_middle_list from=$navigator_list.middle item=nav} -->
+                <li><a href="{$nav.url}" {if $nav.active eq 1}class="selected"{/if} {if $nav.opennew}target="_blank"{/if}>{$nav.name}</a></li>
+                <!-- {/foreach} -->
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="banner woman">
+    <div class="classify-banner">
+        <div class="bd" data-adposname="顶级分类页（女装模板）banner广告" {if $ad_reminder eq 1}ecdscType="adPos"{/if}>
+        {* ECSHOP 提醒您：动态载入cat_top_ad.lbi，显示首页分类小广告 *}{insert name='get_adv_child' ad_arr=$cat_top_ad id=$cate_info.cat_id}
+        </div>
+        <div class="ecsc-warp">
+            <div class="hd"><ul></ul></div>
+            <div class="banner-switch">
+                <div class="banner-grab">
+                    <div class="grab-l" data-adposname="顶级分类页（女装模板）今日抢购日期" {if $ad_reminder eq 1}ecdscType="adPos"{/if}>
+                    {* ECSHOP 提醒您：动态载入cat_top_prom_ad.lbi，显示首页分类小广告 *}{insert name='get_adv_child' ad_arr=$cat_top_prom_ad id=$cate_info.cat_id}
+                    </div>
+                    <div class="grab-r">
+                        <div class="grab-pc">
+                            <ul>
+                            <!--{foreach from=$cate_top_promote_goods item=goods name=promote}-->
+                                <li>
+                                    <div class="grab-con">
+                                        <div class="p-img"><a href="{$goods.url}" target="_blank"><img src="themes/ecmoban_dsc/images/loadGoods.gif" width="135" height="135" class="lazy" data-original="{$goods.thumb}"/></a></div>
+                                        <div class="p-name"><a href="{$goods.url}" target="_blank">{$goods.name|escape:html}</a></div>
+                                        <div class="p-price">
+                                        {if $goods.promote_price neq ''}
+                                             {$goods.promote_price}
+                                        {else}
+                                             {$goods.shop_price}
+                                        {/if}
+                                        </div>
+                                        <a href="{$goods.url}" class="btn4" target="_blank">抢 ></a>
+                                        <i class="icon dis"></i>
+                                    </div>
+                                </li>
+                            <!-- {/foreach} -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content">
+    <div class="lazy-ecsc-warp woman">
+        <!-- {if $cate_top_new_goods} -->
+        <div class="w1200">
+            <div class="ecsc-new woman w932">
+                <div class="ec-title"><h3>新品首发</h3></div>
+                <div class="ec-content">
+                    <div class="ecsc-tp">
+                        <div class="ecsc-tp-photo" data-adposname="顶级分类页（女装模板）新品首发" {if $ad_reminder eq 1}ecdscType="adPos"{/if}>{* ECSHOP 提醒您：动态载入cat_top_new_ad.lbi，显示首页新品首发小广告 *}{insert name='get_adv_child' ad_arr=$cat_top_new_ad id=$cate_info.cat_id}</div>
+                        <div class="ecsc-cp-r">
+                            <ul>
+                            <!--{foreach from=$cate_top_new_goods item=goods name=new}-->
+                            {if $smarty.foreach.new.iteration < 5}
+                                <li>
+                                    <div class="product-desc">
+                                        <div class="p-img"><a href="{$goods.url}" target="_blank"><img src="themes/ecmoban_dsc/images/loadGoods.gif" width="136" height="136" class="lazy" data-original="{$goods.thumb}"></a></div>
+                                        <div class="p-name"><a href="{$goods.url}" target="_blank">{$goods.name|escape:html}</a></div>
+                                        <div class="ecsc-bp">
+                                            <div class="p-price">
+                                            {if $goods.promote_price neq ''}
+                                                 {$goods.promote_price}
+                                            {else}
+                                                 {$goods.shop_price}
+                                            {/if}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                             {/if}
+                             <!-- {/foreach} -->
+                            </ul>
+                            <ul>
+                            <!--{foreach from=$cate_top_new_goods item=goods name=new}-->
+                            {if $smarty.foreach.new.iteration > 4 && $smarty.foreach.new.iteration < 9}
+                                <li>
+                                    <div class="product-desc">
+                                        <div class="p-img"><a href="{$goods.url}" target="_blank"><img src="themes/ecmoban_dsc/images/loadGoods.gif" width="136" height="136" class="lazy" data-original="{$goods.thumb}"></a></div>
+                                        <div class="p-name"><a href="{$goods.url}" target="_blank">{$goods.name|escape:html}</a></div>
+                                        <div class="ecsc-bp">
+                                            <div class="p-price">
+                                            {if $goods.promote_price neq ''}
+                                                 {$goods.promote_price}
+                                            {else}
+                                                 {$goods.shop_price}
+                                            {/if}
+                                            </div>  
+                                        </div>
+                                    </div>
+                                </li>
+                            {/if}
+                            <!-- {/foreach} -->
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="ecsc-tp last">
+                        <div class="ecsc-cp-r">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ecsc-sales w240">
+                <div class="ec-title"><h3>热销商品</h3></div>
+                <div class="ec-content">
+                    <ul class="ecsc-sales-list">
+                    <!--{foreach from=$cate_top_hot_goods item=goods name=hot}-->
+                    <li>
+                        <b class="sales-num sales-num-{$smarty.foreach.hot.iteration}" id="{$smarty.foreach.hot.iteration}">{$smarty.foreach.hot.iteration}</b>
+                        <div class="sales-product-img"><a href="{$goods.url}" target="_blank"><img src="themes/ecmoban_dsc/images/loadGoods.gif" width="62" height="62" class="lazy" data-original="{$goods.thumb}"></a></div>
+                        <div class="p-name"><a href="{$goods.url}" target="_blank">{$goods.name|escape:html}</a></div>
+                        <div class="p-price">
+                        {if $goods.promote_price neq ''}
+                             {$goods.promote_price}
+                        {else}
+                             {$goods.shop_price}
+                        {/if}
+                        </div>
+                    </li>
+                    <!-- {/foreach} -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- {/if} -->
+        <div id="cat_top_lit"></div>
+        <div class="w1200 floor" id="floor_loading" style="padding:120px 0px;">
+            <div style="width:189px; height:150px; margin:auto;"><img src="themes/ecmoban_dsc/images/loading.gif"></div>
+        </div>
+    </div>
+</div>
+<input name="region_id" value="{$region_id}" type="hidden">
+<input name="area_id" value="{$area_id}" type="hidden">
+<input name="cat_id" value="{$cate_info.cat_id}" type="hidden">
+
+<script type="text/javascript">
+	//banner广告轮播调用
+    $(".classify-banner").slide({titCell:".hd ul",mainCell:".bd ul",effect:"fold",pnLoop:true,autoPlay:true,autoPage:true});
+	
+	//异步加载每个楼层需加载的js
+	function loadCategoryTop(key){
+		var Floor = $("#floor_"+key);
+		
+		if(Floor.find(".floor-left-banner .bd li").length>1){
+			Floor.find(".floor-left-banner").slide({titCell:".hd ul",mainCell:".bd ul",effect:"leftLoop",autoPlay:true,autoPage:true,delayTime:300,scroll:1,vis:1});
+		}
+		//顶级分类页广告栏按钮自适应宽度
+        $.liWidth(".floor-left-banner");
+		
+		Floor.find("img.lazy").lazyload({
+			effect : "fadeIn"
+		});
+	}
+	
+	//楼层异步加载封装函数
+	var tpl = '{$cate_info.top_style_tpl}'; //顶级分类页模板id
+	$.catTopLoad(tpl);
+</script>

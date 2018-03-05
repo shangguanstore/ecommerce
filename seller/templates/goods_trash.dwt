@@ -1,0 +1,141 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <!-- 商品列表 -->
+                <form method="post" action="" name="listForm">
+                  <!-- start goods list -->
+                  <div class="list-div" id="listDiv">
+                {/if}
+                <table class="ecsc-default-table">
+                  <thead>
+                      <tr>
+                        <th width="8%">
+                            <div class="first_all">
+                                <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" class="checkbox" />
+                                <a href="javascript:listTable.sort('goods_id');">{$lang.record_id}</a>
+                                <div class="img">{$sort_goods_id}</div>
+                            </div>    
+                        </th>
+                        <th width="47%"><a href="javascript:listTable.sort('goods_name');">{$lang.goods_name}</a><div class="img">{$sort_goods_name}</div></th>
+                        <th width="10%"><a href="javascript:listTable.sort('is_real');">{$lang.goods_type}</a><div class="img">{$sort_is_real}</div></th>
+                        <th width="15%"><a href="javascript:listTable.sort('goods_sn');">{$lang.goods_sn}</a><div class="img">{$sort_goods_sn}</div></th>
+                        <th width="10%"><a href="javascript:listTable.sort('shop_price');">{$lang.shop_price}</a><div class="img">{$sort_shop_price}</div></th>
+                        <th width="10%">{$lang.handler}</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                  {foreach from=$goods_list item=goods}
+                  <tr class="bd-line">
+                    <td class="first_td_checkbox">
+                        <div class="first_all">
+                            <input type="checkbox" name="checkboxes[]" value="{$goods.goods_id}" class="checkbox" />
+                            <label for="goods_{$goods.goods_id}">{$goods.goods_id}</label>
+                        </div>    
+                    </td>
+                    <td align="left"><span class="activity_name w460">{$goods.goods_name|escape:html}</span></td>
+                    <td align="center" class="navy2">{if $goods.is_real}{$lang.material_object}{else}{$lang.virtual_card}{/if}</td>
+                    <td align="center">{$goods.goods_sn}</td>
+                    <td align="center">{$goods.shop_price}</td>
+                    <td align="center">
+                      <a href="javascript:;" onclick="listTable.remove({$goods.goods_id}, '{$lang.restore_goods_confirm}', 'restore_goods')" class="blue">{$lang.restore}</a> |
+                      <a href="javascript:;" onclick="listTable.remove({$goods.goods_id}, '{$lang.drop_goods_confirm}', 'drop_goods')" class="blue">{$lang.drop}</a>
+                    </td>
+                  </tr>
+                  {foreachelse}
+                  <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+                  {/foreach}
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                        <td colspan="10" class="td_border">
+                            <div class="shenhe">
+                              <input type="hidden" name="act" value="batch" />
+                              <select name="type" id="selAction" class="select mr10">
+                                <option value="">{$lang.select_please}</option>
+                                <option value="restore">{$lang.restore}</option>
+                                <option value="drop">{$lang.remove}</option>
+                              </select>
+                              <select name="target_cat" style="display:none" onchange="checkIsLeaf(this)" class="select mr10">
+                                <option value="0">{$lang.select_please}</option>
+                                {$cat_list}
+                              </select>
+                              <input type="submit" value="{$lang.button_submit}" id="btnSubmit" name="btnSubmit" class="button btn_disabled" disabled="true" onclick="changeAction();" />
+                            </div>  
+                        </td>
+                    </tr>
+                    <tr><td colspan="10">{include file="page.dwt"}</td></tr>
+                  </tfoot>
+                </table>
+                </div>
+
+                {if $full_page}
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+
+  {literal}
+  onload = function()
+  {
+    startCheckOrder(); // 开始检查订单
+    document.forms['listForm'].reset();
+  }
+
+  function confirmSubmit(frm, ext)
+  {
+    if (frm.elements['type'].value == 'restore')
+    {
+      {/literal}
+      return confirm("{$lang.restore_goods_confirm}");
+      {literal}
+    }
+    else if (frm.elements['type'].value == 'drop')
+    {
+      {/literal}
+      return confirm("{$lang.batch_drop_confirm}");
+      {literal}
+    }
+    else if (frm.elements['type'].value == '')
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+  }
+
+  function changeAction()
+  {
+      var frm = document.forms['listForm'];
+
+      if (!document.getElementById('btnSubmit').disabled && confirmSubmit(frm, false))
+      {
+          frm.submit();
+      }
+  }
+  {/literal}
+</script>
+</body>
+</html>
+{/if}

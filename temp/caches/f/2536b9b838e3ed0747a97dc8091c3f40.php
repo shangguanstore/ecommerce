@@ -1,0 +1,1 @@
+<?php exit;?>00151737317034ce0f1ce18685a0a7f0be2e2cf280e3s:193:"a:2:{s:8:"template";s:130:"<?php $n=1;if(is_array($ads)) foreach($ads as $ad) { ?><div class="swiper-slide"><?php echo $ad; ?></div><?php $n++;}unset($n); ?>";s:12:"compile_time";i:1517286770;}";

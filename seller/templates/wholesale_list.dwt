@@ -1,0 +1,145 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div class="search-form">
+                  <form action="javascript:searchActivity()" name="searchForm">
+                  	<div class="fr">
+                    <label>{$lang.goods_name}</label>
+                    <input type="text" name="keyword" size="30" class="text text_2 mr10"/>
+                    <label class="submit-border"><input type="submit" value="{$lang.button_search}" class="button" /></label>
+                    </div>
+                  </form>
+                </div>
+
+                <form method="post" action="wholesale.php" name="listForm" onsubmit="return confirm(batch_drop_confirm);">
+                <!-- start wholesale list -->
+                <div class="list-div" id="listDiv">
+                {/if}
+                <table class="ecsc-default-table">
+                	<thead>
+                    <tr>
+                      <th width="8%">
+                        <div class="first_all">
+                            <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" class="checkbox" /><a href="javascript:listTable.sort('act_id'); ">{$lang.record_id}</a><div class="img">{$sort_act_id}</div>
+                        </div>
+                      </th>
+                      <th width="42%"><a href="javascript:listTable.sort('goods_name'); ">{$lang.goods_name}</a><div class="img">{$sort_goods_name}</div></th>
+                      <th width="30%">{$lang.rank_name}</th>
+                      <th width="10%"><a href="javascript:listTable.sort('enabled'); ">{$lang.enabled}</a><div class="img">{$sort_enabled}</div></th>
+                      <th width="10%">{$lang.handler}</th>
+                    </tr>
+				          </thead>
+                  <tbody>
+                    {foreach from=$wholesale_list item=wholesale}
+                    <tr class="bd-line">
+                      <td><div class="first_all"><label><input value="{$wholesale.act_id}" name="checkboxes[]" type="checkbox" class="checkbox">{$wholesale.act_id}</label></div></td>
+                      <td><span class="activity_name w410">{$wholesale.goods_name|escape:html}</span></td>
+                      <td align="center">{$wholesale.rank_names}</td>
+                      <td align="center"><img src="images/{if $wholesale.enabled}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_enabled', {$wholesale.act_id})" /></td>
+                      <td align="center" class="handler_icon">
+                        <a href="wholesale.php?act=edit&amp;id={$wholesale.act_id}" title="{$lang.edit}"><i class="icon icon-edit"></i></a>
+                        <a href="javascript:;" onclick="listTable.remove({$wholesale.act_id},'{$lang.drop_confirm}')" title="{$lang.remove}"><i class="icon icon-trash"></i></a>
+                      </td>
+                    </tr>
+                    {foreachelse}
+                    <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+                    {/foreach}
+                  </tbody>
+                  <tfoot>
+                  	<tr>
+                    	<td colspan="10" class="td_border">
+                            <div class="shenhe">
+                                <input type="submit" name="drop" id="btnSubmit" value="{$lang.drop}" class="button btn_disabled" disabled="true" />
+                                <input type="hidden" name="act" value="batch" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="20">
+                        {include file="page.dwt"}
+                        </td>
+                    </tr>
+                  </tfoot>
+              </table>
+              {if $full_page}
+              </div>
+              <!-- end wholesale list -->
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+<!--
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+
+  {literal}
+  onload = function()
+  {
+    startCheckOrder();
+  }
+  
+  {if $priv_ru eq 1}
+  function get_store_search(val){
+    if(val == 1){
+      document.forms['searchForm'].elements['merchant_id'].style.display = '';
+      document.forms['searchForm'].elements['store_keyword'].style.display = 'none';
+      document.forms['searchForm'].elements['store_type'].style.display = 'none';
+    }else if(val == 2){
+      document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+      document.forms['searchForm'].elements['store_keyword'].style.display = '';
+      document.forms['searchForm'].elements['store_type'].style.display = 'none';
+    }else if(val == 3){
+      document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+      document.forms['searchForm'].elements['store_keyword'].style.display = '';
+      document.forms['searchForm'].elements['store_type'].style.display = '';
+    }else{
+      document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+      document.forms['searchForm'].elements['store_keyword'].style.display = 'none';
+      document.forms['searchForm'].elements['store_type'].style.display = 'none';
+    }
+  }
+  {/if}
+
+  /**
+   * 搜索团购活动
+   */
+  function searchActivity()
+  {
+    
+    {if $priv_ru eq 1}
+    listTable.filter['store_search'] = Utils.trim(document.forms['searchForm'].elements['store_search'].value);
+    listTable.filter['merchant_id'] = Utils.trim(document.forms['searchForm'].elements['merchant_id'].value);
+    listTable.filter['store_keyword'] = Utils.trim(document.forms['searchForm'].elements['store_keyword'].value);
+    listTable.filter['store_type'] = Utils.trim(document.forms['searchForm'].elements['store_type'].value);
+    {/if}
+
+    var keyword = Utils.trim(document.forms['searchForm'].elements['keyword'].value);
+    listTable.filter['keyword'] = keyword;
+    listTable.filter['page'] = 1;
+    listTable.loadList("wholesale_list");
+  }
+  {/literal}
+//-->
+
+</script>
+</body>
+</html>
+{/if}

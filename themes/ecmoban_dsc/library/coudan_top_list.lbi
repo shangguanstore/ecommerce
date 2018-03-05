@@ -1,0 +1,33 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<div class="full">
+    <div class="total"><span class="full-icon">{$act_type_txt}</span>已加入购物车的活动商品&nbsp;&nbsp;共<font id="buyTotalNums"> {$cart_fav_num} </font>件 总计<strong id="buyTotalMoney"> {$cart_fav_total} </strong>元</div>
+    <!-- {if $act_type_txt eq '满赠'} -->
+    <div class="prize" id="wenAn">，<a href="flow.php" class="ftx-05">返回购物车领取赠品</a></div>
+    <!-- {/if} -->
+    <div class="btns">
+        <a href="flow.php">去购物车结算</a>
+    </div>
+</div>
+<div id="spec-list" favorable="{$favourable_id}" >
+    <div class="spec-items" id="spec-items">
+        <div class="spec-con">
+            <ul>
+                <!-- {foreach from=$cart_favourable_goods item=goods} -->
+                <li>
+                    <div class="p-img">
+                        <img src="{$goods.goods_thumb}" width="80" height="80" />
+                    </div>
+                    <div class="p-total">￥{$goods.shop_price}</div>
+                    <div class="p-num">
+                        <span>X{$goods.goods_number}</span>
+                        <span data-id="{$goods.rec_id}" class="coudan_cart_goods"><a href="javascript:;">删除</a></span>
+                    </div>
+                </li>
+                <!-- {/foreach} -->
+            </ul>
+            <a href="javascript:void(0);" class="spec-control spec-forward"></a>
+    		<a href="javascript:void(0);" class="spec-control spec-backward"></a>
+        </div>
+    </div>
+</div>

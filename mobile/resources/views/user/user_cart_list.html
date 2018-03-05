@@ -1,0 +1,31 @@
+{include file="page_header"}
+	<body class="">
+		<div id="loading"><img src="{__TPL__}img/loading.gif" /></div>
+		<div class="con">
+
+			<form action="{U('user/index/addcard')}">
+				<section class=" j-f-tel">
+					<div class="b-color-f padding-lr">
+                                            {foreach $card_list as $card}
+							<div class="text-all dis-box j-text-all b-color-f card-div position-rel">
+								<a href="#" class="product-div-link"></a>
+								<div>
+									<p>{$card.bank_name}</p>
+									<span>尾号3242</span>
+								</div>
+								<span class="t-jiantou"><i class="iconfont icon-jiantou tf-180 jian-top"></i></span>
+							</div>
+						{/foreach}	
+					</div>
+					<div class="dis-box padding-all">
+						<input type="hidden" name="u-h-forget" value="u-f-tel" />
+                                                <a href="{U('user/account/addcard')}" class="btn-submit box-flex">+添加银行卡</a>
+					</div>
+				</section>
+			</form>
+
+		</div>
+
+	</body>
+
+</html>

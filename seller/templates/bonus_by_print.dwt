@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div class="info_warp">
+                  <form action="bonus.php" method="post" name="theForm2" onsubmit="return validate2()">
+                      <table width="100%" class="table_item">
+                      <tr>
+                          <td class="label">{$lang.senduserrank}：</td>
+                          <td>
+                              <select name="rank_id" class="select mr10">
+                              <option value="0">{$lang.select_rank}</option>
+                              {html_options options=$ranklist selected=$smarty.get.rank_id}
+                              </select>
+                              <div class="checkbox_items mt5">
+                                  <label><input type="checkbox" class="checkbox" name="validated_email" value="1"><span>{$lang.validated_email}</span></label>
+                              </div>
+                              <input type="submit" name="send_rank" value="{$lang.confirm_send_bonus}" class="button" style="padding:0 10px;" />
+                              <input type="hidden" name="act" value="send_by_user" />
+                              <input type="hidden" name="id" value="{$id}" />
+                          </td>
+                      </tr>
+                      </table>
+                  </form>
+                </div>
+                <div class="info_warp mt20">
+                  <form action="bonus.php" method="post" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
+                  <table width="90%" class="table_item">
+                      <tr>
+                          <td class="label">{$lang.bonus_type_id}：</td>
+                          <td>
+                              <select name="bonus_type_id" class="select mr10">
+                                {html_options options=$type_list selected=$smarty.get.id}
+                              </select>
+                          </td>
+                      </tr>
+                      <tr>
+                        <td class="label">{$lang.send_bonus_count}：</td>
+                        <td>
+                          <input type="text" name="bonus_sum" size="30" maxlength="6" class="text"/>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="label">&nbsp;</td>
+                        <td><div class="red_text">{$lang.bonus_sn_notic}</div></td>
+                      </tr>
+                      <tr>
+                          <td></td>
+                          <td class="pb20">
+                              <input type="submit" value="{$lang.button_submit}" class="button" />
+                              <input type="reset" value="{$lang.button_reset}" class="button button_reset" />
+                              <input type="hidden" name="act" value="send_by_print" />
+                          </td>
+                      </tr>
+                  </table>
+                  </form>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script language="JavaScript">
+<!--
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+    validator = new Validator("theForm");
+    validator.required("bonus_type_id",   bonus_type_empty);
+    validator.required("bonus_sum",   bonus_sum_empty);
+    validator.isNumber("bonus_sum",   bonus_sum_number, true);
+    return validator.passed();
+}
+
+onload = function()
+{
+    // 开始检查订单
+    startCheckOrder();
+}
+//-->
+</script>
+{/literal}
+
+{include file ='library/seller_footer.lbi'}
+</body>
+</html>

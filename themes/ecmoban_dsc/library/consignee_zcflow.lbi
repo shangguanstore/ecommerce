@@ -1,0 +1,37 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<script type="text/javascript" src="themes/ecmoban_dsc/js/sc_common.js"></script>
+<script type="text/javascript" src="themes/ecmoban_dsc/js/jquery.purebox.js"></script>
+
+
+		<div class="consignee-addr">
+			<div class="consignee-cont">
+				<ul class="ui-switchable-panel-main">
+					<!-- {foreach from=$user_address item=address} -->
+					<li {if $consignee.address_id eq $address.address_id}class="item-selected"{/if} data-addressid="{$address.address_id}">
+						<input type="radio" {if $consignee.address_id eq $address.address_id}checked="checked"{/if} class="ui-radio" name="consignee_radio" value="{$address.address_id}" id="radio_{$address.address_id}" class="hookbox" />
+						<label class="ui-radio-label">
+							<div class="name">{$address.consignee}</div>
+							<div class="tel">{$address.mobile}</div>
+							<div class="address">&nbsp; {$address.region} &nbsp; {$address.address}</div>
+						</label>
+						<div class="op-btns">
+							{if $user_id > 0}
+								<a href="javascript:void(0);" class="ftx-05 del-consignee" data-dialog="edit_address" data-id="{$address.address_id}">编辑</a>
+								<a href="javascript:void(0);" class="ftx-05 del-consignee" data-dialog="del_address" data-id="{$address.address_id}" >删除</a>
+							{else}
+								<a href="javascript:void(0);" class="ftx-05 del-consignee" data-dialog="edit_address">编辑</a>
+							{/if}
+						</div>
+					</li>
+					<!-- {/foreach} -->
+				</ul>
+			</div>
+		</div>
+		<div class="address-btns">
+			<input id="addNewAddress" class="btn-normal" type="button" value="添加收货地址">
+			{if $consignee.address}
+			<input id="confirmAddress" class="btn-normal" type="button" value="确定收货地址">
+			{/if}
+		</div>
+

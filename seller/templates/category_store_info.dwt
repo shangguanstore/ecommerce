@@ -1,0 +1,361 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div style="margin-top:10px;">
+                <form action="category_store.php" method="post" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
+                    <table width="100%" id="general-table" class="table_item">
+                        <tr>
+                          <td class="label">{$lang.require_field}&nbsp;{$lang.cat_name}：</td>
+                          <td>
+                            {if $form_act eq 'insert'}
+                            <textarea name="cat_name" cols="48" rows="3" class="textarea">{$cat_info.cat_name|escape:html}</textarea>
+                            <p class="bf100"><label class="blue_label ml0">{$lang.category_name_notic}</label></p>
+                            {else}
+                            <input type='text' class="text" name='cat_name' maxlength="20" value='{$cat_info.cat_name|escape:html}' size='27' />
+                            {/if}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="label">{$lang.parent_id}：</td>
+                          <td>
+                            {if $select_category_html}{$select_category_html}{/if}
+                            <input type="hidden" name="parent_id" id="cat_parent_id" value="{$parent_and_rank|default:0}" />
+                          </td>
+                        </tr>
+                        <tr id="measure_unit">
+                          <td class="label">{$lang.measure_unit}：</td>
+                          <td>
+                            <input type="text"class="text text_4" name='measure_unit' value='{$cat_info.measure_unit}' size="12" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="label">{$lang.sort_order}：</td>
+                          <td>
+                            <input type="text" class="text text_4" name='sort_order' {if $cat_info.sort_order}value='{$cat_info.sort_order}'{else} value="50"{/if} size="15" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="label">{$lang.is_show}：</td>
+                          <td>
+                            <div class="checkbox_items">
+                            <label><input type="radio" class="checkbox" name="is_show" value="1" {if $cat_info.is_show neq 0} checked="true"{/if}/>{$lang.yes}</label>
+                            <label><input type="radio" class="checkbox" name="is_show" value="0" {if $cat_info.is_show eq 0} checked="true"{/if} />{$lang.no}</label>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td class="label">{$lang.show_seller_nav}：</td>
+                          <td>
+                            <div class="checkbox_items">
+                            <label><input type="radio" class="checkbox" name="is_show_merchants" value="1" {if $cat_info.is_show_merchants neq 0} checked="true"{/if}/>{$lang.yes}</label>
+                            <label><input type="radio" class="checkbox" name="is_show_merchants" value="0" {if $cat_info.is_show_merchants eq 0} checked="true"{/if} />{$lang.no}</label>
+                            </div>
+                          </td>
+                        </tr>
+                        <!-- by guan start -->
+                        {if $cat_name_arr}
+                        <tr>
+                          <td class="label">{$lang.category_herf}：</td>
+                          <td>
+                            <textarea name='category_links' class="textarea" rows="6" cols="48">{$cat_info.category_links}</textarea>
+                            <p class="bf100"><label class="blue_label">{$lang.category_herf_notic}</label>
+                          </td>
+                        </tr>
+                        {/if}
+                        <!-- by guan end -->
+                        <tr>
+                          <td class="label">{$lang.filter_attr}：</td>
+                          <td>
+                            <table width="100%" id="tbody-attr" align="center">
+                              {if $attr_cat_id eq 0}
+                              <tr class="no-line">
+                                <td>   
+                                     <a href="javascript:;" onclick="addFilterAttr(this)" class="fl mt5 mr10">[+]</a>
+                                     <select onChange="changeCat(this)" class="select">
+                                     <option value="0">{$lang.sel_goods_type}</option>
+                                     {$goods_type_list}</select>
+                                     <select name="filter_attr[]" class="select"><option value="0">{$lang.sel_filter_attr}</option></select>           
+                                     <p class="bf100"><label class="blue_label fl ml0">{$lang.filter_attr_notic}</label></p>
+                                </td>
+                              </tr> 
+                              {/if}           
+                              {foreach from=$filter_attr_list item=filter_attr name="filter_attr_tab"}
+                              <tr>
+                                <td>
+                                   {if $smarty.foreach.filter_attr_tab.iteration eq 1}
+                                     <a href="javascript:;" onclick="addFilterAttr(this)" class="fl mt5 mr10">[+]</a>
+                                   {else}
+                                     <a href="javascript:;" onclick="removeFilterAttr(this)" class="fl mt5 mr10">[-]&nbsp;</a>
+                                   {/if}
+                                   <select onChange="changeCat(this)" class="select"><option value="0">{$lang.sel_goods_type}</option>{$filter_attr.goods_type_list}</select>
+                                   <select name="filter_attr[]" class="select"><option value="0">{$lang.sel_filter_attr}</option>{html_options options=$filter_attr.option selected=$filter_attr.filter_attr}</select>                 
+                                   <p class="bf100"><label class="blue_label fl ml0">{$lang.filter_attr_notic}</label></p>
+                                </td>
+                              </tr>
+                              {/foreach}
+                            </table>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="label">{$lang.grade}：</td>
+                          <td>
+                            <input type="text" name="grade" value="{$cat_info.grade|default:0}" size="40" class="text mr10" />
+                            <p class="bf100"><label class="blue_label fl ml0">{$lang.notice_grade}</label></p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="label">{$lang.cat_style}：</td>
+                          <td>
+                            <input type="text" name="style" value="{$cat_info.style|escape}" size="40"  class="text mr10" />
+                            <p class="bf100"><label class="blue_label fl ml0">{$lang.notice_style}</label></p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="label">{$lang.keywords}：</td>
+                          <td><input type="text" name="keywords" value='{$cat_info.keywords}' size="50" class="text mr10" />
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td class="label">{$lang.cat_desc}：</td>
+                          <td>
+                            <textarea name='cat_desc' rows="6" cols="48" class="textarea">{$cat_info.cat_desc}</textarea>
+                          </td>
+                        </tr>
+                        <tr class="no-line">
+                          <td></td>
+                          <td class="pb20">
+                              <input type="submit" value="{$lang.button_submit}" class="button fl" />
+                              <input type="reset" value="{$lang.button_reset}" class="button button_reset fl" />
+                              <input type="hidden" name="act" value="{$form_act}" />
+                              <input type="hidden" name="old_cat_name" value="{$cat_info.cat_name}" />
+                              <input type="hidden" name="cat_id" value="{$cat_info.cat_id}" />
+                          </td>
+                        </tr>
+                    </table>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+{literal}
+<script type="text/javascript">
+<!--
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+  validator = new Validator("theForm");
+  validator.required("cat_name",      catname_empty);
+  if (parseInt(document.forms['theForm'].elements['grade'].value) >10 || parseInt(document.forms['theForm'].elements['grade'].value) < 0)
+  {
+    validator.addErrorMsg('{$lang.grade_error}');
+  }
+  
+  //设置父级分类限制
+  if(document.getElementById('cat_parent_id')){
+	var cat_id = document.getElementById('cat_id_val').value;
+	var parent = document.getElementById('cat_parent_id').value;
+	parent = parent.split("_");
+	if(parent[0] == cat_id){
+		alert("不能设置本身为父级分类");
+		return false;
+	}
+  }
+  
+  return validator.passed();
+}
+/**
+ * 新增一个筛选属性
+ */
+function addFilterAttr(obj)
+{
+  var src = obj.parentNode.parentNode;
+  var tbl = document.getElementById('tbody-attr');
+    
+  var validator  = new Validator('theForm');
+  var filterAttr = document.getElementsByName("filter_attr[]");
+
+  if (filterAttr[filterAttr.length-1].selectedIndex == 0)
+  {
+    validator.addErrorMsg(filter_attr_not_selected);
+  }
+  
+  for (i = 0; i < filterAttr.length; i++)
+  {
+    for (j = i + 1; j <filterAttr.length; j++)
+    {
+      if (filterAttr.item(i).value == filterAttr.item(j).value)
+      {
+        validator.addErrorMsg(filter_attr_not_repeated);
+      } 
+    } 
+  }
+
+  if (!validator.passed())
+  {
+    return false;
+  }
+
+  var row  = tbl.insertRow(tbl.rows.length);
+  var cell = row.insertCell(-1);
+  cell.innerHTML = src.cells[0].innerHTML.replace(/(.*)(addFilterAttr)(.*)(\[)(\+)/i, "$1removeFilterAttr$3$4-");
+  filterAttr[filterAttr.length-1].selectedIndex = 0;
+}
+
+/**
+ * 删除一个筛选属性
+ */
+function removeFilterAttr(obj)
+{
+  var row = rowindex(obj.parentNode.parentNode);
+  var tbl = document.getElementById('tbody-attr');
+
+  tbl.deleteRow(row);
+}
+
+//ecmoban模板堂 --zhuo start
+
+//判断选择的分类是否是顶级分类，如果是则可用 类目证件
+function get_cat_parent_val(f,lev){
+	var title_list = document.getElementsByName("document_title[]");
+	var cat_parent_id = f + "_" + Number(lev - 1);
+	
+	var arr = new Array();
+	var str = new String(cat_parent_id);
+	var arr = str.split("_");
+	var sf = Number(arr[0]);
+	var slevel = Number(arr[1]);
+	
+	catList(sf, lev);
+
+	for(i=0; i<title_list.length; i++){
+		if(sf != 0){
+			title_list[i].disabled = true;
+			title_list[i].value = '';
+		}else{
+			title_list[i].disabled = false;
+		}	
+	}
+}
+/**
+   * 添加类目证件
+   */
+  function addCategoryFile(obj)
+  {  
+	 var title_list = document.getElementsByName("document_title[]");
+	 var catParent = document.getElementById('cat_parent_id').value; 
+	 if(catParent != 0){
+		 alert('该分类必须是顶级分类才能使用!');
+
+		 for(i=0; i<title_list.length; i++){
+			 title_list[i].value = '';
+		 }
+		 
+		 return false;
+	}
+	  
+    var src      = obj.parentNode.parentNode;
+    var tbl      = document.getElementById('documentTitle_table');
+
+    var row  = tbl.insertRow(tbl.rows.length);
+    var cell = row.insertCell(-1);
+    cell.innerHTML = src.cells[0].innerHTML.replace(/(.*)(addCategoryFile)(.*)(\[)(\+)/i, "$1removeCategoryFile$3$4-");
+
+    title_list[title_list.length-1].value = "";
+  }
+
+  /**
+   * 删除类目证件
+   */
+  function removeCategoryFile(obj,dt_id)
+  {
+	  if(dt_id > 0){
+	   if (confirm('确实要删除该信息吗')){
+		   {if $cat_id > 0}
+		   location.href = 'category.php?act=title_remove&dt_id=' + dt_id + '&cat_id=' + {$cat_id};  
+		   {/if}
+	   }
+	  }else{
+		  var row = rowindex(obj.parentNode.parentNode);
+		  var tbl = document.getElementById('documentTitle_table');
+	
+		  tbl.deleteRow(row);
+	  }
+  }
+  //ecmoban模板堂 --zhuo end
+
+  // 分类分级 by qin
+  function catList(val, level)
+  {
+	var cat_parent_id = val;
+	Ajax.call('goods.php?is_ajax=1&act=sel_cat', 'cat_id='+cat_parent_id+'&cat_level='+level, catListResponse, 'GET', 'JSON');
+  }
+
+  function catListResponse(result)
+  {
+	document.getElementById('cat_parent_id').value = result.parent_id + "_" + Number(result.cat_level - 1);  
+	if (result.error == '1' && result.message != '')
+	{
+	  alert(result.message);
+	  return;
+	}
+	var response = result.content;
+	var cat_level = result.cat_level; // 分类级别， 1为顶级分类
+	for(var i=cat_level;i<10;i++)
+	{
+	  $("#cat_list"+Number(i+1)).remove();
+	}
+	if(response)
+	{
+		$("#cat_list"+cat_level).after(response);
+	}
+	return;
+  }
+//-->
+</script>
+<script type="text/javascript">
+  var arr = new Array();
+  var sel_filter_attr = "{$lang.sel_filter_attr}";
+  {foreach from=$attr_list item=val key=att_cat_id}
+	arr[{$att_cat_id}] = new Array();
+	{foreach from=$val item=item key=i}
+	  {foreach from=$item item=attr_val key=attr_id}
+		arr[{$att_cat_id}][{$i}] = ["{$attr_val}", {$attr_id}];
+	  {/foreach}
+	{/foreach}
+  {/foreach}
+
+  function changeCat(obj)
+  {
+	var key = obj.value;
+	var sel = window.ActiveXObject ? obj.parentNode.childNodes[4] : obj.parentNode.childNodes[5];
+	sel.length = 0;
+	sel.options[0] = new Option(sel_filter_attr, 0);
+	if (arr[key] == undefined)
+	{
+	  return;
+	}
+	for (var i= 0; i < arr[key].length ;i++ )
+	{
+	  sel.options[i+1] = new Option(arr[key][i][0], arr[key][i][1]);
+	}
+
+  }
+</script>
+{/literal}
+</body>
+</html>

@@ -1,0 +1,220 @@
+    <div class="nav ecsc-default">
+    	<div class="w1200">
+        	<div class="categorys channel cate_default">
+            	<div class="dt">{$cate_info.cat_name}</div>
+			</div>
+            <div class="navitems">
+                <ul>
+                    <li><a href="../index.php" {if $navigator_list.config.index eq 1}class="selected"{/if}>首页</a></li>
+                    <!-- {foreach name=nav_middle_list from=$navigator_list.middle item=nav} -->
+                    <li><a href="{$nav.url}" {if $nav.active eq 1}class="selected"{/if} {if $nav.opennew}target="_blank"{/if}>{$nav.name}</a></li>
+                    <!-- {/foreach} -->
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="content" style="padding-top:0;">
+    	<div class="w1200">
+            <div class="cate_default_left">
+            	<div class="ctm_items" data-adposname="平台商品分类，编辑二级分类在顶级分类页显示" {if $ad_reminder eq 1}ecdscType="Text"{/if}>
+                    <!--{foreach from=$categories_child item=cat name=child}-->
+					<div class="item{if $smarty.foreach.child.first} first current{/if}{if $smarty.foreach.child.last} last{/if}">
+                        <span>{$cat.name|escape:html}</span>
+                        <div class="cata_secon">
+                            <ul>
+								<!--{foreach from=$cat.cat_id item=child name=no}-->
+                                <li><a href="{$child.url}" target="_blank">{$child.name|escape:html}</a></li>
+								<!--{/foreach}-->
+                            </ul>
+                        </div>
+                    </div>
+                    <!--{/foreach}-->
+                </div>
+                <!--{if $top_goods}-->
+                <div class="sales_valume">
+                    <div class="mt">热销排行</div>
+                    <div class="mc">
+                        <ul class="sales_list">
+							<!--{foreach from=$top_goods item=goods name=top}-->
+							<li{if $smarty.foreach.top.last} class="last"{/if}>
+								<b class="sales-num sales-num-{$smarty.foreach.top.iteration}" id="{$smarty.foreach.top.iteration}">{$smarty.foreach.top.iteration}</b>
+								<div class="sales_pro_img"><a href="{$goods.url}" target="_blank"><img src="themes/ecmoban_dsc/images/loadGoods.gif" width="52" height="52" class="lazy" data-original="{$goods.goods_thumb}"></a></div>
+								<div class="p-name"><a href="{$goods.url}" target="_blank">{$goods.goods_name|escape:html}</a></div>
+								<div class="p-price">
+								{if $goods.promote_price neq ''}
+									 {$goods.promote_price}
+								{else}
+									 {$goods.shop_price}
+								{/if}
+								</div>
+							</li>
+							<!-- {/foreach} -->
+                        </ul>
+                    </div>
+                </div>
+                <!--{/if}-->
+                <div class="cate_default_adv" data-adposname="默认顶级分类页面左边广告" {if $ad_reminder eq 1}ecdscType="adPos"{/if}>
+				{* ECSHOP 提醒您：动态载入category_top_left.lbi，显示首页新品首发小广告 *}{insert name='get_adv_child' ad_arr=$category_top_left id=$cate_info.cat_id}
+                </div>
+                <div class="cate_default_brand">
+                	<ul>
+						<!--{foreach from=$cat_brand.brands item=brand key=kid name=brand}-->
+						<!--{if $kid<10}-->
+						<li><a href="brand.php?id={$brand.brand_id}&cat={$cate_info.cat_id}" target="_blank"><img src="{$brand.brand_logo}" width="114" height="45"/></a></li>
+						<!--{/if}-->
+						<!--{/foreach}-->
+                    </ul>
+                </div>
+            </div>
+            <div class="cate_default_right">
+            	<div class="cate_default_banner" data-adposname="顶级分类页（默认）幻灯广告" {if $ad_reminder eq 1}ecdscType="adPos"{/if}>
+                	{* ECSHOP 提醒您：动态载入category_top_banner.lbi，显示首页分类小广告 *}{insert name='get_adv_child' ad_arr=$category_top_banner id=$cate_info.cat_id}  
+                </div>
+                <div class="cate_default_items cate_default_tj">
+                	<div class="mt">今日推荐</div>
+                    <div class="mc">
+                    	<div class="cate_default_sbides">
+                            <ul data-adposname="平台商品分类->平台二级分类->分类下商品->编辑商品->其他信息->勾选中加入推荐《精品》" {if $ad_reminder eq 1}ecdscType="Text"{/if}>
+								<!--{foreach from=$cate_top_best_goods item=goods name=best}-->
+                                <li>
+                                    <div class="product_warp">
+                                        <div class="p-name"><a href="{$goods.url}" target="_blank">{$goods.name|escape:html}</a></div>
+                                        <div class="p-img"><a href="{$goods.url}" target="_blank"><img src="themes/ecmoban_dsc/images/loadGoods.gif" width="135" height="135" class="lazy" data-original="{$goods.thumb}"></a></div>
+                                        <div class="ecsc-bp">
+                                            <div class="p-price">
+                                            {if $goods.promote_price neq ''}
+                                                 {$goods.promote_price}
+                                            {else}
+                                                 {$goods.shop_price}
+                                            {/if}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>								
+								<!--{/foreach}-->
+                            </ul>
+                        </div>
+                        <a href="javascript:void(0);" class="prev"></a>
+                        <a href="javascript:void(0);" class="next"></a>
+                    </div>
+                </div>
+                <div class="cate_default_items cate_default_new">
+                	<div class="mt">新品到货</div>
+                    <div class="mc">
+                    	<div class="cate_default_sbides">
+                            <ul data-adposname="平台商品分类->平台二级分类->分类下商品->编辑商品->其他信息->勾选中加入推荐《新品》" {if $ad_reminder eq 1}ecdscType="Text"{/if}>
+                                <!--{foreach from=$cate_top_new_goods item=goods name=new}-->
+                                {if $smarty.foreach.new.iteration < 6}
+                                    <li>
+                                        <div class="product_warp">
+											<a href="{$goods.url}" target="_blank">
+												<div class="p-name">{$goods.name|escape:html}</div>
+												<div class="p-img"><a href="{$goods.url}" target="_blank"><img src="themes/ecmoban_dsc/images/loadGoods.gif" width="135" height="135" class="lazy" data-original="{$goods.thumb}"></a></div>
+												<div class="ecsc-bp">
+													<div class="p-price">
+													{if $goods.promote_price neq ''}
+														 {$goods.promote_price}
+													{else}
+														 {$goods.shop_price}
+													{/if}
+													</div>
+												</div>
+											</a>
+                                        </div>
+                                    </li>
+                                 {/if}
+                                 <!-- {/foreach} -->							
+                            </ul>
+							{if $cate_top_new_goods.6}
+                            <ul data-adposname="平台商品分类，编辑二级分类在顶级分类页显示" {if $ad_reminder eq 1}ecdscType="Text"{/if}>
+                                <!--{foreach from=$cate_top_new_goods item=goods name=new}-->
+                                {if $smarty.foreach.new.iteration > 5 and $smarty.foreach.new.iteration < 12}
+                                    <li>
+                                        <div class="product_warp">
+											<a href="{$goods.url}" target="_blank">
+												<div class="p-name">{$goods.name|escape:html}</div>
+												<div class="p-img"><a href="{$goods.url}" target="_blank"><img src="themes/ecmoban_dsc/images/loadGoods.gif" width="135" height="135" class="lazy" data-original="{$goods.thumb}"></a></div>
+												<div class="ecsc-bp">
+													<div class="p-price">
+													{if $goods.promote_price neq ''}
+														 {$goods.promote_price}
+													{else}
+														 {$goods.shop_price}
+													{/if}
+													</div>
+												</div>
+											</a>
+                                        </div>
+                                    </li>
+                                 {/if}
+                                 <!-- {/foreach} -->						
+                            </ul>
+							{/if}
+                        </div>
+						{if $cate_top_new_goods.6}
+                        <div class="hd"><ul></ul></div>
+						{/if}
+                    </div>
+                </div> 
+                <div class="cate_default_items cate_default_xg">
+                	<div class="mt">限时抢购</div>
+                    <div class="mc">
+                    	<div class="cate_default_sbides">
+                            <ul data-adposname="平台商品分类->平台二级分类->分类下商品->编辑商品->通用信息->设置促销价格和促销时间" {if $ad_reminder eq 1}ecdscType="Text"{/if}>
+								<!--{foreach from=$cate_top_promote_goods item=goods name=promote}-->
+                                	<li>
+                                    	<div class="product_warp">
+											<a href="{$goods.url}" target="_blank">
+												<div class="p-name"><a href="{$goods.url}" target="_blank">{$goods.name|escape:html}</a></div>
+												<div class="p-img"><a href="{$goods.url}" target="_blank"><img src="themes/ecmoban_dsc/images/loadGoods.gif" width="135" height="135" class="lazy" data-original="{$goods.thumb}"/></a></div>												
+												<div class="p-price">
+												{if $goods.promote_price neq ''}
+													 {$goods.promote_price}
+												{else}
+													 {$goods.shop_price}
+												{/if}
+												</div>
+											</a>
+                                        </div>
+                                    </li>
+                                <!-- {/foreach} -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="cate_default_items cate_default_ts">
+                	<div class="mt">特价商品</div>
+                    <div class="mc">
+                    	<div class="cate_default_list">
+                            <ul data-adposname="平台商品分类->平台二级分类->分类下商品->编辑商品->其他信息->勾选中加入推荐《热销》" {if $ad_reminder eq 1}ecdscType="Text"{/if}>
+								<!--{foreach from=$cate_top_hot_goods item=goods name=hot}-->
+                                <li{if $smarty.foreach.hot.iteration % 4 ==0} class="last"{/if}>
+                                	<div class="p-product">
+                                        <div class="p-img"><a href="{$goods.url}" target="_blank"><img src="themes/ecmoban_dsc/images/loadGoods.gif" width="90" height="90" class="lazy" data-original="{$goods.thumb}"></a></div>
+                                        <div class="p-rit">
+                                            <div class="p-name"><a href="{$goods.url}" target="_blank">{$goods.name|escape:html}</a></div>
+											<div class="p-price">
+											{if $goods.promote_price neq ''}
+												 {$goods.promote_price}
+											{else}
+												 {$goods.shop_price}
+											{/if}
+											</div>
+                                            <div class="p-num">已售：<em>{$goods.sales_volume}</em>件</div>
+                                        </div>
+                                    </div>
+                                </li>							
+								<!-- {/foreach} -->
+                            </ul>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    //banner广告轮播调用
+	$(".cate_default_banner").slide({titCell:".hd ul",mainCell:".bd ul",effect:"fold",autoPlay:true,autoPage:true,trigger:"mouseover"});
+	$(".cate_default_tj").slide({mainCell:".cate_default_sbides ul",effect:"left",pnLoop:false,autoPlay:true,autoPage:true,scroll:1,vis:5,prevCell:".prev",nextCell:".next"})
+	$(".cate_default_new").slide({titCell:".hd ul",mainCell:".cate_default_sbides",effect:"left",pnLoop:false,autoPlay:false,autoPage:true})
+    </script>

@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div class="search-form">
+                  <form action="javascript:searchGoods()" name="searchForm">
+                    <div class="fr">
+                    <select name="cat_id" class="select"><option value="0">{$lang.all_category}</option>{$cat_list}</select>
+                    <select name="brand_id" class="select"><option value="0">{$lang.all_brand}</option>{html_options options=$brand_list}</select>
+                    <input type="text" name="keyword" size="30" class="text text_2 mr10" />
+                    <label class="submit-border"><input type="submit" value="{$lang.button_search}" class="button" /></label>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="info_warp">
+                  <form name="theForm">
+                  <table width="100%" class="table_item">
+                    <tr>
+                      <th class="tc"><div class="th">{$lang.all_goods}</div></th>
+                      <th class="tc"><div class="th">{$lang.handler}</div></th>
+                      <th class="tc"><div class="th">{$lang.send_bouns_goods}</div></th>
+                    </tr>
+                    <tr class="no-line">
+                      <td width="45%" align="center">
+                        <select name="source_select" size="20" class="selectzoom" ondblclick="sz.addItem(false, 'add_bonus_goods', bounsTypeId)" multiple="true">
+                        </select>
+                      </td>
+                      <td class="tc">
+                        <div class="caozuo">
+                        <p><input type="button" value="&gt;&gt;" onclick="sz.addItem(true, 'add_bonus_goods', bounsTypeId)" class="button" /></p>
+                        <p><input type="button" value="&gt;" onclick="sz.addItem(false, 'add_bonus_goods', bounsTypeId)" class="button" /></p>
+                        <p><input type="button" value="&lt;" onclick="sz.dropItem(false, 'drop_bonus_goods', bounsTypeId)" class="button" /></p>
+                        <p><input type="button" value="&lt;&lt;" onclick="sz.dropItem(true, 'drop_bonus_goods', bounsTypeId)" class="button" /></p>
+                        </div>
+                      </td>
+                      <td width="45%" align="center">
+                        <select name="target_select" multiple="true" size="20" class="selectzoom" ondblclick="sz.dropItem(false, 'drop_bonus_goods', bounsTypeId)">
+                          {foreach from=$goods_list item=goods}
+                          <option value="{$goods.goods_id}">{$goods.goods_name}</option>
+                          {/foreach}
+                        </select>
+                      </td>
+                    </tr>
+                    <tr class="no-line">
+                      <td colspan="3" class="tc pt20 pb20"><input type="button"  class="button" value="发放" onClick="javascript:location.href='gift_gard.php?act=bonus_list&bonus_type={$bonus_type}'" /></td>
+                    </td>
+                  </table>
+                  </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+<!--
+  listTable.recordCount = 0;
+  listTable.pageCount = 0;
+
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+
+  {literal}
+  onload = function()
+  {
+    startCheckOrder();
+  }
+  
+  {if $priv_ru eq 1}
+    function get_store_search(val){
+        if(val == 1){
+            document.forms['searchForm'].elements['merchant_id'].style.display = '';
+            document.forms['searchForm'].elements['store_keyword'].style.display = 'none';
+            document.forms['searchForm'].elements['store_type'].style.display = 'none';
+        }else if(val == 2){
+            document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+            document.forms['searchForm'].elements['store_keyword'].style.display = '';
+            document.forms['searchForm'].elements['store_type'].style.display = 'none';
+        }else if(val == 3){
+            document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+            document.forms['searchForm'].elements['store_keyword'].style.display = '';
+            document.forms['searchForm'].elements['store_type'].style.display = '';
+        }else{
+            document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+            document.forms['searchForm'].elements['store_keyword'].style.display = 'none';
+            document.forms['searchForm'].elements['store_type'].style.display = 'none';
+        }
+    }
+    {/if}
+
+  /**
+   * 搜索团购活动
+   */
+  function searchGroupBuy()
+  {
+      
+      {if $priv_ru eq 1}
+        listTable.filter['store_search'] = Utils.trim(document.forms['searchForm'].elements['store_search'].value);
+        listTable.filter['merchant_id'] = Utils.trim(document.forms['searchForm'].elements['merchant_id'].value);
+        listTable.filter['store_keyword'] = Utils.trim(document.forms['searchForm'].elements['store_keyword'].value);
+        listTable.filter['store_type'] = Utils.trim(document.forms['searchForm'].elements['store_type'].value);
+        {/if}
+
+    var keyword = Utils.trim(document.forms['searchForm'].elements['keyword'].value);
+    listTable.filter['keyword'] = keyword;
+    listTable.filter['page'] = 1;
+    listTable.loadList("group_buy_list");
+  }
+
+  var bounsTypeId = '{$gift_goods_id}';
+  var elements    = document.forms['theForm'].elements;
+  var sz          = new SelectZone(1, elements['source_select'], elements['target_select'], '');
+
+
+  onload = function()
+  {
+    startCheckOrder();
+  }
+
+  function searchGoods()
+  {
+    var elements  = document.forms['searchForm'].elements;
+    var filters   = new Object;
+
+    filters.cat_id = elements['cat_id'].value;
+    filters.brand_id = elements['brand_id'].value;
+    filters.keyword = Utils.trim(elements['keyword'].value);
+
+    sz.loadOptions('get_goods_list', filters);
+  }
+
+  {/literal}
+//-->
+</script>
+</body>
+</html>

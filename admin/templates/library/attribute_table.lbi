@@ -1,0 +1,88 @@
+{if $attr_group}
+<a href="goods_attr_price.php?act=add&goods_id={$goods_id}&goods_type={$goods_type}" class="btn btn25 blue_btn ga_price" target="_blank" style="display:none">选择批量上传</a>
+<table class="table_head" width="100%">
+	<thead>
+		<tr>
+			{foreach from=$attribute_array item=attribute}
+			<th width="7%">{$attribute.attr_name}</th>
+			{/foreach}
+			<th width="5%" {if $model_name eq ''}class="hide"{/if}>{$model_name}</th>
+			<th width="15%" class="hide"><em class="require-field">*</em>市场价<i class="sc_icon sc_icon_edit pointer pro_market"></i></th>
+			<th width="8%" {if $goods_attr_price eq 0}class="hide"{/if}><em class="require-field">*</em>本店价<i class="sc_icon sc_icon_edit pointer pro_shop"></i></th>
+			<th width="8%"><em class="require-field">*</em>库存<i class="sc_icon sc_icon_edit pointer pro_number"></i></th>
+			<th width="8%"><em class="require-field">*</em>预警值<i class="sc_icon sc_icon_edit pointer pro_warning"></i></th>
+			<th width="10%">商品货号</th>
+			<th width="10%">商品条形码</th>
+            <th width="5%">操作</th>
+		</tr>
+	</thead>
+</table>
+<div class="step_item_table2">
+<table class="table_attr" width="100%">
+	<tbody>
+		{foreach from=$attr_group item=group}
+		<tr>
+			{foreach from=$group.attr_info item=one}
+			<td class="td_bg_blue" width="7%">{$one.attr_value}<input type="hidden" name="attr[{$one.attr_id}][]" value="{$one.attr_value}" /></td>		
+			{/foreach}		
+			<td width="5%" {if $region_name eq ''}class="hide"{/if}>{$region_name}</td>
+			<td width="15%" class="hide"><input type="text" name="product_market_price[]" class="text w60" autocomplete="off" value="{$group.product_market_price|default:0.00}" /></td>
+			<td width="8%" {if $goods_attr_price eq 0}class="hide"{/if}><input type="text" name="product_price[]" onBlur="listTable.editInput(this, 'edit_product_price', {$group.product_id|default:0}, $('#goods_model').val(), 'goods_model');" class="text w60" autocomplete="off" value="{$group.product_price|default:0.00}" /></td>
+			<td width="8%"><input type="text" name="product_number[]" onBlur="listTable.editInput(this, 'edit_product_number', {$group.product_id|default:0}, $('#goods_model').val(), 'goods_model');" class="text w60" autocomplete="off" value="{$group.product_number|default:0}" /></td>
+			<td width="8%"><input type="text" name="product_warn_number[]" onBlur="listTable.editInput(this, 'edit_product_warn_number', {$group.product_id|default:0}, $('#goods_model').val(), 'goods_model');" class="text w60" autocomplete="off" value="{$group.product_warn_number|default:1}" /></td>
+			<td width="10%"><input type="text" name="product_sn[]" onBlur="listTable.editInput(this, 'edit_product_sn', {$group.product_id|default:0}, $('#goods_model').val(), 'goods_model');" class="text w120" autocomplete="off" value="{$group.product_sn}" /></td>
+			<td width="10%"><input type="text" name="product_bar_code[]" onBlur="listTable.editInput(this, 'edit_product_bar_code', {$group.product_id|default:0}, $('#goods_model').val(), 'goods_model');" class="text w120" autocomplete="off" value="{$group.bar_code}" /></td>
+            <td class="handle" width="5%">
+            	{if $group.product_id}
+                    <div class="tDiv pl0 a1">
+                    <a href="javascript:void(0);" class="btn_trash" onclick="if (confirm('{$lang.trash_product_confirm}')) dropProduct('{$group.product_id}')"><i class="icon icon-trash"></i>删除</a>
+                    </div>
+                {else}
+                	{$lang.n_a}
+                {/if}
+                <input type="hidden" name="product_id[]" value="{$group.product_id|default:0}" />
+            </td>
+		</tr>
+		{/foreach}
+	</tbody>
+</table>
+<input name="group_attr" type="hidden" value='{$group_attr}'>
+</div>
+
+<script type="text/javascript">
+$(function(){
+	$(".step_item_table2").perfectScrollbar();
+	/**
+	*货品市场价
+	*/
+	$(".pro_market").click(function(){
+		var val = $("form[name='theForm'] :input[name='product_market_price[]']").get(0).value;
+		$("form[name='theForm'] :input[name='product_market_price[]']").val(val);
+	});
+	
+	/**
+	*货品本店价
+	*/
+	$(".pro_shop").click(function(){
+		var val = $("form[name='theForm'] :input[name='product_price[]']").get(0).value;
+		$("form[name='theForm'] :input[name='product_price[]']").val(val);
+	});
+	
+	/**
+	*货品库存
+	*/
+	$(".pro_number").click(function(){
+		var val = $("form[name='theForm'] :input[name='product_number[]']").get(0).value;
+		$("form[name='theForm'] :input[name='product_number[]']").val(val);
+	});
+	
+	/**
+	*货品库存预警值
+	*/
+	$(".pro_warning").click(function(){
+		var val = $("form[name='theForm'] :input[name='product_warn_number[]']").get(0).value;
+		$("form[name='theForm'] :input[name='product_warn_number[]']").val(val);
+	});
+});
+</script>
+{/if}

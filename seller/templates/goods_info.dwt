@@ -1,0 +1,3148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+{insert_scripts files="showbox.js"}
+<link rel="stylesheet" type="text/css" href="css/purebox.css" />
+<script type="text/javascript" src="../js/jquery.form.js"></script>
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+		{include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                <ul class="add-goods-step">
+                    <li {if !$properties}class="current"{/if}><span><i class="icon icon-desktop"></i><h2>设置商品模式</h2></span></li>
+                    <li><span><i class="icon icon-edit"></i><h2>填写商品详情</h2></span></li>
+                    <li {if $properties}class="current"{/if}><span><i class="icon icon-list-alt"></i><h2>编辑商品属性</h2></span></li>
+                    <li><span><i class="icon icon-camera-retro"></i><h2>上传商品图片</h2></span></li>
+                    <li><span><i class="icon icon-retweet"></i><h2>商品关联设置</h2></span></li>
+                </ul>
+                <form action="goods.php" method="post" name="theForm" enctype="multipart/form-data">
+                    <div class="item-publish">
+                        <div class="warder-info">
+                            <div class="alert red">注意：设置不同的商品模式将会决定商品在不同区域或仓库下购买的价格和显示的库存。</div>
+                            <div class="ecsc-form-goods">
+                            	<div class="wpr_sort">
+                                    <h3 id="demo1" class="mb20">商品模式选择</h3>
+                                    <div class="items-list">
+                                        <div class="items-list-left">{$lang.goods_model}：</div>
+                                        <div class="items-list-right">
+                                            <label class="moren"><input type="radio" name="goods_model" value="0" checked="checked" onclick="get_goods_model(this.value)" /><span>默认</span></label>
+                                            <label class="moren"><input type="radio" name="goods_model" value="1" onclick="get_goods_model(this.value)" />仓库</label>
+                                            <label class="moren"><input type="radio" name="goods_model" value="2" onclick="get_goods_model(this.value)" />地区</label>
+                                        </div>
+                                    </div>
+                                    <div class="items-list">
+                                        <div class="items-list-left">{$lang.goods_price_model}：</div>
+                                        <div class="items-list-right">
+                                            <label class="moren"><input type="radio" name="model_price" value="0" {if $goods.model_price eq 0}checked="checked"{/if} onclick="get_model_price(this.value)" />默认</label>
+                                            <label class="moren"><input type="radio" name="model_price" value="1" {if $goods.model_price eq 1}checked="checked"{/if} onclick="get_model_price(this.value)" />仓库</label>
+                                            <label class="moren"><input type="radio" name="model_price" value="2" {if $goods.model_price eq 2}checked="checked"{/if} onclick="get_model_price(this.value)" />地区</label>
+                                        </div>
+                                        <span class="items-desc" id="modelPrice">（使用仓库的价格模式,根据不同仓库调取不同价格）</span>
+                                    </div>
+                                    <div class="items-list">
+                                        <div class="items-list-left">{$lang.goods_stock_model}：</div>
+                                        <div class="items-list-right">
+                                            <label class="moren"><input type="radio" name="model_inventory" value="0" {if $goods.model_inventory eq 0}checked="checked"{/if} onclick="get_model_inventory(this.value)" />默认</label>
+                                            <label class="moren"><input type="radio" name="model_inventory" value="1" {if $goods.model_inventory eq 1}checked="checked"{/if} onclick="get_model_inventory(this.value)" />仓库</label>
+                                            <label class="moren"><input type="radio" name="model_inventory" value="2" {if $goods.model_inventory eq 2}checked="checked"{/if} onclick="get_model_inventory(this.value)" />地区</label>
+                                        </div>
+                                        <span class="items-desc" id="modelInventory">（使用仓库的库存模式,根据不同仓库调取不同库存）</span>
+                                    </div>
+                                    <div class="items-list">
+                                        <div class="items-list-left">{$lang.goods_attr_model}：</div>
+                                        <div class="items-list-right">
+                                            <label class="moren"><input type="radio" name="model_attr" value="0" {if $goods.model_attr eq 0}checked="checked"{/if} onclick="get_model_attr(this.value)" />默认</label>
+                                            <label class="moren"><input type="radio" name="model_attr" value="1" {if $goods.model_attr eq 1}checked="checked"{/if} onclick="get_model_attr(this.value)" />仓库</label>
+                                            <label class="moren"><input type="radio" name="model_attr" value="2" {if $goods.model_attr eq 2}checked="checked"{/if} onclick="get_model_attr(this.value)" />地区</label>
+                                        </div>
+                                        <span class="items-desc" id="modelAttr">（使用仓库的属性模式,根据不同仓库调取不同仓库价格，以及库存）</span>
+                                    </div>
+                                </div>
+                                <div class="wpr_sort" id="warehouse-tab" style="display:none;">
+                                	<h3 id="demo1" class="mb20">仓库模式</h3>
+                                    <div class="list">
+                                    	{include file="library/goods_warehouse.lbi"}
+                                    </div>
+                                </div>
+                                <div class="wpr_sort" id="region-tab" style="display:none;">
+                                	<h3 id="demo1" class="mb20">地区模式模式</h3>
+                                    <div class="list">
+                                    {include file="library/goods_region.lbi"}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="warder-info" style="display:none;">
+                            <input type="hidden" name="form_submit" value="ok">
+                            <input type="hidden" name="commonid" value="100090">
+                            <input type="hidden" name="type_id" value="0">
+                            <input type="hidden" name="ref_url" value="">
+                            <div class="alert red"><i class="required">*</i>为必填属性，为了商品真实性请认真填写！</div>
+                            <div class="ecsc-form-goods">
+                                <h3 id="demo1">商品基本信息</h3>
+                                <dl>
+                                    <dt><i class="required">*</i>{$lang.lab_goods_name}</dt>
+                                    <dd>
+                                        <input name="goods_name" type="text" class="text w400" value="{$goods.goods_name|escape:html}">
+                                        <span></span>
+                                        <p class="hint">商品标题名称长度至少3个字符，最长50个汉字</p>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt><i class="required">*</i>{$lang.lab_goods_sn}</dt>
+                                    <dd>
+                                    <p>
+                                    <input type="text" class="text" name="goods_sn" value="{$goods.goods_sn|escape}" size="20" onblur="checkGoodsSn(this.value,'{$goods.goods_id}')" />
+									<input type="hidden" name="goods_id" id="goods_id" value="{$goods.goods_id}" />
+                                    </p>
+                                    <p class="hint" id="goods_sn_notice">商家货号是指商家管理商品的编号，买家不可见最多可输入20个字符，支持输入中文、字母、数字、_、/、-和小数点</p>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>{$lang.lab_bar_code}</dt>
+                                    <dd>
+                                    <p>
+                                    <input type="text" class="text" name="bar_code" value="{$goods.bar_code|escape}" size="20" />
+                                    </p>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>{$lang.platform}{$lang.lab_goods_cat}</dt>
+									<dd>
+                                    <p>{if $select_category_html}{$select_category_html}{/if}
+									<input type="hidden" name="cat_id" id="cat_id" value="{$parent_and_rank|default:0}"/>
+                                    </p>									
+                                    </dd>
+                                </dl>
+
+                                <dl>
+                                    <dt>{$lang.seller}{$lang.lab_goods_cat}</dt>
+									<dd>
+                                    <p>{if $seller_select_category_html}{$seller_select_category_html}{/if}
+									<input type="hidden" name="user_cat" id="user_cat" value="{$seller_parent_and_rank|default:0}"/>
+                                    </p>									
+                                    </dd>
+                                </dl>
+                                
+                                <dl>
+                                    <dt>{$lang.platform}{$lang.lab_other_cat}</dt>
+									<dd>
+                                    	<p>
+										  <input type="button" value="{$lang.add}" class="button button_red button1" ectype="category_dialog"/>
+										</p>							
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>{$lang.lab_goods_brand}</dt>
+									<dd>
+                                    	<p>
+											<select name="brand_id" id="brand_id" onchange="hideBrandDiv()" class="select select_4">
+											  <option value="0">{$lang.select_please}</option>
+											  {html_options options=$brand_list selected=$goods.brand_id}
+											</select>
+											<input width="20" name="keyword_brand" type="text" id="keyword_brand" class="text text_6 mr10">
+											<input name="search_brand" type="button" id="search_brand" value=" 搜索" class="button fl mr10" onclick="searchBrand()">
+                                        </p>							
+                                    </dd>
+                                </dl>
+                                
+                                <!--分销商品开关begin -->
+                                {if $is_dir}
+                                <dl>
+                                    <dt>{$lang.is_drp_goods}</dt>
+                                    <dd class="is_dis">
+                                            &nbsp;&nbsp;<label><input name="is_distribution" type="radio" class="checkbox" {if $goods.is_distribution eq 1} checked="checked" {/if} value="1" />{$lang.yes} </label>&nbsp;&nbsp;
+                                            <label><input name="is_distribution" type="radio" class="checkbox" value="0" {if $goods.is_distribution eq 0 || $goods.is_distribution eq ''} checked="checked"{/if}/>{$lang.no} </label>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>{$lang.drp_comm}</dt>
+                                    <dd>
+                                        <div id="showDiv">
+                                            <input  type="text" name="dis_commission" value="{$goods.dis_commission}" size="20" {if $goods.is_distribution eq 0} disabled='disabled'{/if} class="text"/>
+                                            <label class="blue_label"> {$lang.notice_drp_comm}</label>
+                                        </div>
+                                    </dd>
+                                </dl>
+                                {/if}
+                                <!--分销商品开关end -->
+                                    
+								{if $suppliers_exists eq 1}
+                                <dl>
+                                    <dt>{$lang.label_suppliers}</dt>
+                                    <dd>
+										<select name="suppliers_id" id="suppliers_id" class="select select_2">
+										<option value="0">{$lang.suppliers_no}</option>
+										{html_options options=$suppliers_list_name selected=$goods.suppliers_id}
+										</select>
+                                    </dd>
+                                </dl>
+                                {/if}
+                                <dl>
+                                	<dt><i class="required">*</i>{$lang.lab_shop_price}</dt>
+                                    <dd>
+                                    	<div id="td_shopPrice1">
+                                    		<input name="shop_price" value="{$goods.shop_price}" type="text" onblur="priceSetted()" class="text w60"><em class="add-on"><i class="icon-renminbi"></i></em> <span></span>
+                                    		<input type="button" value="{$lang.compute_by_mp}" class="button button_red ml10" onclick="marketPriceSetted()" />
+                                            <p class="hint">价格必须是0.01~9999999之间的数字，且不能高于市场价。此价格为商品实际销售价格，如果商品存在规格，该价格显示最低价格。</p>
+                                        </div>
+                                        <div id="td_shopPrice2" style="display:none; color:#F00">{if $goods.model_price eq 1}仓库模式{elseif $goods.model_price eq 2}地区模式{/if}</div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>{$lang.lab_user_price}</dt>
+                                    <dd>
+									  {foreach from=$user_rank_list item=user_rank name=user_rank}
+										  <div class="item fl mr10">
+											  <span>{$user_rank.rank_name}</span>
+											  <span id="nrank_{$user_rank.rank_id}"></span>
+											  <input type="text" id="rank_{$user_rank.rank_id}" name="user_price[]" value="{$member_price_list[$user_rank.rank_id]|default:-1}" onkeyup="if(parseInt(this.value)<-1){this.value='-1';};set_price_note({$user_rank.rank_id})" size="8" class="text_3" {if $smarty.foreach.user_rank.last}style="width:40px;"{/if} />
+											  <input type="hidden" name="user_rank[]" value="{$user_rank.rank_id}" />
+										  </div>
+									   {/foreach}
+										<p class="hint">会员价格为-1时表示会员价格按会员等级折扣率计算。你也可以为每个等级指定一个固定价格</p>									   
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>{$lang.lab_volume_price}</dt>
+                                    <dd>
+                                    	<div id="tbody-volume" class="volume">											
+											{foreach from=$volume_price_list item=volume_price name="volume_price_tab"}											
+                                            <p class="{if $smarty.foreach.volume_price_tab.first}mt0{else}mt10{/if}">
+												<label class="mr10">优惠数量</label>
+                                                <input type="text" name="volume_number[]" size="8" value="{$volume_price.number}" class="text text_4 mr10">
+												<label class="mr10">优惠价格</label>
+                                                <input type="text" name="volume_price[]" size="8" onchange="get_volume_price(this);" value="{$volume_price.price}" class="text text_4">
+												{if $smarty.foreach.volume_price_tab.iteration eq 1}<label class="blue_label" style="margin-left:8px;">{$lang.notice_volume_price}</label>{else}<a href='javascript:;' class='removeV' onclick='removeVolumePrice(this)'><img src='images/no.gif' title='删除'></a>{/if}
+                                            </p>
+											{/foreach}
+                                        	<a href="javascript:;" onclick="addVolumePrice(this)" class="button button_red mt10">添加</a>
+                                            <p class="hint fl">购买数量达到优惠数量时享受的优惠价格</p>
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>{$lang.lab_market_price}</dt>
+                                    <dd>
+										<input name="market_price" value="{$goods.market_price}" type="text" class="text w60"><em class="add-on"><i class="icon-renminbi"></i></em> <span></span>
+										<p class="hint">价格必须是0.01~9999999之间的数字，此价格仅为市场参考售价，请根据该实际情况认真填写。</p>
+                                    </dd>
+                                </dl>								
+                                <dl id="dl_give_integral" {if $goods.model_price neq 0}style="display:none"{/if}>
+                                    <dt>{$lang.lab_give_integral}</dt>
+                                    <dd>
+										<input type="text" name="give_integral" value="{$goods.give_integral|default:0}" onblur="get_give_integral(this.value);" size="20" class="text" />&nbsp;<span class="color999">最高可设置<em id="give_integral">{$goods.use_give_integral|default:0}</em>消费积分</span>
+										 <p class="hint">{$lang.notice_give_integral}</p>
+                                    </dd>
+                                </dl>	
+                                <dl id="dl_rank_integral" {if $goods.model_price neq 0}style="display:none"{/if}>
+                                    <dt>{$lang.lab_rank_integral}</dt>
+                                    <dd>
+										<input type="text" name="rank_integral" value="{$goods.rank_integral|default:0}" onblur="get_rank_integral(this.value);" size="20" class="text" />&nbsp;<span class="color999">最高可设置<em id="rank_integral">{$goods.use_rank_integral|default:0}</em>等级积分</span>
+										<p class="hint">{$lang.notice_rank_integral}</p>
+                                    </dd>
+                                </dl>									
+                                <dl id="dl_pay_integral" {if $goods.model_price neq 0}style="display:none"{/if}>
+                                    <dt>{$lang.lab_integral}</dt>
+                                    <dd>
+										<input type="text" name="integral" value="{$goods.integral|default:0}" size="20" onblur="parseint_integral(this.value);" class="text"/>&nbsp;<span class="color999">最高可设置积分购买<em id="pay_integral">{$goods.use_pay_integral|default:0}</em>金额</span>
+										<p class="hint">{$lang.notice_integral}</p>
+                                    </dd>
+                                </dl>								
+                                <dl>
+                                    <dt><input type="checkbox" class="checkbox" id="is_promote" name="is_promote" value="1" {if $goods.is_promote}checked="checked"{/if} onclick="handlePromote(this);" />{$lang.lab_promote_price}</dt>
+                                    <dd id="promote_3">
+                                    	<div id="td_promotePrice1">
+                                            <input id="promote_1" name="promote_price" value="{$goods.promote_price}" {if !$goods.is_promote}disabled="disabled"{/if} onblur="get_promote_price(this.value)" type="text" class="text w60"><em class="add-on"><i class="icon-renminbi"></i></em> <span></span>
+                                            <p class="hint">价格必须是0.00~9999999之间的数字，此价格为商户对所销售的商品的活动促销价格，非必填选项。</p>
+                                        </div>
+                                        <div id="td_promotePrice2" style="display:none; color:#F00">{if $goods.model_price eq 1}仓库模式{elseif $goods.model_price eq 2}地区模式{/if}</div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>{$lang.lab_promote_date}</dt>
+                                    <dd>
+									  <div class="text_time{if !$goods.is_promote} time_disabled{/if}" id="text_time1">
+										<input name="promote_start_date" type="text" id="promote_start_date" size="22" value='{$goods.promote_start_date}' readonly />
+										<input name="selbtn1" type="button" id="selbtn1"></input>
+									  </div>
+									  <span class="bolang">&nbsp;&nbsp;~&nbsp;&nbsp;</span> 
+									  <div class="text_time{if !$goods.is_promote} time_disabled{/if}" id="text_time2"> 
+										<input name="promote_end_date" type="text" id="promote_end_date" style=" width:147px;" size="22" value='{$goods.promote_end_date}' readonly />
+										<input name="selbtn2" type="button" id="selbtn2"></input>
+									  </div>
+                                    </dd>
+                                </dl>	
+                                <dl>
+                                    <dt><input type="checkbox" class="checkbox" id="is_xiangou" name="is_xiangou" value="1" {if $goods.is_xiangou}checked="checked"{/if} onclick="handle_for_purchasing(this);" />限购：</dt>
+                                    <dd>
+										<input type="text" class="text" id="xiangou_11" name="xiangou_num" value="{$goods.xiangou_num}" {if !$goods.is_xiangou}disabled="disabled"{/if} size="20" />
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>限购日期：</dt>
+                                    <dd>
+										<div class="text_time{if !$goods.is_xiangou} time_disabled{/if}" id="text_time3">
+											<input name="xiangou_start_date" type="text" id="xiangou_start_date" size="22" value='{$goods.xiangou_start_date}' readonly />
+											<input name="selbtn11" type="button" id="selbtn11"/>
+										</div>
+										<span class="bolang">&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+										<div class="text_time{if !$goods.is_xiangou} time_disabled{/if}" id="text_time4">
+											<input name="xiangou_end_date" type="text" id="xiangou_end_date" size="22" value='{$goods.xiangou_end_date}' readonly />
+											<input name="selbtn22" type="button" id="selbtn22"/>
+										</div>
+                                    </dd>
+                                </dl>								
+                                <dl>
+                                    <dt>{$lang.lab_picture}</dt>
+                                    <dd class="upload_img">
+                                    	<p class="mt5">
+                                            <input type="file" name="goods_img" size="35" class="file"/>
+                                            <i class="ts_img">
+                                                {if $goods.goods_img}
+                                                <a href="goods.php?act=show_image&img_url={$goods.goods_img}" target="_blank"><img src="images/yes.gif" border="0" /></a>
+                                                {else}
+                                                <img src="images/no.gif" />
+                                                {/if}
+                                            </i>
+                                        </p>
+                                        <p>
+                                        <input type="text" size="40" value="{$lang.lab_picture_url}" style="color:#aaa;" onfocus="if (this.value == '{$lang.lab_picture_url}'){this.value='http://';this.style.color='#000';}" name="goods_img_url" class="text" />
+                                        </p>
+                                        <div class="upload-thumb"><img height="100" width="100" ectype="goods_image" src="{if $goods.goods_thumb}../{$goods.goods_thumb}{else}images/default_goods_image_240.gif{/if}"></div>								
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>{$lang.lab_thumb}</dt>
+                                    <dd>
+									  <p class="mt5">
+										  <input type="file" name="goods_thumb" size="35" class="file"/>
+										  <i class="ts_img">
+										  {if $goods.goods_thumb}
+											<a href="goods.php?act=show_image&img_url={$goods.goods_thumb}" target="_blank"><img src="images/yes.gif" border="0" /></a>
+										  {else}
+											<img src="images/no.gif" />
+										  {/if}
+										  </i>
+									  </p>
+									  <p>
+									  <input type="text" size="40" value="{$lang.lab_thumb_url}" class="text" style="color:#aaa;" onfocus="if (this.value == '{$lang.lab_thumb_url}'){this.value='http://';this.style.color='#000';}" name="goods_thumb_url"/>
+									  {if $gd > 0}
+									  <span class="gouxuan">
+										  <input type="checkbox" class="checkbox" id="auto_thumb" name="auto_thumb" checked="true" value="1" onclick="handleAutoThumb(this.checked)" /><label for="auto_thumb" style="margin-left:0; cursor:pointer;">{$lang.auto_thumb}</label>
+									  </span>
+									  {/if}
+									  </p>
+                                    </dd>
+                                </dl>								
+                                <dl>
+                                    <dt><input type="checkbox" {if $stages}checked="checked"{/if} value="1" name="is_stages" id="stages_btn" class="checkbox" />是否分期付：</dt>
+                                    <dd>
+										<div id="stages" class="checkbox_items">
+											<label><input type="checkbox" stages="{$stages[0]}" class="checkbox" value="1" disabled name="stages_num[0]" size="3">30天免息</label>
+											<label><input type="checkbox" stages="{$stages[1]}" class="checkbox" value="3" disabled name="stages_num[1]" size="30">分3期</label>
+											<label><input type="checkbox" stages="{$stages[2]}" class="checkbox" value="6" disabled name="stages_num[2]" size="3">分6期</label>
+											<label><input type="checkbox" stages="{$stages[3]}" class="checkbox" value="9" disabled name="stages_num[3]" size="3">分9期</label>
+											<label><input type="checkbox" stages="{$stages[4]}" class="checkbox" value="12" disabled name="stages_num[4]" size="3">分12期</label>
+											<label><input type="checkbox" stages="{$stages[5]}" class="checkbox" value="24" disabled name="stages_num[5]" size="3">分24期</label>
+										</div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>每期费率：</dt>
+                                    <dd>
+										<input id="stages_rate" disabled="disabled" type="text" name="stages_rate" value="{$goods.stages_rate}" size="1" class="text text_5" />
+										<p class="hint">分期时,利息占总金额的百分比</p>
+                                    </dd>
+                                </dl>									
+                                <h3 id="demo2">商品详情描述</h3>                                    
+                                <dl>
+                                    <dt>商品描述：</dt>
+                                    <dd id="ncProductDetails">
+                                        {$FCKeditor}
+                                    </dd>
+                                </dl>
+                                <h3 id="demo5">其他信息</h3>
+                                <dl>
+                                    <dt>{$lang.lab_goods_weight}</dt>
+                                    <dd id="ncProductDetails">
+                                        <input type="text" class="text mr10" name="goods_weight" value="{$goods.goods_weight_by_unit}" size="20" />
+										<select name="weight_unit" class="select">{html_options options=$unit_list selected=$weight_unit}</select>
+                                    </dd>
+                                </dl>								
+                                <dl>
+                                    <dt>{$lang.lab_goods_number}</dt>
+                                    <dd>
+                                    	<div id="td_goodsNumber1">
+                                            <input name="goods_number" value="{$goods.goods_number}" type="text" class="text w60">
+                                            <p class="hint">商铺库存数量必须为0~999999999之间的整数<br>若启用了库存配置，则系统自动计算商品的总数，此处无需卖家填写</p>
+                                        </div>
+                						<div id="td_goodsNumber2" style="display:none;" class="whouse_text"></div>
+                                    </dd>
+                                </dl>
+                                <dl>
+									<dt>{$lang.lab_warn_number}</dt>
+                                    <dd>
+                                    <input name="warn_number" value="{$goods.warn_number}" type="text" class="text w60">
+                                    <p class="hint">设置最低库存预警值。当库存低于预警值时商家中心商品列表页库存列红字提醒。<br>
+                                    请填写0~255的数字，0为不预警。</p>
+                                    </dd>
+                                </dl>
+                                <dl>
+									<dt>{$lang.lab_intro}</dt>
+                                    <dd>
+										{if $form_act eq 'update'}
+										<div class="checkbox_items">
+											<label><input type="checkbox" class="checkbox" name="store_best" value="1" {if $goods.store_best}checked="checked"{/if} /><span>{$lang.is_best}</span></label>
+											<label><input type="checkbox" class="checkbox" name="store_new" value="1" {if $goods.store_new}checked="checked"{/if} /><span>{$lang.is_new}</span></label>
+											<label><input type="checkbox" class="checkbox" name="store_hot" value="1" {if $goods.store_hot}checked="checked"{/if} /><span>{$lang.is_hot}</span></label>
+										</div>
+										{else}
+										<div class="checkbox_items">
+											<label><input type="checkbox" class="checkbox" name="store_best" value="1" /><span>{$lang.is_best}</span></label>
+											<label><input type="checkbox" class="checkbox" name="store_new" value="1" /><span>{$lang.is_new}</span></label>
+											<label><input type="checkbox" class="checkbox" name="store_hot" value="1" /><span>{$lang.is_hot}</span></label>	
+										</div>
+										{/if}
+                                    </dd>
+                                </dl>
+                                <dl>
+									<dt>{$lang.lab_goods_service}</dt>
+                                    <dd>
+										<div class="checkbox_items">
+											<label><input type="checkbox" class="checkbox" name="is_reality" value="1" {if $goods.goods_extend.is_reality} checked="checked"{/if} /><span>{$lang.is_reality}</span></label>
+											<label><input type="checkbox" class="checkbox" name="is_return" value="1" {if $goods.goods_extend.is_return} checked="checked"{/if} /><span>{$lang.is_return}</span></label>
+											<label><input type="checkbox" class="checkbox" name="is_fast" value="1" {if $goods.goods_extend.is_fast} checked="checked"{/if} /><span>{$lang.is_fast}</span></label>
+										</div>
+                                    </dd>
+                                </dl>								
+                                <dl>
+                                    <dt>{$lang.lab_is_on_sale}</dt>
+                                    <dd>
+										<div class="checkbox_items">
+											<label><input type="checkbox" class="checkbox" name="is_on_sale" value="1" {if $goods.is_on_sale}checked="checked"{/if} /><span>{$lang.on_sale_desc}</span></label>
+										</div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>{$lang.lab_is_alone_sale}</dt>
+                                    <dd>
+										<div class="checkbox_items">
+											<label><input type="checkbox" class="checkbox" name="is_alone_sale" value="1" {if $goods.is_alone_sale}checked="checked"{/if} /><span>{$lang.alone_sale}</span></label>
+										</div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>{$lang.lab_is_free_shipping}</dt>
+                                    <dd>
+										<div class="checkbox_items">
+											<label><input type="checkbox" class="checkbox" name="is_shipping" value="1" {if $goods.is_shipping}checked="checked"{/if} /><span>{$lang.free_shipping}</span></label>
+										</div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>{$lang.lab_keywords}</dt>
+                                    <dd>
+										<input type="text" class="text" name="keywords" value="{$goods.keywords|escape}" size="40" />
+										<p class="hint">{$lang.notice_keywords}</p>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>{$lang.lab_reduce}</dt>
+                                    <dd>
+										<div id="consumtable">
+											<p>
+                                                <label class="fl mr10">{$lang.man}</label>
+                                                <input type="text" class="text text_2 mr10" name="cfull[]" size="10" />
+                                                <label class="fl mr10">{$lang.lijian}</label>
+                                                <input type="text" class="text text_2" name="creduce[]" size="10" /><input type="button" onclick="addCon_amount(this)" class="button button_red ml10" value="{$lang.add}" />
+                                                <input type="hidden" name="c_id[]"  value="0" size="10" />
+                                                <input name="c_del_{$con.id}" type="hidden" checked="checked" value="0" />
+											</p>
+											{if $consumption}
+											{foreach from=$consumption item=con}
+											<p class="mt10">
+												<label class="fl mr10">{$lang.man}</label>
+                                                <input type="text" name="cfull[]" value="{$con.cfull}" class="text text_2 mr10" size="10" />
+                                                <label class="fr mr10">{$lang.lijian}</label>
+                                                <input type="text" name="creduce[]" value="{$con.creduce}" size="10" class="text text_2" />
+												<input type="hidden" name="c_id[]"  value="{$con.id}" size="10" />
+												<label class="ml10"><input name="c_del_{$con.id}" type="checkbox" value="1" class="checkbox" style="display:none"/><a href='javascript:;' class='removeV' id="con_id_{$con.id}" onclick='remove_consumption({$con.id},{$goods.goods_id})'><img src='images/no.gif' title='删除'></a></label>
+											</p>  
+											{/foreach}
+											{/if}
+										</div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>{$lang.lab_goods_brief}</dt>
+                                    <dd>
+										<textarea class="textarea" name="goods_brief" cols="40" rows="3">{$goods.goods_brief|escape}</textarea>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>{$lang.goods_product_tag}</dt>
+                                    <dd>
+										<textarea name="goods_product_tag" cols="40" rows="3" class="textarea fl">{$goods.goods_product_tag|escape}</textarea>
+										<p class="hint">{$lang.notice_product_tag}</p>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>{$lang.lab_seller_note}</dt>
+                                    <dd>
+										<textarea name="seller_note" cols="40" rows="3" class="textarea fl">{$goods.seller_note|escape}</textarea>
+										<p class="hint">{$lang.notice_seller_note}</p>
+                                    </dd>
+                                </dl>								
+                            </div>
+                        </div>
+                        <div class="warder-info warder-info-attr" style="display:none;">
+                        	<div class="alert red">{$lang.be_careful}：{$lang.add_attr_img_noc}</div>
+                        	<div class="ecsc-form-goods">
+                                <h3 id="demo5">商品属性</h3>
+                                {if $goods_type_list}								
+                                <dl>
+                                    <dt>商品属性：</dt>
+                                    <dd>
+                                        <select name="goods_type" onchange="getAttrList({$goods.goods_id})" class="select">
+                                          <option value="0">{$lang.sel_goods_type}</option>
+                                          {$goods_type_list}
+                                        </select>
+                                        <label class="blue_label">{$lang.notice_goods_type}</label>
+                                        					
+                                    </dd>								
+                                </dl>
+                                <div id="tbody-goodsAttr">{$goods_attr_html}</div>
+                                {/if}
+                            </div>
+                        </div>
+                        <div class="warder-info" style="display:none;">
+                            <div class="alert alert-info">
+								{$lang.goods_images_tishi}
+                            </div>
+							<div id="goods_img_list" class="mt20">
+								{include file="goods_img_list.dwt"}
+							</div>
+                        </div>
+                        <div class="warder-info" style="overflow:visible; display:none;">
+                        	<div class="alert red">注意：添加商品关联设置请先搜索商品。</div>
+                        	<div class="ecsc-form-goods">
+                            	<div class="relation_item">
+									<h3 id="demo1">关联商品</h3>
+                                    <table width="95%" id="linkgoods-table" style="" align="center" data-table="linkgoods" class="table_item">
+                                      <tr class="no-line">
+                                        <td colspan="3">
+                                          {if $select_category_rel}{$select_category_rel}{/if}
+                                          <select name="sel_mode1" id="sel_mode1" onchange="get_sel_mode1(this.value)" class="select">
+                                            <option value="0">请选择品牌</option>
+                                            <option value="1">按搜索</option>
+                                            <option value="2">按下拉框</option>
+                                          </select>
+                                          <input type="text" name="brand_keyword1" id="brand_keyword1" style="display: none;" placeholder="请输入品牌关键字" class="text text_2 mr10"/>
+                                          <select name="brand_id1" id="brand_id1" style="display: none;" class="select"><option value="0">{$lang.all_brand}{html_options options=$brand_list}</select>
+                                          <input type="text" name="keyword1" class="text text_2 mr10" placeholder="请输入商品关键字"/>
+                                          <input type="button" value="{$lang.button_search}"  class="button" onclick="searchGoods(sz1, 'cat_id1','brand_id1','keyword1','brand_keyword1','sel_mode1')" />
+                                          <input type="hidden" name="cat_id1" id="cat_id1" value="0" />
+										  <input type="hidden" name="ru_id" id="ru_id" value="{$ru_id}" />
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <th class="tc"><div class="th">{$lang.all_goods}</div></th>
+                                        <th class="tc"><div class="th">{$lang.handler}</div></th>
+                                        <th class="tc"><div class="th">{$lang.link_goods}</div></th>
+                                      </tr>
+                                      <tr class="no-line">
+                                        <td width="45%">
+                                          <select name="source_select1" size="20" class="selectzoom" ondblclick="sz1.addItem(false, 'add_link_goods', goodsId, this.form.elements['is_single'][0].checked)" multiple="true"></select>
+                                        </td>
+                                        <td class="tc">
+                                          <div class="caozuo">	
+                                          <p><label><input name="is_single" type="radio" class="checkbox" value="1" checked="checked" />{$lang.single}</label></p>
+                                          <p><label><input name="is_single" type="radio" class="checkbox" value="0" />{$lang.double}</label></p>
+                                          <p><input type="button" class="button button3" value=">>" onclick="sz1.addItem(true, 'add_link_goods', goodsId, this.form.elements['is_single'][0].checked)" class="button" /></p>
+                                          <p><input type="button" class="button button3" value=">" onclick="sz1.addItem(false, 'add_link_goods', goodsId, this.form.elements['is_single'][0].checked)" class="button" /></p>
+                                          <p><input type="button" class="button button3" value="<" onclick="sz1.dropItem(false, 'drop_link_goods', goodsId, elements['is_single'][0].checked)" class="button" /></p>
+                                          <p><input type="button" class="button button3" value="<<" onclick="sz1.dropItem(true, 'drop_link_goods', goodsId, elements['is_single'][0].checked)" class="button" /></p>
+                                          </div>
+                                        </td>
+                                        <td width="45%">
+                                          <select name="target_select1" size="20" class="selectzoom" multiple ondblclick="sz1.dropItem(false, 'drop_link_goods', goodsId, elements['is_single'][0].checked)">
+                                            {foreach from=$link_goods_list item=link_goods}
+                                            <option value="{$link_goods.goods_id}">{$link_goods.goods_name}</option>
+                                            {/foreach}
+                                          </select>
+                                        </td>
+                                      </tr>
+                                    </table>
+								</div>
+                                <div class="relation_item">
+									<h3 id="demo1">商品配件</h3>
+                                    <table width="95%" id="groupgoods-table" style="" align="center" data-table="groupgoods" class="table_item">
+                                      <tr class="no-line">
+                                        <td colspan="3">
+                                          {if $select_category_pak}{$select_category_pak}{/if}              
+                                          
+                                          <select name="sel_mode2" id="sel_mode2" onchange="get_sel_mode2(this.value)" class="select">
+                                            <option value="0">请选择品牌</option>
+                                            <option value="1">按搜索</option>
+                                            <option value="2">按下拉框</option>
+                                          </select>
+        
+                                          <input type="text" name="brand_keyword2" id="brand_keyword2" style="display: none;" class="text text_2 mr10" placeholder="请输入品牌关键字" />
+        
+                                          <select name="brand_id2" id="brand_id2" style="display: none;" class="select"><option value="0">{$lang.all_brand}{html_options options=$brand_list}</select>
+                                          <input type="text" name="keyword2" class="text text_2 mr10" placeholder="请输入商品关键字"/>
+                                          <input type="button" value="{$lang.button_search}" onclick="searchGoods(sz2, 'cat_id2', 'brand_id2', 'keyword2','brand_keyword2','sel_mode2')" class="button" />
+                                          <input type="hidden" name="cat_id2" id="cat_id2" value="0" />
+                                        </td>
+                                      </tr>
+                                      <script type="text/javascript">
+                                        // 显示品牌选择方式
+                                        function get_sel_mode2(val)
+                                        {
+                                            var sel_mode2 = document.getElementById('sel_mode2');
+                                            
+                                            var brand_keyword2 = document.getElementById('brand_keyword2');
+                                            var brand_id2 = document.getElementById('brand_id2');
+        
+                                            if(val == 0)
+                                            {
+                                                brand_keyword2.style.display = 'none';
+                                                brand_id2.style.display = 'none';
+                                            }
+                                            else if(val == 1)
+                                            {
+                                                brand_id2.style.display = 'none';
+                                                brand_keyword2.style.display = '';
+                                            }
+                                            else if(val == 2)
+                                            {
+                                                brand_keyword2.style.display = 'none';
+                                                brand_id2.style.display = '';
+                                            }
+                                        }
+                                        // 分类分级 by qin
+        
+                                        function new2catList(val, level)
+                                        {
+                                          var cat_id2 = val;
+                                          document.getElementById('cat_id2').value = cat_id2;
+                                          Ajax.call('goods.php?is_ajax=1&act=sel_cat2', 'cat_id='+cat_id2+'&cat_level='+level, new2catListResponse, 'GET', 'JSON');
+                                        }
+        
+                                        function new2catListResponse(result)
+                                        {
+                                          if (result.error == '1' && result.message != '')
+                                          {
+                                            alert(result.message);
+                                            return;
+                                          }
+                                          var response = result.content;
+                                          var cat_level = result.cat_level; // 分类级别， 1为顶级分类
+                                          for(var i=cat_level;i<10;i++)
+                                          {
+                                            $("#new2cat_list"+Number(i+1)).remove();
+                                          }
+                                          if(response)
+                                          {
+                                              $("#new2cat_list"+cat_level).after(response);
+                                          }
+                                          return;
+                                        }
+                                      </script>
+                                      <!-- 鍟嗗搧鍒楄〃 -->
+                                      <tr>
+                                        <th class="tc"><div class="th">{$lang.all_goods}</div></th>
+                                        <th class="tc"><div class="th">{$lang.handler}</div></th>
+                                        <th class="tc"><div class="th">{$lang.group_goods}</div></th>
+                                      </tr>
+                                      <tr class="no-line">
+                                        <td width="45%">
+                                          <select name="source_select2" size="20" class="selectzoom" onchange="sz2.priceObj.value = this.options[this.selectedIndex].id" ondblclick="sz2.addItem(false, 'add_group_goods', goodsId, this.form.elements['price2'].value, this.form.elements['group2'].value)">
+                                          </select>
+                                        </td>
+                                        <td class="tc">
+                                        <div class="caozuo">
+                                          <p>
+                                              <label class="dp_label">{$lang.price}：</label>
+                                              <input name="price2" type="text" class="fl" style="width:80px;" size="6" />
+                                          </p>
+                                          <p>
+                                            <label class="dp_label">{$lang.package}：</label>
+                                            <select name="group2" class="select" style="width:90px;">
+                                                {foreach from=$group_list item=list key=key}
+                                                <option value="{$key}">{$list}</option>
+                                                {/foreach}
+                                            </select>
+                                          </p>
+                                          <p><input type="button" value=">" onclick="sz2.addItem(false, 'add_group_goods', goodsId, this.form.elements['price2'].value, this.form.elements['group2'].value)" class="button" /></p>
+                                          <p><input type="button" value="<" onclick="sz2.dropItem(false, 'drop_group_goods', goodsId, elements['is_single'][0].checked)" class="button" /></p>
+                                          <p><input type="button" value="<<" onclick="sz2.dropItem(true, 'drop_group_goods', goodsId, elements['is_single'][0].checked)" class="button" /></p>
+                                        </div>  
+                                        </td>
+                                        <td width="45%">
+                                          <select name="target_select2" size="20" class="selectzoom" multiple ondblclick="sz2.dropItem(false, 'drop_group_goods', goodsId, elements['is_single'][0].checked)">
+                                            {foreach from=$group_goods_list item=group_goods}
+                                            <option value="{$group_goods.goods_id}">{$group_goods.goods_name}</option>
+                                            {/foreach}
+                                          </select>
+                                        </td>
+                                      </tr>
+                                      <tr class="no-line">
+                                        <td colspan="3"><label class="lh">{$lang.limit_add_number}：</label><input name="group_number" value="{$goods.group_number|default:0}" type="text" size="5" style="width:80px;" /></td>
+                                      </tr>
+                                    </table>
+                            	</div>
+								<div class="relation_item">
+									<h3 id="demo1">关联文章</h3>
+                                    <table width="95%" id="article-table" style="" align="center" data-table="article" class="table_item">
+                                      <tr>
+                                        <td colspan="3">
+                                          <label class="fl" style="height:30px; line-height:30px;">{$lang.article_title}：</label>
+                                          <input type="text" name="article_title" class="text text_2 mr10" />
+                                          <input type="button" value="{$lang.button_search}" onclick="searchArticle()" class="button" />
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <th class="tc"><div class="th">{$lang.all_article}</div></th>
+                                        <th class="tc"><div class="th">{$lang.handler}</div></th>
+                                        <th class="tc"><div class="th">{$lang.goods_article}</div></th>
+                                      </tr>
+                                      <tr class="no-line">
+                                        <td width="45%">
+                                          <select name="source_select3" size="20" class="selectzoom" multiple ondblclick="sz3.addItem(false, 'add_goods_article', goodsId, this.form.elements['price2'].value)">
+                                          </select>
+                                        </td>
+                                        <td class="tc">
+                                          <div class="caozuo">
+                                          <p><input type="button" value=">>" onclick="sz3.addItem(true, 'add_goods_article', goodsId, this.form.elements['price2'].value)" class="button button3" /></p>
+                                          <p><input type="button" value=">" onclick="sz3.addItem(false, 'add_goods_article', goodsId, this.form.elements['price2'].value)" class="button button3" /></p>
+                                          <p><input type="button" value="<" onclick="sz3.dropItem(false, 'drop_goods_article', goodsId, elements['is_single'][0].checked)" class="button button3" /></p>
+                                          <p><input type="button" value="<<" onclick="sz3.dropItem(true, 'drop_goods_article', goodsId, elements['is_single'][0].checked)" class="button button3" /></p>
+                                          </div>
+                                        </td>
+                                        <td width="45%">
+                                          <select name="target_select3" size="20" class="selectzoom" multiple ondblclick="sz3.dropItem(false, 'drop_goods_article', goodsId, elements['is_single'][0].checked)">
+                                            {foreach from=$goods_article_list item=goods_article}
+                                            <option value="{$goods_article.article_id}">{$goods_article.title}</option>
+                                            {/foreach}
+                                          </select>
+                                        </td>
+                                      </tr>
+                                    </table>
+								</div>
+                                <div class="relation_item">
+									<h3 id="demo1">关联地区</h3>
+                                    <table width="95%" id="areaRegion-table" style="" align="center" data-table="areaRegion" class="table_item">
+                                      <tr>
+                                        <td colspan="3">
+                                          <select name="ra_id" class="select" style="width:100px;">
+                                            <option value="0">{$lang.all_region}</option>
+                                            {foreach from=$areaRegion_list item=area}
+                                            <option value="{$area.ra_id}">{$area.ra_name}</option>
+                                            {/foreach}
+                                          </select>
+                                          <input type="button" value="{$lang.button_search}" onclick="searchGoods_area(area_sz2, 'ra_id')" class="button" />
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <th class="tc"><div class="th">{$lang.optional_region}</div></th>
+                                        <th class="tc"><div class="th">{$lang.handler}</div></th>
+                                        <th class="tc"><div class="th">{$lang.this_goods_region}</div></th>
+                                      </tr>
+                                      <tr class="no-line">
+                                        <td width="45%">
+                                          <select name="area_source_select2" size="20" class="selectzoom"  multiple="true" ondblclick="area_sz2.addItem(false, 'add_area_goods', goodsId, this.value)">
+                                          </select>
+                                        </td>
+                                        <td class="tc">
+                                          <div class="caozuo">
+                                          <p><input type="button" value=">>" onclick="area_sz2.addItem(true, 'add_area_goods', goodsId, this.form.elements['area_source_select2'].value)" class="button button3" /></p>
+                                          <p><input type="button" value=">" onclick="area_sz2.addItem(false, 'add_area_goods', goodsId, this.form.elements['area_source_select2'].value)" class="button button3" /></p>
+                                          <p><input type="button" value="<" onclick="area_sz2.dropItem(false, 'drop_area_goods', goodsId, this.form.elements['area_source_select2'].value)" class="button button3" /></p>
+                                          <p><input type="button" value="<<" onclick="area_sz2.dropItem(true, 'drop_area_goods', goodsId, this.form.elements['area_source_select2'].value)" class="button button3" /></p>
+                                          </div>
+                                        </td>
+                                        <td width="45%">
+                                          <select name="area_target_select2[]" size="20" class="selectzoom" multiple ondblclick="area_sz2.dropItem(false, 'drop_area_goods', goodsId, this.value)">
+                                            {foreach from=$area_goods_list item=area}
+                                            <option value="{$area.region_id}" selected>{$area.region_name}</option>
+                                            {/foreach}
+                                          </select>
+                                        </td>
+                                      </tr>
+                                    </table>
+                            	</div>
+                            </div>					
+                        </div>
+                    </div>
+                    <div class="bottom tc hr32">
+                        <label class="submit-border">
+                            <input type="hidden" name="goods_id" value="{$goods.goods_id}">
+							  {if $code neq ''}
+							  <input type="hidden" name="extension_code" value="{$code}" />
+							  {/if}							
+                            <input type="button" class="button" value="{$lang.button_submit}" onclick="validate('{$goods.goods_id}')">
+							<input name="numAdd" value="1" id="numAdd" type="hidden" />  
+							<input name="numAdd_area" value="1" id="numAdd_area" type="hidden" />  
+							<input type="hidden" name="act" value="{$form_act}" />
+                            <input name="other_catids" value="{$other_catids}" id="other_catids" type="hidden" /> 
+                        </label>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+{insert_scripts files="jquery.purebox.js,colorselector.js"}
+<script type="text/javascript">
+	$(document).on('click','*[dsctype="dialog"]',function(){
+		var url =$(this).data('url');
+		var title = $(this).attr('title');
+		Ajax.call(url,'',dsctag, 'POST', 'JSON');
+		function dsctag(result){
+			pb({
+				id:"dialog",
+				title:title,
+				content:result.content,
+				drag:false,
+				ok_title:"确定",
+				cl_title:"取消",
+				onOk:function(){
+					if(result.sgs == 'addCategory'){
+						addCategory();
+					}else if(result.sgs == 'addBrand'){
+						addBrand();
+					}else if(result.sgs == 'addWarehouse'){
+						addWarehouse();
+					}else if(result.sgs == 'addBatchWarehouse'){
+						addBatchWarehouse();
+					}else if(result.sgs == 'addRegion'){
+						addRegion();
+					}else if(result.sgs == 'addBatchRegion'){
+						addBatchRegion();
+					}else if(result.sgs == 'addImg'){
+						addImgItem();
+					}else{
+						addBatchImg();
+					}
+				}
+			});
+		}
+	});
+	
+	/*sunle end*/
+	
+	//搜索分类
+	function search_cat_btn()
+	{
+		var search_cat=document.getElementById('search_cat');
+		var parent_id=document.getElementById('cat_id').value;
+		var cat_level=document.getElementById('cat_level').value;
+		if(search_cat.style.display=='none')
+		{
+			search_cat.style.display='';	
+		}
+		else if(search_cat.value!=''&&search_cat.value!='undefined')
+		{
+			{if $form_act == 'update'}
+				if(cat_level == 0){
+					parent_id = 0;
+				}
+			{/if}
+			Ajax.call('goods.php?is_ajax=1&act=search_cat', "seacrch_key=" + search_cat.value + "&parent_id=" + parent_id + "&cat_level=" + cat_level,give_select_value, "GET", "JSON");
+		}else{
+			alert('搜索关键字为空!');
+		}
+	}
+	
+	function give_select_value(result)
+	{
+		var arr=result.content;
+		
+		if(result.error == 1){
+			alert(result.message);
+			return false;
+		}else{
+			var sel_name = '';
+			var istr = 0;
+			if(result.cat_level > 1){
+				for(var i=1; i<(result.cat_level); i++){
+					sel_name = $("#cat_list" + i).attr('name');
+					if(sel_name != 'undefined'){
+						istr = Number(istr + 1);
+					}else{
+						continue;
+					}
+				}
+				
+				$("#cat_list" + result.cat_level).remove();
+				$("#cat_list"+istr).after('<select id="cat_list' + result.cat_level + '" onchange="catList(this.value, ' + result.cat_level +')" name="catList' + result.cat_level + '" class="select"></select>');
+				var search_cat=document.getElementById('cat_list' + result.cat_level);
+				search_cat.options.length = 0;	
+				for (var i=0; i < arr.length; i++)
+				{
+				  var opt   = document.createElement("OPTION");
+				  opt.value = arr[i].cat_id;
+				  opt.text  = arr[i].cat_name;
+				  if(i==0)
+				  {
+					  opt.selected    = true;//by wang修改
+				  }
+				  search_cat.options.add(opt);
+				}
+			}else{
+				if(document.getElementById('cat_list' + result.cat_level)){
+					var search_cat=document.getElementById('cat_list' + result.cat_level);
+					search_cat.options.length = 0;
+					for (var i=0; i < arr.length; i++)
+					{
+					  var opt   = document.createElement("OPTION");
+					  opt.value = arr[i].cat_id;
+					  opt.text  = arr[i].cat_name;
+					  if(i==0)
+					  {
+						  opt.selected    = true;//by wang修改
+					  }
+					  search_cat.options.add(opt);
+					}
+				}
+			}
+		}
+	}
+	
+	// 显示品牌选择方式
+	function get_sel_mode1(val)
+	{
+		var sel_mode1 = document.getElementById('sel_mode1');
+		
+		var brand_keyword1 = document.getElementById('brand_keyword1');
+		var brand_id1 = document.getElementById('brand_id1');
+		//var keyword1 = document.getElementById('keyword1');
+
+		if(val == 0)
+		{
+			brand_keyword1.style.display = 'none';
+			brand_id1.style.display = 'none';
+			//keyword1.style.display = '';
+		}
+		else if(val == 1)
+		{
+			brand_id1.style.display = 'none';
+			//keyword1.style.display = 'none';
+			brand_keyword1.style.display = '';
+		}
+		else if(val == 2)
+		{
+			brand_keyword1.style.display = 'none';
+			//keyword1.style.display = 'none';
+			brand_id1.style.display = '';
+		}
+	}
+	// 分类分级 by qin
+
+	function newcatList(val, level)
+	{
+	  var cat_id1 = val;
+	  document.getElementById('cat_id1').value = cat_id1;
+	  Ajax.call('goods.php?is_ajax=1&act=sel_cat1', 'cat_id='+cat_id1+'&cat_level='+level, newcatListResponse, 'GET', 'JSON');
+	}
+
+	function newcatListResponse(result)
+	{
+	  if (result.error == '1' && result.message != '')
+	  {
+		alert(result.message);
+		return;
+	  }
+	  var response = result.content;
+	  var cat_level = result.cat_level; // 分类级别， 1为顶级分类
+	  for(var i=cat_level;i<10;i++)
+	  {
+		$("#newcat_list"+Number(i+1)).remove();
+	  }
+	  if(response)
+	  {
+		  $("#newcat_list"+cat_level).after(response);
+	  }
+	  return;
+	}
+	
+	//添加分类回调函数
+	function addCategory(){
+		var parent_id = $("form[name='theForm']").find("#cat_id").val();
+		var arr = parent_id.split('_');
+		
+		var cat = $("#addedCategoryName");
+		var params = 'parent_id=' + arr[0];
+		
+		if(cat.val().replace(/^\s+|\s+$/g, '') == ''){
+			alert(category_cat_not_null);
+			return;
+		}
+		
+		params += '&cat=' + cat.val();
+		Ajax.call('category.php?is_ajax=1&act=add_category', params, addCatResponse, 'GET', 'JSON');
+	}
+	  
+	function addCatResponse(result){
+		if (result.error == '1' && result.message != ''){
+			alert(result.message);
+			return;
+		}
+		$(".platCategory .cate_select").html(result.detail)
+	}
+	//添加分类回调函数end
+	  
+	function hideCatDiv(){
+		var category_add_div = document.getElementById("category_add");
+		if(category_add_div.style.display != null)
+		{
+			category_add_div.style.display = 'none';
+		}
+	}
+	
+	//添加品牌回调函数
+	function addBrand()
+	  {
+		  var brand = $('#addBrandName');
+		  if(brand.val().replace(/^\s+|\s+$/g, '') == '')
+		  {
+			  alert(brand_cat_not_null);
+			  return;
+		  }
+	
+		  var params = 'brand=' + brand.val();
+		  Ajax.call('brand.php?is_ajax=1&act=add_brand', params, addBrandResponse, 'GET', 'JSON');
+	  }
+	
+	  function addBrandResponse(result)
+	  {
+		  if (result.error == '1' && result.message != '')
+		  {
+			  alert(result.message);
+			  return;
+		  }
+		  
+		  var response = result.content;
+		  var selCat = document.forms['theForm'].elements['brand_id'];
+		  var opt = document.createElement("OPTION");
+		  opt.value = response.id;
+		  opt.selected = true;
+		  opt.text = response.brand;
+	
+		  if (Browser.isIE)
+		  {
+			  selCat.add(opt);
+		  }
+		  else
+		  {
+			  selCat.appendChild(opt);
+		  }
+	
+		  return;
+	  }
+	//添加品牌回调函数end
+	
+	//添加仓库回调函数
+	function addWarehouse(){
+		var ware_name =$("#warehouse_name").val();
+		var ware_number =$("#warehouse_number").val();
+		var ware_price =$("#warehouse_price").val();
+		var ware_promote_price =$("#warehouse_promote_price").val();
+		var give_integral =$("#warehouse_give_integral").val();
+		var rank_integral =$("#warehouse_rank_integral").val();
+		var pay_integral =$("#warehouse_pay_integral").val();
+		var goods_id = {$goods.goods_id};
+		
+		Ajax.call('goods.php?act=addWarehouse', 'ware_name=' + ware_name+"&ware_number="+ware_number+"&ware_price="+ware_price+"&ware_promote_price="+ware_promote_price+"&give_integral="+give_integral+"&rank_integral="+rank_integral+"&pay_integral="+pay_integral+"&goods_id="+goods_id, addWarehouseResponse, 'POST', 'JSON');
+	}
+	
+	function addBatchWarehouse(){
+		var obj = $("#batchWarehouelist");
+		var ware_name = [];
+		var ware_number = [];
+		var ware_price = [];
+		var ware_promote_price = [];
+		
+		var give_integral = [];
+		var rank_integral = [];
+		var pay_integral = [];
+		
+		var goods_id = {$goods.goods_id};
+		obj.find("select").each(function(){
+			var val = $(this).val();
+			ware_name.push(val);
+		});
+		obj.find("input[name='warehouse_number']").each(function(){
+			var number = $(this).val();
+			ware_number.push(number);
+		});
+		obj.find("input[name='warehouse_price']").each(function(){
+			var price = $(this).val();
+			ware_price.push(price);
+		});
+		obj.find("input[name='warehouse_promote_price']").each(function(){
+			var promote_price = $(this).val();
+			ware_promote_price.push(promote_price);
+		});
+		obj.find("input[name='give_integral']").each(function(){
+			var gintegral = $(this).val();
+			give_integral.push(gintegral);
+		});
+		obj.find("input[name='rank_integral']").each(function(){
+			var rintegral = $(this).val();
+			rank_integral.push(rintegral);
+		});
+		obj.find("input[name='pay_integral']").each(function(){
+			var pintegral = $(this).val();
+			pay_integral.push(pintegral);
+		});
+		
+		Ajax.call('goods.php?act=addBatchWarehouse', 'ware_name=' + ware_name+"&ware_number="+ware_number+"&ware_price="+ware_price+"&ware_promote_price="+ware_promote_price+"&give_integral="+give_integral+"&rank_integral="+rank_integral+"&pay_integral="+pay_integral+"&goods_id="+goods_id, addWarehouseResponse, 'POST', 'JSON');
+	}
+	function addWarehouseResponse(result){
+		if(result.error == 1){
+			alert(result.massege);
+		}else{
+			$("#warehouse-tab .list").html(result.content);
+		}
+	}
+	//添加仓库回调函数end
+   /*添加地区 start*/
+   function addRegion(){
+        var obj = $(".addWarehouse");
+        var warehouse_area_name =$("#1").val();
+        var region_number =$("#region_number").val();
+        var region_price =$("#region_price").val();
+        var region_promote_price =$("#region_promote_price").val();
+		var give_integral =$("#region_give_integral").val();
+		var rank_integral =$("#region_rank_integral").val();
+		var pay_integral =$("#region_pay_integral").val();
+        var warehouse_area_list =obj.find("select[name='area_name']").val();
+        var goods_id = {$goods.goods_id};
+		
+        Ajax.call('goods.php?act=addRegion', 'warehouse_area_name=' + warehouse_area_name+"&region_number="+region_number+"&region_price="+region_price+"&region_promote_price="+region_promote_price+"&give_integral="+give_integral+"&rank_integral="+rank_integral+"&pay_integral="+pay_integral+"&goods_id="+goods_id+"&warehouse_area_list="+warehouse_area_list, addRegionResponse, 'POST', 'JSON');
+   }
+   //批量添加地区
+   function addBatchRegion(){
+        var obj = $("#batchRegionlist");
+        var warehouse_area_name = [];
+        var region_number = [];
+        var region_price = [];
+        var region_promote_price = [];
+		
+		var give_integral = [];
+		var rank_integral = [];
+		var pay_integral = [];
+		
+        var warehouse_area_list = [];
+        var goods_id = {$goods.goods_id};
+        obj.find("select").each(function(){
+            var val = $(this).val();
+            warehouse_area_name.push(val);
+        });
+        obj.find("select[name='area_name']").each(function(){
+            var area_list = $(this).val();
+            warehouse_area_list.push(area_list);
+        });
+         obj.find("input[name='region_number']").each(function(){
+            var number = $(this).val();
+            region_number.push(number);
+        });
+        obj.find("input[name='region_price']").each(function(){
+            var price = $(this).val();
+            region_price.push(price);
+        });
+        obj.find("input[name='region_promote_price']").each(function(){
+            var promote_price = $(this).val();
+            region_promote_price.push(promote_price);
+        });
+		obj.find("input[name='give_integral']").each(function(){
+            var gintegral = $(this).val();
+            give_integral.push(gintegral);
+        });
+		obj.find("input[name='rank_integral']").each(function(){
+            var rintegral = $(this).val();
+            region_promote_price.push(rintegral);
+        });
+		obj.find("input[name='pay_integral']").each(function(){
+            var pintegral = $(this).val();
+            pay_integral.push(pintegral);
+        });
+        
+        Ajax.call('goods.php?act=addBatchRegion', 'warehouse_area_name=' + warehouse_area_name+"&region_number="+region_number+"&region_price="+region_price+"&region_promote_price="+region_promote_price+"&give_integral="+give_integral+"&rank_integral="+rank_integral+"&pay_integral="+pay_integral+"&goods_id="+goods_id+"&warehouse_area_list="+warehouse_area_list, addRegionResponse, 'POST', 'JSON');
+   }
+   function addRegionResponse(result){
+      
+       if(result.error == 1){
+            alert(result.massege);
+        }else{
+            $("#region-tab .list").html(result.content);
+        }
+   }
+   
+   //添加图片
+   function addImgItem(){
+        var actionUrl = "goods.php?act=addImg";  
+        $("#fileForm").ajaxSubmit({
+                type: "POST",
+                dataType: "json",
+                url: actionUrl,
+                data: { "action": "TemporaryImage" },
+                success: function (data) {
+                    if (data.error == "1") {
+                       alert(data.massege);
+                    } else if (data.error == "2") {
+                       $("#goods_img_list").html(data.content);
+                    }
+                },
+                async: true  
+         });
+   }
+   //批量添加图片
+   function addBatchImg(){
+       
+        var actionUrl = "goods.php?act=addImg";  
+        $("#addBatchImg_from").ajaxSubmit({
+                type: "POST",
+                dataType: "json",
+                url: actionUrl,
+                data: { "action": "TemporaryImage" },
+                success: function (data) {
+                    if (data.error == "1") {
+                       alert(data.massege);
+                    } else if (data.error == "2") {
+                       $("#goods_img_list").html(data.content);
+                    }
+                },
+                async: true  
+         });
+   }
+</script>
+
+<script type="text/javascript">
+  var goodsId = '{$goods.goods_id}';
+  var elements = document.forms['theForm'].elements;
+  var sz1 = new SelectZone(1, elements['source_select1'], elements['target_select1']);
+  var sz2 = new SelectZone(2, elements['source_select2'], elements['target_select2'], elements['price2']);
+  var sz3 = new SelectZone(1, elements['source_select3'], elements['target_select3']);
+  
+  var area_sz2 = new SelectZone(1, elements['area_source_select2'], elements['area_target_select2[]']); //ecmoban模板堂 --zhuo
+  
+  var marketPriceRate = {$cfg.market_price_rate|default:1};
+  var integralPercent = {$cfg.integral_percent|default:0};
+
+  {literal}
+  onload = function()
+  {
+      handlePromote('#is_promote');
+	  
+	  handle_for_purchasing('#is_xiangou'); //ecmoban模板堂 --zhuo 限购
+	  
+      if (document.forms['theForm'].elements['auto_thumb'])
+      {
+          handleAutoThumb(document.forms['theForm'].elements['auto_thumb'].checked);
+      }
+	  
+	  get_model_price({$goods.model_price|default:0});
+	  get_model_inventory({$goods.model_inventory|default:0});
+	  get_model_attr({$goods.model_attr|default:0});
+	  
+	  document.getElementById('numAdd').value = 1;
+	  document.getElementById('numAdd_area').value = 1;
+	
+      // 妫€鏌ユ柊璁㈠崟
+      startCheckOrder();
+      {/literal}
+      {foreach from=$user_rank_list item=item}
+      set_price_note({$item.rank_id});
+      {/foreach}
+      {literal}
+      document.forms['theForm'].reset();
+  }
+
+  function validate(goods_id)
+  {
+      var validator = new Validator('theForm');
+      var goods_sn  = document.forms['theForm'].elements['goods_sn'].value;
+
+      validator.required('goods_name', goods_name_not_null);
+	  
+	  if(document.forms['theForm'].elements['store_category']){ //ecmoban模板堂 --zhuo
+		  if (document.forms['theForm'].elements['cat_id'].value == 0 && document.forms['theForm'].elements['store_category'].value == 0)
+		  {
+			  validator.addErrorMsg(goods_cat_not_null);
+		  }
+      }else{
+		  if (document.forms['theForm'].elements['cat_id'].value == 0)
+		  {
+			  validator.addErrorMsg(goods_cat_not_null);
+		  }
+	  }
+	  //品牌必选 by wu
+      if(document.forms['theForm'].elements['brand_id'].value==0)
+	  {	  
+		validator.addErrorMsg(goods_brand_not_null);
+	  }      
+
+      checkVolumeData("1",validator);
+
+      validator.required('shop_price', shop_price_not_null);
+      validator.isNumber('shop_price', shop_price_not_number, true);
+      validator.isNumber('market_price', market_price_not_number, false);
+      if (document.forms['theForm'].elements['is_promote'].checked)
+      {
+          validator.required('promote_start_date', promote_start_not_null);
+          validator.required('promote_end_date', promote_end_not_null);
+          validator.islt('promote_start_date', 'promote_end_date', promote_not_lt);
+      }
+
+      if (document.forms['theForm'].elements['goods_number'] != undefined)
+      {
+          validator.isInt('goods_number', goods_number_not_int, false);
+          validator.isInt('warn_number', warn_number_not_int, false);
+      }
+
+      var callback = function(res)
+     {
+      if (res.error > 0)
+      {
+        alert("{$lang.goods_sn_exists}");
+      }
+      else
+      {
+         if(validator.passed())
+         {
+         document.forms['theForm'].submit();
+         }
+      }
+  }
+    Ajax.call('goods.php?is_ajax=1&act=check_goods_sn', "goods_sn=" + goods_sn + "&goods_id=" + goods_id, callback, "GET", "JSON");
+}
+
+  /**
+   * 鍒囨崲鍟嗗搧绫诲瀷
+   */
+  function getAttrList(goodsId)
+  {
+      var selGoodsType = document.forms['theForm'].elements['goods_type'];
+	  var selModelAttr = document.forms['theForm'].elements['model_attr'];
+	  var modelAttr = selModelAttr.value;
+      if (selGoodsType != undefined)
+      {
+          var goodsType = selGoodsType.options[selGoodsType.selectedIndex].value;
+
+          Ajax.call('goods.php?is_ajax=1&act=get_attr', 'goods_id=' + goodsId + "&goods_type=" + goodsType + '&modelAttr=' + modelAttr, setAttrList, "GET", "JSON");
+      }
+  }
+
+  function setAttrList(result, text_result)
+  {
+    document.getElementById('tbody-goodsAttr').innerHTML = result.content;
+  }
+
+  /**
+   * 鎸夋瘮渚嬭?绠椾环鏍
+   * @param   string  inputName   杈撳叆妗嗗悕绉
+   * @param   float   rate        姣斾緥
+   * @param   string  priceName   浠锋牸杈撳叆妗嗗悕绉帮紙濡傛灉娌℃湁锛屽彇shop_price锛
+   */
+  function computePrice(inputName, rate, priceName)
+  {
+      var shopPrice = priceName == undefined ? document.forms['theForm'].elements['shop_price'].value : document.forms['theForm'].elements[priceName].value;
+      shopPrice = Utils.trim(shopPrice) != '' ? parseFloat(shopPrice)* rate : 0;
+      if(inputName == 'integral')
+      {
+          shopPrice = parseInt(shopPrice);
+      }
+      shopPrice += "";
+
+      n = shopPrice.lastIndexOf(".");
+      if (n > -1)
+      {
+          shopPrice = shopPrice.substr(0, n + 3);
+      }
+
+      if (document.forms['theForm'].elements[inputName] != undefined)
+      {
+          document.forms['theForm'].elements[inputName].value = shopPrice;
+      }
+      else
+      {
+          document.getElementById(inputName).value = shopPrice;
+      }
+  }
+
+  /**
+   * 璁剧疆浜嗕竴涓?晢鍝佷环鏍硷紝鏀瑰彉甯傚満浠锋牸銆佺Н鍒嗕互鍙婁細鍛樹环鏍
+   */
+  function priceSetted()
+  {
+	var shop_price = 0;  
+  	if(document.forms['theForm'].elements['shop_price']){
+		
+		var promote_price = document.forms['theForm'].elements['promote_price'].value;
+		
+		if($("form[name='theForm'] :input[name='is_promote']").is(":checked")){
+			shop_price = Number(parseFloat(document.forms['theForm'].elements['promote_price'].value));
+		}else{
+			shop_price = Number(parseFloat(document.forms['theForm'].elements['shop_price'].value));
+		}
+ 	}
+
+    computePrice('market_price', marketPriceRate);
+    {/literal}
+    {foreach from=$user_rank_list item=item}
+    set_price_note({$item.rank_id});
+    {/foreach}
+    {literal}
+	
+	  //商品价格
+	  $("form[name='theForm'] :input[name='model_price']").each(function(index, element) {
+         if($(element).is(":checked")){
+			 var val = $(element).val();
+			 if(val == 0){
+				 {if $grade_rank.give_integral}
+				 	var give_integral = Math.floor(shop_price * {$grade_rank.give_integral});
+				 	$("#give_integral").html(give_integral);
+					
+					var rank_integral = Math.floor(shop_price * {$grade_rank.rank_integral});
+				 	$("#rank_integral").html(rank_integral);
+					
+					var pay_integral = Math.floor(shop_price / 100 * {$integral_scale} * {$grade_rank.pay_integral});
+				 	$("#pay_integral").html(pay_integral);
+				 {/if}
+			 }
+		 }
+      });
+	  
+  }
+  
+	function get_promote_price(val){
+		var shop_price = 0;  
+		if(document.forms['theForm'].elements['shop_price'] && document.forms['theForm'].elements['is_promote']){
+			if($("form[name='theForm'] :input[name='is_promote']").is(":checked")){
+				shop_price = Number(parseFloat(val));
+			}else{
+				shop_price = Number(parseFloat(document.forms['theForm'].elements['shop_price'].value));
+			}
+		}
+
+		//商品价格
+		$("form[name='theForm'] :input[name='model_price']").each(function(index, element) {
+		 if($(element).is(":checked")){
+			 var val = $(element).val();
+			 if(val == 0){
+				 {if $grade_rank.give_integral}
+					var give_integral = Math.floor(shop_price * {$grade_rank.give_integral});
+					$("#give_integral").html(give_integral);
+					
+					var rank_integral = Math.floor(shop_price * {$grade_rank.rank_integral});
+					$("#rank_integral").html(rank_integral);
+					
+					var pay_integral = Math.floor(shop_price / 100 * {$integral_scale} * {$grade_rank.pay_integral});
+					$("#pay_integral").html(pay_integral);
+				 {/if}
+			 }
+		 }
+		});
+	}
+
+  /**
+   * 璁剧疆浼氬憳浠锋牸娉ㄩ噴
+   */
+  function set_price_note(rank_id)
+  {
+	 if(document.forms['theForm'].elements['shop_price']){
+		 var shop_price = parseFloat(document.forms['theForm'].elements['shop_price'].value);
+	 }else{
+		 var shop_price = 0;
+	 }
+
+    var rank = new Array();
+    {/literal}
+    {foreach from=$user_rank_list item=item}
+    rank[{$item.rank_id}] = {$item.discount|default:100};
+    {/foreach}
+    {literal}
+    if (shop_price >0 && rank[rank_id] && document.getElementById('rank_' + rank_id) && parseInt(document.getElementById('rank_' + rank_id).value) == -1)
+    {
+      var price = parseInt(shop_price * rank[rank_id] + 0.5) / 100;
+      if (document.getElementById('nrank_' + rank_id))
+      {
+        document.getElementById('nrank_' + rank_id).innerHTML = '(' + price + ')';
+      }
+    }
+    else
+    {
+      if (document.getElementById('nrank_' + rank_id))
+      {
+        document.getElementById('nrank_' + rank_id).innerHTML = '';
+      }
+    }
+  }
+
+  /**
+   * 鏍规嵁甯傚満浠锋牸锛岃?绠楀苟鏀瑰彉鍟嗗簵浠锋牸銆佺Н鍒嗕互鍙婁細鍛樹环鏍
+   */
+  function marketPriceSetted()
+  {
+    computePrice('shop_price', 1/marketPriceRate, 'market_price');
+    computePrice('integral', integralPercent / 100);
+    {/literal}
+    {foreach from=$user_rank_list item=item}
+    set_price_note({$item.rank_id});
+    {/foreach}
+    {literal}
+  }
+
+  /**
+   * 添加属性
+   */
+  function addSpec(obj)
+  {  
+	  var obj = $(obj);
+	  var tbl = obj.parents('.item');
+	  var input = tbl.clone();
+          input.find("#a_warehouseAttr").remove();
+          input.find("#a_areaAttr").remove();
+          input.find("#a_add_attr_img").remove();
+	  input.find('.up').attr('onclick','removeSpec(this)');
+	  input.find('.up').removeClass().addClass('down');
+	  tbl.after(input);
+  }
+
+  /**
+   * 删除属性
+   */
+  function removeSpec(obj)
+  {
+      var obj = $(obj);
+	  var tbl = obj.parents('.item');
+	  tbl.remove();
+  }
+
+  /**
+   * 澶勭悊瑙勬牸
+   */
+  function handleSpec()
+  {
+      var elementCount = document.forms['theForm'].elements.length;
+      for (var i = 0; i < elementCount; i++)
+      {
+          var element = document.forms['theForm'].elements[i];
+          if (element.id.substr(0, 5) == 'spec_')
+          {
+              var optCount = element.options.length;
+              var value = new Array(optCount);
+              for (var j = 0; j < optCount; j++)
+              {
+                  value[j] = element.options[j].value;
+              }
+
+              var hiddenSpec = document.getElementById('hidden_' + element.id);
+              hiddenSpec.value = value.join(String.fromCharCode(13)); // 鐢ㄥ洖杞﹂敭闅斿紑姣忎釜瑙勬牸
+          }
+      }
+      return true;
+  }
+
+  function handlePromote(obj)
+  {
+	  var obj = $(obj);
+	  if(obj.prop("checked")== true){
+		  $("#promote_1,#selbtn1,#selbtn2").attr("disabled",false);
+		  $("#selbtn1,#selbtn2").parent().removeClass("time_disabled");
+		  
+		  priceSetted();
+	  }else{
+		  $("#promote_1,#selbtn1,#selbtn2").attr("disabled",true);
+		  $("#selbtn1,#selbtn2").parent().addClass("time_disabled");
+		  
+		  get_promote_price();
+	  }
+	  
+	  document.forms['theForm'].elements['give_integral'].value = 0;
+	  document.forms['theForm'].elements['rank_integral'].value = 0;
+	  document.forms['theForm'].elements['integral'].value = 0;
+  }
+  
+  //ecmoban模板堂 --zhuo start 限购
+  function handle_for_purchasing(obj)
+  {
+      var obj = $(obj);
+	  if(obj.prop("checked")== true){
+		  $("#xiangou_11,#selbtn11,#selbtn22").attr("disabled",false);
+		  $("#selbtn11,#selbtn22").parent().removeClass("time_disabled");
+	  }else{
+		  $("#xiangou_11,#selbtn11,#selbtn22").attr("disabled",true);
+		  $("#selbtn11,#selbtn22").parent().addClass("time_disabled");
+	  }
+  }
+  //ecmoban模板堂 --zhuo end 限购
+
+  function handleAutoThumb(checked)
+  {
+      document.forms['theForm'].elements['goods_thumb'].disabled = checked;
+      document.forms['theForm'].elements['goods_thumb_url'].disabled = checked;
+  }
+
+  /**
+   * 商品品牌操作
+   */
+ /* function rapidBrandAdd(conObj)
+  {
+      var brand_div = document.getElementById("brand_add");
+
+      if(brand_div.style.display != '')
+      {
+          var brand =document.forms['theForm'].elements['addedBrandName'];
+          brand.value = '';
+          brand_div.style.display = '';
+      }
+  }
+
+  function hideBrandDiv()
+  {
+      var brand_add_div = document.getElementById("brand_add");
+      if(brand_add_div.style.display != 'none')
+      {
+          brand_add_div.style.display = 'none';
+      }
+  }
+
+  function goBrandPage()
+  {
+      if(confirm(go_brand_page))
+      {
+          window.location.href='brand.php?act=add';
+      }
+      else
+      {
+          return;
+      }
+  }*/
+  // 搜索品牌 -qin
+	/*function searchBrand()
+	{
+	  var search_keyword  = document.forms['theForm'].elements['keyword_brand'].value
+	  Ajax.call('goods.php?is_ajax=1&act=search_brand', "search_keyword=" + search_keyword, searchBrandResponse, 'GET', 'JSON');
+	}
+	function searchBrandResponse(result)
+	{
+	  $('#brand_id').html(result);
+	}*/
+	function searchBrand()
+	{
+	  var search_keyword  = document.forms['theForm'].elements['keyword_brand'].value;
+	  var ru_id  = document.forms['theForm'].elements['ru_id'].value;
+	  var goods_id  = {$goods.goods_id};
+	  Ajax.call('goods.php?is_ajax=1&act=search_brand', "search_keyword=" + search_keyword + "&ru_id=" + ru_id + "&goods_id=" + goods_id, searchBrandResponse, 'GET', 'JSON');
+	}
+	function searchBrandResponse(result)
+	{
+	  $('#brand_id').html(result);
+	}	
+	
+  function rapidCatAdd()
+  {
+      var cat_div = document.getElementById("category_add");
+
+      if(cat_div.style.display != '')
+      {
+          var cat =document.forms['theForm'].elements['addedCategoryName'];
+          cat.value = '';
+          cat_div.style.display = '';
+      }
+  }
+
+  
+
+  
+
+    /*function goCatPage()
+    {
+        if(confirm(go_category_page))
+        {
+            window.location.href='category.php?act=add';
+        }
+        else
+        {
+            return;
+        }
+    }*/
+
+
+  /**
+   * 鍒犻櫎蹇?€熷垎绫
+   */
+  function removeCat()
+  {
+      if(!document.forms['theForm'].elements['parent_cat'] || !document.forms['theForm'].elements['new_cat_name'])
+      {
+          return;
+      }
+
+      var cat_select = document.forms['theForm'].elements['parent_cat'];
+      var cat = document.forms['theForm'].elements['new_cat_name'];
+
+      cat.parentNode.removeChild(cat);
+      cat_select.parentNode.removeChild(cat_select);
+  }
+
+  /**
+   * 鍒犻櫎蹇?€熷搧鐗
+   */
+  function removeBrand()
+  {
+      if (!document.forms['theForm'].elements['new_brand_name'])
+      {
+          return;
+      }
+
+      var brand = document.theForm.new_brand_name;
+      brand.parentNode.removeChild(brand);
+  }
+
+  /**
+   * 添加平台扩展分类
+   */
+  function addOtherCat(conObj)
+  {
+      var sel = document.createElement("SELECT");
+      var selCat = document.forms['theForm'].elements['cat_id_new'];
+
+      for (i = 0; i < selCat.length; i++)
+      {
+          var opt = document.createElement("OPTION");
+          opt.text = selCat.options[i].text;
+          opt.value = selCat.options[i].value;
+          if (Browser.isIE)
+          {
+              sel.add(opt);
+          }
+          else
+          {
+              sel.appendChild(opt);
+          }
+      }
+      conObj.insertBefore(sel,conObj.childNodes[0]);
+      sel.name = "other_cat[]";
+	  sel.className="select select_4";
+      sel.onChange = function() {checkIsLeaf(this);};
+  }
+  
+  /**
+   * 添加店铺扩展分类
+   */
+  function addOtherCat_store(conObj)
+  {
+      var sel = document.createElement("SELECT");
+      var selCat = document.forms['theForm'].elements['store_category'];
+
+      for (i = 0; i < selCat.length; i++)
+      {
+          var opt = document.createElement("OPTION");
+          opt.text = selCat.options[i].text;
+          opt.value = selCat.options[i].value;
+          if (Browser.isIE)
+          {
+              sel.add(opt);
+          }
+          else
+          {
+              sel.appendChild(opt);
+          }
+      }
+      conObj.insertBefore(sel,conObj.childNodes[0]);
+      sel.name = "other_cat[]";
+	  sel.className="select select_3";
+      sel.onChange = function() {checkIsLeaf(this);};
+  }
+
+  /* 鍏宠仈鍟嗗搧鍑芥暟 */
+  function searchGoods(szObject, catId, brandId, keyword,brand_keyword,sel_mode)
+  {
+      var filters = new Object;
+
+      filters.cat_id = elements[catId].value;
+      filters.brand_id = elements[brandId].value;
+
+      filters.sel_mode = elements[sel_mode].value;
+
+      filters.brand_keyword = Utils.trim(elements[brand_keyword].value);
+
+      filters.keyword = Utils.trim(elements[keyword].value);
+      filters.exclude = document.forms['theForm'].elements['goods_id'].value;
+
+      szObject.loadOptions('get_goods_list', filters);
+  }
+  
+  //ecmoban模板堂 --zhuo start 关联地区
+  function searchGoods_area(szObject, ra_id)
+  {
+      var filters = new Object;
+
+      filters.ra_id = elements[ra_id].value;
+      szObject.loadOptions('get_area_list', filters);
+  }
+  //ecmoban模板堂 --zhuo end
+
+  /**
+   * 鍏宠仈鏂囩珷鍑芥暟
+   */
+  function searchArticle()
+  {
+    var filters = new Object;
+
+    filters.title = Utils.trim(elements['article_title'].value);
+
+    sz3.loadOptions('get_article_list', filters);
+  }
+
+  /**
+   * 添加图片
+   */
+  function addImg(obj)
+  {
+      var obj = $(obj);
+	  var tbl = obj.parents('.img_item');
+	  var input = tbl.clone();
+	  input.find('.up').attr('onclick','removeImg(this)');
+	  input.find('.up').removeClass().addClass('down');
+	  tbl.parents('#addBatchImg_from').append(input);
+  }
+
+  /**
+   * 删除图片
+   */
+  function removeImg(obj)
+  {
+      var obj = $(obj);
+	  var tbl = obj.parents('.img_item');
+	  
+	  tbl.remove();
+  }
+  
+  /**
+   * 消费满减 start  ecmoban模板堂 --zhuo
+   */
+  function addCon_amount(obj)
+  {  
+	  var obj = $(obj);
+	  var tbl = obj.parents('#consumtable');
+	  
+	  var validator  = new Validator('theForm');
+	  reduceData("0",validator);
+	  if (!validator.passed())
+	  {
+	  	return false;
+	  }
+	  
+	  var input = tbl.find('p:first').clone();
+	  input.addClass("mt10");
+	  input.find("input[type='button']").remove();
+	  input.append("<a href='javascript:;' class='removeV' onclick='removeCon_amount(this)'><img src='images/no.gif' title='删除'></a>")
+	  input.find(":input").each(function(i){
+		$(this).val('');
+	  });
+	  tbl.append(input);
+  }
+  
+  function reduceData(isSubmit,validator){
+	var volumeNum = document.getElementsByName("cfull[]");
+	var volumePri = document.getElementsByName("creduce[]");
+	var numErrNum = 0;
+	var priErrNum = 0;
+	
+	for (i = 0 ; i < volumePri.length ; i ++)
+	{
+	if ((isSubmit != 1 || volumeNum.length > 1) && numErrNum <= 0 && volumeNum.item(i).value == "")
+	{
+	validator.addErrorMsg(reduce_num_not_null);
+	numErrNum++;
+	}
+	
+	if (numErrNum <= 0 && Utils.trim(volumeNum.item(i).value) != "" && ! Utils.isNumber(Utils.trim(volumeNum.item(i).value)))
+	{
+	validator.addErrorMsg(reduce_num_not_number);
+	numErrNum++;
+	}
+	
+	if ((isSubmit != 1 || volumePri.length > 1) && priErrNum <= 0 && volumePri.item(i).value == "")
+	{
+	validator.addErrorMsg(reduce_price_not_null);
+	priErrNum++;
+	}
+	
+	if (priErrNum <= 0 && Utils.trim(volumePri.item(i).value) != "" && ! Utils.isNumber(Utils.trim(volumePri.item(i).value)))
+	{
+	validator.addErrorMsg(reduce_price_not_number);
+	priErrNum++;
+	}
+    }
+  }
+
+  
+  function removeCon_amount(obj)
+  {
+         var obj = $(obj);
+	 obj.parent('p').remove();
+  }
+
+  /**
+   * 消费满减 end  ecmoban模板堂 --zhuo
+   */
+  
+  /**
+   * 消费满减 start  ecmoban模板堂 --zhuo
+   */
+  function addCon_shipping(obj)
+  {
+      var src  = obj.parentNode.parentNode;
+      var idx  = rowindex(src);
+      var tbl  = document.getElementById('shippingtable');
+      var row  = tbl.insertRow(idx + 1);
+      var cell = row.insertCell(-1);
+      cell.innerHTML = src.cells[0].innerHTML.replace(/(.*)(addCon_shipping)(.*)(\[)(\+)/i, "$1removeCon_shipping$3$4-");
+  }
+
+  /**
+   * 消费满减 end  ecmoban模板堂 --zhuo
+   */
+  function removeCon_shipping(obj)
+  {
+      var row = rowindex(obj.parentNode.parentNode);
+      var tbl = document.getElementById('shippingtable');
+
+      tbl.deleteRow(row);
+  }
+
+  /**
+   * 鍒犻櫎鍥剧墖
+   */
+  function dropImg(imgId)
+  {
+    Ajax.call('goods.php?is_ajax=1&act=drop_image', "img_id="+imgId, dropImgResponse, "GET", "JSON");
+  }
+
+  function dropImgResponse(result)
+  {
+      if (result.error == 0)
+      {
+          document.getElementById('gallery_' + result.content).style.display = 'none';
+      }
+  }
+
+  /**
+   * 灏嗗競鍦轰环鏍煎彇鏁
+   */
+  function parseint_integral(val)
+  {
+	  if(val > 0){
+		    var pay_integral = $("#pay_integral").html();
+			
+			if(val > pay_integral){
+				alert("最高只能设置" +pay_integral+"消费积分范围内");
+				var val = pay_integral;
+			}
+	  }else{
+		  val = 0;
+	  }
+	  
+      document.forms['theForm'].elements['integral'].value = parseInt(val);
+  }
+  
+  function get_give_integral(val)
+  {
+	  if(val > 0){
+		    var give_integral = $("#give_integral").html();
+			if(val > give_integral){
+				alert("最高只能设置" +give_integral+"消费积分范围内");
+				var val = give_integral;
+			} 
+	  }else{
+		  val = 0;
+	  }
+	  
+      document.forms['theForm'].elements['give_integral'].value = parseInt(val);
+  }
+  
+  function get_rank_integral(val)
+  {
+	  if(val > 0){
+		    var rank_integral = $("#rank_integral").html();  
+			if(val > rank_integral){
+				alert("最高只能设置" +rank_integral+"消费积分范围内");
+				var val = rank_integral;
+			}
+	  }else{
+		  val = 0;
+	  }
+	  
+      document.forms['theForm'].elements['rank_integral'].value = parseInt(val);
+  }
+
+
+  /**
+  * 妫€鏌ヨ揣鍙锋槸鍚﹀瓨鍦
+  */
+  function checkGoodsSn(goods_sn, goods_id)
+  {
+    if (goods_sn == '')
+    {
+	 	document.getElementById('goods_sn_notice').style.color="#1b9ad5";
+        document.getElementById('goods_sn_notice').innerHTML = '如果您不输入商品货号，系统将自动生成一个唯一的货号。';
+        return;
+    }
+
+    var callback = function(res)
+    {
+      if (res.error > 0)
+      {
+        document.getElementById('goods_sn_notice').innerHTML = res.message;
+        document.getElementById('goods_sn_notice').style.color = "red";
+      }
+      else
+      {
+        document.getElementById('goods_sn_notice').innerHTML = "";
+      }
+    }
+    Ajax.call('goods.php?is_ajax=1&act=check_goods_sn', "goods_sn=" + goods_sn + "&goods_id=" + goods_id, callback, "GET", "JSON");
+  }
+
+  /**
+   * 鏂板?涓€涓?紭鎯犱环鏍
+   */
+  function addVolumePrice(obj)
+  {
+    var obj = $(obj);
+    var tbl = obj.parents('#tbody-volume');
+
+	//判断是否为空
+    var validator  = new Validator('theForm');
+    checkVolumeData("0",validator);
+    if (!validator.passed())
+    {
+      return false;
+    }
+
+	var input = tbl.find('p:first').clone();
+	input.addClass("mt10");
+	input.find('.blue_label').remove();
+	input.append("<a href='javascript:;' class='removeV' onclick='removeVolumePrice(this)'><img src='images/no.gif' title='删除'></a>")
+	input.find(":input").each(function(i){
+		$(this).val('');
+	});
+	obj.before(input);
+  }
+  
+  function get_volume_price(t)
+  {
+	  var shop_price = parseFloat($("form[name='theForm'] :input[name='shop_price']").val());
+	  var model_price = parseFloat($("form[name='theForm'] :input[name='model_price']").val());
+	  if(t.value > shop_price && model_price == 0)
+	  {
+		  alert("商品优惠价格不能大于本店售价");
+		  return t.value = '';
+	  }
+	  else
+	  {
+		  return true;
+	  }
+  }
+
+  /**
+   * 删除商品优惠活动
+   */
+  function removeVolumePrice(obj)
+  {
+    var obj = $(obj);
+	obj.parent('p').remove();
+  }
+
+  /**
+   * 商品优惠价格添加验证
+   */
+  function checkVolumeData(isSubmit,validator)
+  {
+    var volumeNum = document.getElementsByName("volume_number[]");
+    var volumePri = document.getElementsByName("volume_price[]");
+    var numErrNum = 0;
+    var priErrNum = 0;
+
+    for (i = 0 ; i < volumePri.length ; i ++)
+    {
+      if ((isSubmit != 1 || volumeNum.length > 1) && numErrNum <= 0 && volumeNum.item(i).value == "")
+      {
+        validator.addErrorMsg(volume_num_not_null);
+        numErrNum++;
+      }
+
+      if (numErrNum <= 0 && Utils.trim(volumeNum.item(i).value) != "" && ! Utils.isNumber(Utils.trim(volumeNum.item(i).value)))
+      {
+        validator.addErrorMsg(volume_num_not_number);
+        numErrNum++;
+      }
+
+      if ((isSubmit != 1 || volumePri.length > 1) && priErrNum <= 0 && volumePri.item(i).value == "")
+      {
+        validator.addErrorMsg(volume_price_not_null);
+        priErrNum++;
+      }
+
+      if (priErrNum <= 0 && Utils.trim(volumePri.item(i).value) != "" && ! Utils.isNumber(Utils.trim(volumePri.item(i).value)))
+      {
+        validator.addErrorMsg(volume_price_not_number);
+        priErrNum++;
+      }
+    }
+  }
+  
+   //ecmoban模板堂 --zhuo start
+   
+	function get_goods_model(val){
+		
+		var model_price = document.forms['theForm'].elements['model_price'];
+		
+		var td_goodsNumber1 = document.getElementById('td_goodsNumber1');
+		var td_goodsNumber2 = document.getElementById('td_goodsNumber2');
+		
+		
+		var shopPrice1 = document.getElementById('td_shopPrice1');
+		var shopPrice2 = document.getElementById('td_shopPrice2');
+		
+		var promotePrice1 = document.getElementById('td_promotePrice1');
+		var promotePrice2 = document.getElementById('td_promotePrice2');
+		
+		var warehouseNumber = document.getElementsByName('div_warehouseNumber[]');
+		var warehousePrice = document.getElementsByName('div_warehousePrice[]');
+		var warehousePromote = document.getElementsByName('div_warehousePromote[]');
+		
+		var wGive_integral = document.getElementsByName('div_warehouseGiveIntegral[]');
+	  	var wRank_integral = document.getElementsByName('div_warehouseRankIntegral[]');
+	  	var wPay_integral = document.getElementsByName('div_warehousePayIntegral[]');
+		
+		var areaNumber = document.getElementsByName('div_areaNumber[]');
+		var areaPrice = document.getElementsByName('div_areaPrice[]');
+		var areaPromote = document.getElementsByName('div_areaPromote[]');
+		
+		var rGive_integral = document.getElementsByName('div_regionGiveIntegral[]');
+	  	var rRank_integral = document.getElementsByName('div_regionRankIntegral[]');
+	  	var rPay_integral = document.getElementsByName('div_regionPayIntegral[]');
+		
+		if(val == 1){
+			shopPrice1.style.display = 'none';
+			promotePrice1.style.display = 'none';
+			shopPrice2.style.display = 'block';
+			promotePrice2.style.display = 'block';
+			td_goodsNumber1.style.display = 'none';
+			td_goodsNumber2.style.display = 'block';
+			shopPrice2.innerHTML = '<div class="red_text">{$lang.tab_warehouse_model}</div>';
+			promotePrice2.innerHTML = '<div class="red_text">{$lang.tab_warehouse_model}</div>';
+			td_goodsNumber2.innerHTML = '<div class="red_text">{$lang.tab_warehouse_model}</div>';
+			
+			for(i=0; i<warehouseNumber.length; i++){
+				warehouseNumber[i].style.display = 'block';
+				warehousePrice[i].style.display = 'block';
+				warehousePromote[i].style.display = 'block';
+				wGive_integral[i].style.display = 'block';
+				wRank_integral[i].style.display = 'block';
+				wPay_integral[i].style.display = 'block';
+			}
+			
+			for(i=0; i<areaNumber.length; i++){
+				areaNumber[i].style.display = 'none';
+				areaPrice[i].style.display = 'none';
+				areaPromote[i].style.display = 'none';
+				rGive_integral[i].style.display = 'none';
+				rRank_integral[i].style.display = 'none';
+				rPay_integral[i].style.display = 'none';
+			}
+		
+		}else if(val == 2){
+			shopPrice1.style.display = 'none';
+			promotePrice1.style.display = 'none';
+			shopPrice2.style.display = 'block';
+			promotePrice2.style.display = 'block';
+			td_goodsNumber1.style.display = 'none';
+			td_goodsNumber2.style.display = 'block';
+			shopPrice2.innerHTML = '{$lang.warehouse_region_model}';
+			promotePrice2.innerHTML = '{$lang.warehouse_region_model}';
+			td_goodsNumber2.innerHTML = '{$lang.warehouse_region_model}';
+			
+			for(i=0; i<warehouseNumber.length; i++){
+				warehouseNumber[i].style.display = 'none';
+				warehousePrice[i].style.display = 'none';
+				warehousePromote[i].style.display = 'none';
+				wGive_integral[i].style.display = 'none';
+				wRank_integral[i].style.display = 'none';
+				wPay_integral[i].style.display = 'none';
+			}
+			
+			for(i=0; i<areaNumber.length; i++){
+				areaNumber[i].style.display = 'block';
+				areaPrice[i].style.display = 'block';
+				areaPromote[i].style.display = 'block';
+				rGive_integral[i].style.display = 'block';
+				rRank_integral[i].style.display = 'block';
+				rPay_integral[i].style.display = 'block';
+			}
+		}else{
+			shopPrice1.style.display = 'block';
+			promotePrice1.style.display = 'block';
+			shopPrice2.style.display = 'none';
+			promotePrice2.style.display = 'none';
+			td_goodsNumber1.style.display = 'block';
+			td_goodsNumber2.style.display = 'none';
+			promotePrice2.innerHTML = '';
+			shopPrice2.innerHTML = '';
+			td_goodsNumber2.innerHTML = '';
+			
+			for(i=0; i<warehouseNumber.length; i++){
+				warehouseNumber[i].style.display = 'none';
+				warehousePrice[i].style.display = 'none';
+				warehousePromote[i].style.display = 'none';
+				wGive_integral[i].style.display = 'none';
+				wRank_integral[i].style.display = 'none';
+				wPay_integral[i].style.display = 'none';
+			}
+			
+			for(i=0; i<areaNumber.length; i++){
+				areaNumber[i].style.display = 'none';
+				areaPrice[i].style.display = 'none';
+				areaPromote[i].style.display = 'none';
+				rGive_integral[i].style.display = 'none';
+				rRank_integral[i].style.display = 'none';
+				rPay_integral[i].style.display = 'none';
+			}
+		}
+		
+		
+		for(i=0; i<model_price.length; i++){
+			if(val == model_price[i].value){
+				model_price[i].checked = true;
+				
+				var price = document.getElementById('modelPrice');
+				if(model_price[i].value == 0){
+					price.innerHTML = '（使用系统默认的价格模式,统一使用一样的价格）';
+				}else if(model_price[i].value == 1){
+				  	price.innerHTML = '（使用仓库的价格模式,根据不同仓库调取不同价格）';
+				}else if(model_price[i].value == 2){
+				  	price.innerHTML = '（使用地区的价格模式,根据不同地区调取不同价格）';
+				}
+				
+			}else{
+				model_price[i].checked = false;
+			}
+		}
+		
+		var model_inventory = document.forms['theForm'].elements['model_inventory'];
+		
+		for(i=0; i<model_inventory.length; i++){
+			if(val == model_inventory[i].value){
+				model_inventory[i].checked = true;
+				
+				var Inventory = document.getElementById('modelInventory');
+				if(model_inventory[i].value == 0){
+				  	Inventory.innerHTML = '（使用系统默认的库存模式,统一使用一样的库存）';
+				}else if(model_inventory[i].value == 1){
+				  	Inventory.innerHTML = '（使用仓库的库存模式,根据不同仓库调取不同库存）';
+				}else if(model_inventory[i].value == 2){
+				  	Inventory.innerHTML = '（使用地区的库存模式,根据不同地区调取不同库存）';
+				}	  
+			}else{
+				model_inventory[i].checked = false;
+			}
+		}
+		
+		var model_attr = document.forms['theForm'].elements['model_attr'];
+		
+		for(i=0; i<model_attr.length; i++){
+			if(val == model_attr[i].value){
+				model_attr[i].checked = true;
+				
+				var attr = document.getElementById('modelAttr');
+				if(model_attr[i].value == 0){
+				  	attr.innerHTML = '（使用系统默认的属性模式,统一使用一样的属性价格）';
+				}else if(model_attr[i].value == 1){
+				  	attr.innerHTML = '（使用仓库的属性模式,根据不同仓库调取不同仓库价格，以及库存）';
+				}else if(model_attr[i].value == 2){
+				  	attr.innerHTML = '（使用地区的属性模式,根据不同地区调取不同属性价格，以及库存）';
+				}	  
+			}else{
+				model_attr[i].checked = false;
+			}
+		}
+		
+		if(model_price[0].checked == true && model_inventory[0].checked == true){
+			var warehouse = document.getElementById('warehouse-tab');
+			warehouse.style.display = 'none';
+			
+			var region = document.getElementById('region-tab');
+			region.style.display = 'none';
+			
+		}else if(model_price[1].checked == true && model_inventory[1].checked == true){
+			var warehouse = document.getElementById('warehouse-tab');
+			warehouse.style.display = 'block';
+			
+			var region = document.getElementById('region-tab');
+			region.style.display = 'none';
+			
+		}else if(model_price[2].checked == true && model_inventory[2].checked == true){
+			var warehouse = document.getElementById('warehouse-tab');
+			warehouse.style.display = 'none';
+			
+			var region = document.getElementById('region-tab');
+			region.style.display = 'block';
+		}
+		
+		var attrPrice = document.getElementsByName('span_attrPrice[]');
+		var warehouseAttr = document.getElementsByName('a_warehouseAttr[]');
+		var areaAttr = document.getElementsByName('a_areaAttr[]');
+		
+		if(val == 1){
+			for(j=0; j<attrPrice.length; j++){
+			  attrPrice[j].style.display = 'none';
+			}
+			
+			for(j=0; j<warehouseAttr.length; j++){
+			  warehouseAttr[j].style.display = '';
+			}
+			
+			for(j=0; j<areaAttr.length; j++){
+			  areaAttr[j].style.display = 'none';
+			}
+		}else if(val == 2){
+			
+			for(j=0; j<attrPrice.length; j++){
+			  attrPrice[j].style.display = 'none';
+			}
+			
+			for(j=0; j<warehouseAttr.length; j++){
+			  warehouseAttr[j].style.display = 'none';
+			}
+			
+			for(j=0; j<areaAttr.length; j++){
+			  areaAttr[j].style.display = '';
+			}
+		}else{
+			
+			for(j=0; j<attrPrice.length; j++){
+			  attrPrice[j].style.display = '';
+			}
+			
+			for(j=0; j<warehouseAttr.length; j++){
+			  warehouseAttr[j].style.display = 'none';
+			}
+
+			for(j=0; j<areaAttr.length; j++){
+			  areaAttr[j].style.display = 'none';
+			}
+		}
+		
+		if(val == 0){
+		  $("#dl_give_integral").show();
+		  $("#dl_rank_integral").show();
+		  $("#dl_pay_integral").show();
+		  
+		  $("#volume_number").show();
+		}else{
+		  $("#dl_give_integral").hide();
+		  $("#dl_rank_integral").hide();
+		  $("#dl_pay_integral").hide();
+		  
+		  $("#volume_number").hide();
+		}
+	}
+
+  //添加仓库数据
+  function addImg_warehouse(obj)  
+  {
+	  var obj = $(obj);
+	  var tbl = obj.parents('.warehouse_item');
+	  var input = tbl.clone();
+	  var num = $("input[name='numAdd']").val();
+	  if(num < {$count_warehouse}){
+		  input.find('.up').attr('onclick','removeImg_warehouse(this)');
+		  input.find('.up').removeClass().addClass('down');
+		  tbl.parents('.warehouse_warpper').append(input);
+		  num++;
+	  	  $("input[name='numAdd']").val(num);
+	  }else{
+		  alert('最多可添加{$count_warehouse}个仓库');
+	  }
+  }
+
+  function removeImg_warehouse(obj)
+  {
+      var obj = $(obj);
+	  var tbl = obj.parents('.warehouse_item');
+	  var num = $("input[name='numAdd']").val();
+	  
+	  tbl.remove();
+	  num--;
+	  $("input[name='numAdd']").val(num);
+  }
+  
+  //添加地区数据
+  function addImg_area_warehouse(obj)  
+  {
+	var obj = $(obj);
+    var tbl = obj.parents('.warehouse_item');
+	var warp = tbl.parents('.warehouse_warpper');
+    var input = tbl.clone();  
+	var num = $("input[name='numAdd_area']").val();
+	if(num < {$area_count}){
+		num++;
+		input.find('.up').attr('onclick','removeImg_area_warehouse(this)');
+		input.find('.up').removeClass().addClass('down');
+		input.attr('id','area_' + num);
+		input.find('font').attr('id',"warehouse_area_list_" + num);
+		input.find('select').attr('id',num);
+		$("input[name='numAdd_area']").val(num);
+		warp.append(input);
+	}else{
+		alert('最多可添加{$area_count}个地区');
+	}
+  }
+
+  function removeImg_area_warehouse(obj)
+  {  
+	  var obj = $(obj);
+	  var tbl = obj.parents('.warehouse_item');
+	  var num = $("input[name='numAdd_area']").val();
+	  
+	  tbl.remove();
+	  num--;
+	  $("input[name='numAdd_area']").val(num);
+  }
+  
+  function dropWarehouse(w_id)
+  {
+    Ajax.call('goods.php?is_ajax=1&act=drop_warehouse', "w_id="+w_id, dropWarehouseResponse, "GET", "JSON");
+  }
+
+  function dropWarehouseResponse(result)
+  {
+      if (result.error == 0)
+      {
+          document.getElementById('warehouse_' + result.content).style.display = 'none';
+      }
+  }
+  
+  function get_warehouse_area_name(warehouse_id, key, goods_id, ru_id){
+	 Ajax.call('goods.php?is_ajax=1&act=edit_warehouse_area_list', "id=" + warehouse_id + "&key=" + key + "&goods_id=" + goods_id + "&ru_id=" + ru_id, ResponseWarehouse_area, "GET", "JSON");
+  }
+  
+  function ResponseWarehouse_area(result)
+  {
+      if (result.content.error == 0)
+      {
+          $('#warehouse_area_list_' + result.content.key).html(result.content.html);
+      }else{
+		  $('#warehouse_area_list_' + result.content.key).find('select').remove();
+		  alert('该仓库暂无地区');
+	  }
+  }
+  
+  function dropWarehouseArea(a_id)
+  {
+    Ajax.call('goods.php?is_ajax=1&act=drop_warehouse_area', "a_id="+a_id, dropWarehouseAreaResponse, "GET", "JSON");
+  }
+
+  function dropWarehouseAreaResponse(result)
+  {
+      if (result.error == 0)
+      {
+          document.getElementById('warehouse_area_' + result.content).style.display = 'none';
+      }
+  }
+  
+  function add_area_price(goods_id, attr_id, goods_attr_name){
+	  location.href = "goods.php?act=add_area_price&goods_id=" + goods_id + "&attr_id=" + attr_id + "&goods_attr_name=" + goods_attr_name;
+  }
+  
+  function add_warehouse_price(goods_id, attr_id, goods_attr_name){
+	  Ajax.call("goods.php?act=add_warehouse_price", "goods_id=" + goods_id + "&attr_id=" + attr_id + "&goods_attr_name=" + goods_attr_name, add_warehouse_priceAreaResponse, "GET", "JSON");
+  }
+  
+  function add_attr_img(goods_id, attr_id, goods_attr_name){
+	  Ajax.call("goods.php?is_ajax=1&act=add_attr_img", "goods_id=" + goods_id + "&attr_id=" + attr_id + "&goods_attr_name=" + goods_attr_name, add_attr_imgAreaResponse, "GET", "JSON");
+  }
+  
+  
+  function add_warehouse_priceAreaResponse(result){
+	    pb({
+		 id:'goods_dialog',
+		 title:'添加属性价格',
+		 content:result.content,
+		 drag:false,
+		 foot:false
+	  });
+  }
+  function add_attr_imgAreaResponse(result){
+	  pb({
+		 id:'goods_dialog',
+		 title:'添加属性图片',
+		 content:result.content,
+		 drag:false,
+		 foot:false
+	  });
+ }
+  
+  //价格模式
+  function get_model_price(value){
+	  var price = document.getElementById('modelPrice');
+	  var Inventory = document.forms['theForm'].elements['model_inventory'];
+	  
+	  var warehouseNumber = document.getElementsByName('div_warehouseNumber[]');
+	  var warehousePrice = document.getElementsByName('div_warehousePrice[]');
+	  var warehousePromote = document.getElementsByName('div_warehousePromote[]');
+	  
+	  var wGive_integral = document.getElementsByName('div_warehouseGiveIntegral[]');
+	  var wRank_integral = document.getElementsByName('div_warehouseRankIntegral[]');
+	  var wPay_integral = document.getElementsByName('div_warehousePayIntegral[]');
+	  
+	  var areaNumber = document.getElementsByName('div_areaNumber[]');
+	  var areaPrice = document.getElementsByName('div_areaPrice[]');
+	  var areaPromote = document.getElementsByName('div_areaPromote[]');
+	  
+	  var rGive_integral = document.getElementsByName('div_regionGiveIntegral[]');
+	  var rRank_integral = document.getElementsByName('div_regionRankIntegral[]');
+	  var rPay_integral = document.getElementsByName('div_regionPayIntegral[]');
+	  
+	  var shopPrice1 = document.getElementById('td_shopPrice1');
+	  var shopPrice2 = document.getElementById('td_shopPrice2');
+	  
+	  var promotePrice1 = document.getElementById('td_promotePrice1');
+	  var promotePrice2 = document.getElementById('td_promotePrice2');
+
+	  var warehouse = document.getElementById('warehouse-tab');
+	  var region = document.getElementById('region-tab');
+	  
+	  for(i=0; i<Inventory.length; i++){
+		  if(value !=0){
+			shopPrice1.style.display = 'none';
+			promotePrice1.style.display = 'none';
+			
+			shopPrice2.style.display = 'block';  
+			promotePrice2.style.display = 'block';  
+			
+			if(Inventory[i].checked == true){
+				if(value == 1 || Inventory[i].value == 1){
+					warehouse.style.display = 'block';
+				}else{
+					warehouse.style.display = 'none';
+				}
+				
+				if(value == 2 || Inventory[i].value == 2){
+					region.style.display = 'block';
+				}else{
+					region.style.display = 'none';
+				}
+				
+				if(value == 1){
+					shopPrice2.innerHTML = '<div class="red_text">{$lang.tab_warehouse_model}</div>';
+					promotePrice2.innerHTML = '<div class="red_text">{$lang.tab_warehouse_model}</div>';
+				}else if(value == 2){
+					shopPrice2.innerHTML = '<div class="red_text">{$lang.warehouse_region_model}</div>';
+					promotePrice2.innerHTML = '<div class="red_text">{$lang.warehouse_region_model}<div>';
+				}
+				
+				
+				for(j=0; j<warehouseNumber.length; j++){
+					if(Inventory[i].value == 1){
+						warehouseNumber[j].style.display = 'block';
+					}else{
+						warehouseNumber[j].style.display = 'none';
+					}
+				}
+				
+				for(j=0; j<warehouseNumber.length; j++){
+					if(Inventory[i].value == 1){
+						warehouseNumber[j].style.display = 'block';
+					}else{
+						warehouseNumber[j].style.display = 'none';
+					}
+				}
+				
+				for(j=0; j<warehousePrice.length; j++){
+					if(value == 1){
+						warehousePrice[j].style.display = 'block';
+						warehousePromote[j].style.display = 'block';
+						
+						wGive_integral[j].style.display = 'block';
+						wRank_integral[j].style.display = 'block';
+						wPay_integral[j].style.display = 'block';
+						
+						
+						shopPrice2.innerHTML = '<div class="red_text">{$lang.tab_warehouse_model}</div>';
+						promotePrice2.innerHTML = '<div class="red_text">{$lang.tab_warehouse_model}</div>';
+					}else{
+						warehousePrice[j].style.display = 'none';
+						warehousePromote[j].style.display = 'none';
+						
+						wGive_integral[j].style.display = 'none';
+						wRank_integral[j].style.display = 'none';
+						wPay_integral[j].style.display = 'none';
+						
+						shopPrice2.innerHTML = '<div class="red_text">{$lang.warehouse_region_model}</div>';
+						promotePrice2.innerHTML = '<div class="red_text">{$lang.warehouse_region_model}</div>';
+					}
+				}
+				
+				for(j=0; j<areaNumber.length; j++){
+					if(Inventory[i].value == 2){
+						areaNumber[j].style.display = 'block';
+					}else{
+						areaNumber[j].style.display = 'none';
+					}
+				}
+				
+				for(j=0; j<areaPrice.length; j++){
+					if(value == 2){
+						areaPrice[j].style.display = 'block';
+						areaPromote[j].style.display = 'block';
+						
+						rGive_integral[j].style.display = 'block';
+						rRank_integral[j].style.display = 'block';
+						rPay_integral[j].style.display = 'block';
+						
+						shopPrice2.innerHTML = '<div class="red_text">{$lang.warehouse_region_model}</div>';
+						promotePrice2.innerHTML = '<div class="red_text">{$lang.warehouse_region_model}</div>';
+					}else{
+						areaPrice[j].style.display = 'none';
+						areaPromote[j].style.display = 'none';
+						
+						rGive_integral[j].style.display = 'none';
+						rRank_integral[j].style.display = 'none';
+						rPay_integral[j].style.display = 'none';
+						
+						shopPrice2.innerHTML = '<div class="red_text">{$lang.tab_warehouse_model}</div>';
+						promotePrice2.innerHTML = '<div class="red_text">{$lang.tab_warehouse_model}</div>';
+					}
+				}
+			}
+		  }else{
+			if(Inventory[i].checked == true){
+				if(Inventory[i].value == 1){
+					warehouse.style.display = 'block';
+				}else{
+					warehouse.style.display = 'none';
+				}
+			}
+			region.style.display = 'none';
+			shopPrice1.style.display = 'block';
+			shopPrice2.style.display = 'none'; 
+			promotePrice1.style.display = 'block';
+			promotePrice2.style.display = 'none'; 
+			
+			shopPrice2.innerHTML = ''; 
+			promotePrice2.innerHTML = ''; 
+			  
+			if(Inventory[i].checked == true){
+				if(Inventory[i].value == 0){
+					region.style.display = 'none';
+				}else{
+					region.style.display = 'block';
+				}
+			}
+			
+			for(j=0; j<warehousePrice.length; j++){
+				warehousePrice[j].style.display = 'none';
+				warehousePromote[j].style.display = 'none';
+				
+				wGive_integral[j].style.display = 'none';
+				wRank_integral[j].style.display = 'none';
+				wPay_integral[j].style.display = 'none';
+			}
+			
+			for(j=0; j<areaPrice.length; j++){
+				areaPrice[j].style.display = 'none';
+				areaPromote[j].style.display = 'none';
+				
+				rGive_integral[j].style.display = 'none';
+				rRank_integral[j].style.display = 'none';
+				rPay_integral[j].style.display = 'none';
+			}
+			
+		  }
+	  }
+	  
+	  if(value == 0){
+		  $("#dl_give_integral").show();
+		  $("#dl_rank_integral").show();
+		  $("#dl_pay_integral").show();
+		  
+		  $("#volume_number").show();
+	  }else{
+	  	  $("#dl_give_integral").hide();
+		  $("#dl_rank_integral").hide();
+		  $("#dl_pay_integral").hide();
+		  
+		  $("#volume_number").hide();
+	  }
+	  
+	  if(value == 0){
+		  price.innerHTML = '（使用系统默认的价格模式,统一使用一样的价格）';
+	  }else if(value == 1){
+		  price.innerHTML = '（使用仓库的价格模式,根据不同仓库调取不同价格）';
+	  }else if(value == 2){
+		  price.innerHTML = '（使用地区的价格模式,根据不同地区调取不同价格）';
+	  }
+  }
+  
+	//库存模式 
+	function get_model_inventory(value){
+		var Inventory = document.getElementById('modelInventory');
+		var price = document.forms['theForm'].elements['model_price'];
+		
+		var warehouseNumber = document.getElementsByName('div_warehouseNumber[]');
+	    var warehousePrice = document.getElementsByName('div_warehousePrice[]');
+	    var warehousePromote = document.getElementsByName('div_warehousePromote[]');
+	  
+	    var wGive_integral = document.getElementsByName('div_warehouseGiveIntegral[]');
+	    var wRank_integral = document.getElementsByName('div_warehouseRankIntegral[]');
+	    var wPay_integral = document.getElementsByName('div_warehousePayIntegral[]');
+	  
+	    var areaNumber = document.getElementsByName('div_areaNumber[]');
+	    var areaPrice = document.getElementsByName('div_areaPrice[]');
+	    var areaPromote = document.getElementsByName('div_areaPromote[]');
+	  
+	    var rGive_integral = document.getElementsByName('div_regionGiveIntegral[]');
+	    var rRank_integral = document.getElementsByName('div_regionRankIntegral[]');
+	    var rPay_integral = document.getElementsByName('div_regionPayIntegral[]');
+		
+		var goodsNumber1 = document.getElementById('td_goodsNumber1');
+		var goodsNumber2 = document.getElementById('td_goodsNumber2');
+		
+		var warehouse = document.getElementById('warehouse-tab');
+		var region = document.getElementById('region-tab');
+		
+		for(i=0; i<price.length; i++){
+		  
+		  if(value !=0){
+			  
+			goodsNumber1.style.display = 'none';
+			goodsNumber2.style.display = 'block';
+			  
+			if(price[i].checked == true){
+				
+				if(value == 1 || price[i].value == 1){
+					warehouse.style.display = 'block';
+				}else{
+					warehouse.style.display = 'none';
+				}
+				
+				if(value == 2 || price[i].value == 2){
+					region.style.display = 'block';
+				}else{
+					region.style.display = 'none';
+				}
+				
+				if(price[i].value == 0){
+					for(j=0; j<warehousePrice.length; j++){
+						wGive_integral[j].style.display = 'none';
+						wRank_integral[j].style.display = 'none';
+						wPay_integral[j].style.display = 'none';
+					}
+					
+					for(j=0; j<areaPrice.length; j++){
+						rGive_integral[j].style.display = 'none';
+						rRank_integral[j].style.display = 'none';
+						rPay_integral[j].style.display = 'none';
+							
+					}
+				}
+				
+				if(value == 1){
+					goodsNumber2.innerHTML = '<div class="red_text">{$lang.tab_warehouse_model}</div>';
+				}else if(value == 2){
+					goodsNumber2.innerHTML = '<div class="red_text">{$lang.warehouse_region_model}</div>';
+				}
+				
+				for(j=0; j<warehouseNumber.length; j++){
+					if(value == 1){
+						warehouseNumber[j].style.display = 'block';
+						
+						goodsNumber2.innerHTML = '<div class="red_text">{$lang.tab_warehouse_model}</div>';
+					}else{
+						warehouseNumber[j].style.display = 'none';
+					}
+				}
+				
+				for(j=0; j<areaNumber.length; j++){
+					if(value == 2){
+						areaNumber[j].style.display = 'block';
+						
+						goodsNumber2.innerHTML = '<div class="red_text">{$lang.warehouse_region_model}</div>';
+					}else{
+						areaNumber[j].style.display = 'none';
+					}
+				}
+			}
+		  }else{
+			region.style.display = 'none';  
+			
+			goodsNumber1.style.display = 'block';
+			goodsNumber2.style.display = 'none';
+			
+			goodsNumber2.innerHTML = '<div class="red_text">{$lang.tab_warehouse_model}</div>';
+			  
+			if(price[i].checked == true){
+				if(price[i].value == 0){
+					warehouse.style.display = 'none';
+					region.style.display = 'none';
+				}else{
+					
+					if(price[i].value == 1){
+						for(j=0; j<warehousePrice.length; j++){
+							warehousePrice[j].style.display = 'block';
+							warehousePromote[j].style.display = 'block';
+							
+							wGive_integral[j].style.display = 'block';
+							wRank_integral[j].style.display = 'block';
+							wPay_integral[j].style.display = 'block';
+						}
+						
+						for(j=0; j<areaPrice.length; j++){
+							areaPrice[j].style.display = 'none';
+							areaPromote[j].style.display = 'none';
+							
+							rGive_integral[j].style.display = 'none';
+							rRank_integral[j].style.display = 'none';
+							rPay_integral[j].style.display = 'none';
+								
+						}
+						
+						warehouse.style.display = 'block';
+						region.style.display = 'none';
+						
+					}else if(price[i].value == 2){
+						
+						for(j=0; j<warehousePrice.length; j++){
+							warehousePrice[j].style.display = 'none';
+							warehousePromote[j].style.display = 'none';
+							
+							wGive_integral[j].style.display = 'none';
+							wRank_integral[j].style.display = 'none';
+							wPay_integral[j].style.display = 'none';
+						}
+						
+						for(j=0; j<areaPrice.length; j++){
+							areaPrice[j].style.display = 'block';
+							areaPromote[j].style.display = 'block';
+							
+							rGive_integral[j].style.display = 'block';
+							rRank_integral[j].style.display = 'block';
+							rPay_integral[j].style.display = 'block';
+								
+						}
+						
+						warehouse.style.display = 'none';
+						region.style.display = 'block';
+					}
+					
+				}
+			}
+			
+			for(j=0; j<warehouseNumber.length; j++){
+				warehouseNumber[j].style.display = 'none';
+			}
+			
+			for(j=0; j<areaNumber.length; j++){
+				areaNumber[j].style.display = 'none';
+			}
+			
+		  }
+		}
+		
+		if(value == 0){
+		  Inventory.innerHTML = '（使用系统默认的库存模式,统一使用一样的库存）';
+		}else if(value == 1){
+		  Inventory.innerHTML = '（使用仓库的库存模式,根据不同仓库调取不同库存）';
+		}else if(value == 2){
+		  Inventory.innerHTML = '（使用地区的库存模式,根据不同地区调取不同库存）';
+		}	  
+	}
+  
+   //属性模式
+	function get_model_attr(value){
+		var attr = document.getElementById('modelAttr');
+		var model_attr = document.forms['theForm'].elements['model_attr'];
+		
+		var attrPrice = document.getElementsByName('span_attrPrice[]');
+		var warehouseAttr = document.getElementsByName('a_warehouseAttr[]');
+		var areaAttr = document.getElementsByName('a_areaAttr[]');
+		
+		for(i=0; i<model_attr.length; i++){
+		  
+		  if(value !=0){
+			  if(value == 1){
+				  
+				  for(j=0; j<warehouseAttr.length; j++){
+					  warehouseAttr[j].style.display = '';
+				  }
+				  for(j=0; j<areaAttr.length; j++){
+					  areaAttr[j].style.display = 'none';
+				  }
+				  for(j=0; j<attrPrice.length; j++){
+					  attrPrice[j].style.display = 'none';
+				  }
+			  }else{
+				  
+				  for(j=0; j<warehouseAttr.length; j++){
+					  warehouseAttr[j].style.display = 'none';
+				  }
+				  for(j=0; j<areaAttr.length; j++){
+					  areaAttr[j].style.display = '';
+				  }
+				  for(j=0; j<attrPrice.length; j++){
+					  attrPrice[j].style.display = 'none';
+				  }
+			  }
+		  }else{
+			  for(j=0; j<warehouseAttr.length; j++){
+				  warehouseAttr[j].style.display = 'none';
+			  }
+			  for(j=0; j<areaAttr.length; j++){
+				  areaAttr[j].style.display = 'none';
+			  }
+			  for(j=0; j<attrPrice.length; j++){
+				  attrPrice[j].style.display = '';
+			  }
+		  }
+		  
+		}
+		
+		if(value == 0){
+		  attr.innerHTML = '（使用系统默认的属性模式,统一使用一样的属性价格）';
+		}else if(value == 1){
+		  attr.innerHTML = '（使用仓库的属性模式,根据不同仓库调取不同仓库价格，以及库存）';
+		}else if(value == 2){
+		  attr.innerHTML = '（使用地区的属性模式,根据不同地区调取不同属性价格，以及库存）';
+		}	  
+	}
+  //ecmoban模板堂 --zhuo end 仓库
+	
+	function get_choose_attrImg(goods_id, goods_attr_id,obj){
+		Ajax.call('goods.php?is_ajax=1&act=choose_attrImg', "goods_id="+goods_id +  "&goods_attr_id="+goods_attr_id, choose_attrImgAreaResponse, "GET", "JSON");
+	}
+	
+	function choose_attrImgAreaResponse(result){
+		document.getElementById('feedcontent').innerHTML = result.content;
+		showBox('feedbox');
+		
+		var height = $('#goods_dialog').height();
+		var scrollHeight = $(window).height();
+		$('#goods_dialog').css({'top':(scrollHeight-height)/2})
+	}
+	
+	function gallery_on(this_obj,gallery_id,goods_id,goods_attr_id)
+	{
+		var a = document.getElementById('feedcontent').getElementsByTagName("li");
+	
+		for(i = 0; i < a.length; i++)
+		{
+			a[i].className=" ";
+		}
+		
+		Ajax.call('goods.php?is_ajax=1&act=insert_gallery_attr', "gallery_id=" + gallery_id + "&goods_id=" + goods_id + "&goods_attr_id=" + goods_attr_id, galleryOnResult, "GET", "JSON");
+		this_obj.className="on";
+		
+	}
+	
+	function galleryOnResult(result)
+	{
+		if(document.getElementById('galleryKey'))
+		{
+			document.getElementById('galleryKey').childNodes[1].value=result.content;
+		}
+		
+		if(document.getElementById('imgUrl')){
+			document.getElementById('imgUrl').value=result.img_url;
+		}
+	}
+	
+  {/literal}
+      function img_default(img_id){
+          Ajax.call('goods.php?act=img_default', "img_id=" + img_id , img_defaultResult, "POST", "JSON");
+      }
+      function img_defaultResult(result){
+          if(result.error == 1){
+              $("#goods_img_list").html(result.content);
+          }else{
+              alert(result.massege);
+          }
+      }
+   function remove_consumption(con_id,goods_id)
+  {     
+        Ajax.call('goods.php?act=remove_consumption', "con_id=" + con_id + "&goods_id="+goods_id , remove_consumptionResult, "POST", "JSON");
+  }
+  function remove_consumptionResult(obj){
+      if(obj.error == 2){
+          $('#con_id_'+obj.con_id).parents('p').remove();
+      }else{
+          alert(obj.massege);
+      }
+  }
+  
+	<!--ecmoban堂 白条分期付款选择js start bylu-->
+	$(function(){
+		$('#stages_btn').click(function(){
+	
+			if($('#stages_btn').prop('checked')){
+				$('#stages').find('input').removeAttr('disabled');
+				$('#stages_rate').removeAttr('disabled');
+			}else{
+				$('#stages').find('input').attr("disabled",'disabled');
+				$('#stages_rate').attr("disabled",'disabled');
+			}
+		});
+		for(var i=0;i<6;i++){
+			var val=$('#stages').find('input').eq(i).val();
+			var stages=$('#stages').find('input').eq(i).attr('stages');
+			if(val==stages){
+				$('#stages').find('input').eq(i).attr('checked','checked');
+			}
+		}
+		if($('#stages_btn').prop('checked')){
+			$('#stages').find('input').removeAttr('disabled');
+			$('#stages_rate').removeAttr('disabled');
+		}
+	});
+	<!--ecmoban堂 白条分期付款选择js end bylu-->
+	
+	//日期选择插件调用start sunle
+	var opts1 = {
+		'targetId':'promote_start_date',//时间写入对象的id
+		'triggerId':['selbtn1'],//触发事件的对象id
+		'alignId':'text_time1',//日历对齐对象
+		'format':'-'//时间格式 默认'YYYY-MM-DD HH:MM:SS'
+	},opts2 = {
+		'targetId':'promote_end_date',
+		'triggerId':['selbtn2'],
+		'alignId':'text_time2',
+		'format':'-'
+	},opts3 = {
+		'targetId':'xiangou_start_date',
+		'triggerId':['selbtn11'],
+		'alignId':'text_time3',
+		'format':'-'
+	},opts4 = {
+		'targetId':'xiangou_end_date',
+		'triggerId':['selbtn22'],
+		'alignId':'text_time4',
+		'format':'-'
+	}
+	
+	xvDate(opts1);
+	xvDate(opts2);
+	xvDate(opts3);
+	xvDate(opts4);
+	//日期选择插件调用end sunle
+	
+	var properties = {$properties};
+	
+	if(properties == 1){
+		$(".warder-info-attr").siblings().hide();
+		$(".warder-info-attr").show();
+	}
+	
+	$(".add-goods-step li").click(function(){
+		var index = $(this).index();
+		$(this).addClass('current').siblings().removeClass('current');
+		$(".item-publish").find(".warder-info").eq(index).show().siblings().hide();
+	});
+	
+	//添加扩展分类
+	$("*[ectype='category_dialog']").on("click",function(){
+		var goods_id = $("input[name='goods_id']").val();
+		$.jqueryAjax("dialog.php", "act=extension_category&goods_id="+goods_id, function(data){
+			var content = data.content;
+			pb({
+				id:"categroy_dialog",
+				title:"扩展分类",
+				width:788,
+				content:content,
+				ok_title:"确定",
+				cl_title:"取消",
+				drag:false,
+				foot:true
+			});
+			$(".category_list").perfectScrollbar();
+		});
+	});
+	
+	/* 处理扩展分类 by wu start */
+	$(document).on("click","a[ectype=addExdCategory]",function(){
+		var thisObj = $(this).parent();
+		var cat_id = thisObj.find("input[ectype=cat_id]").val();
+		var goods_id = $("input[name='goods_id']").val();
+		if(cat_id == 0){
+			$(".red_notic").remove();
+			$(".sort_info").after("<div class='red_notic'>请选择分类</div>");
+			setTimeout('$(".red_notic").remove()',1500);
+		}else if(thisObj.find(".filter_item input[value="+cat_id+"]").length > 0){
+			$(".red_notic").remove();
+			$(".sort_info").after("<div class='red_notic'>不能添加重复分类</div>");
+			setTimeout('$(".red_notic").remove()',1500);
+		}else{
+			var str = "";
+			thisObj.find("ul li.current").each(function(){
+				str += $(this).text() + '>';
+			});
+			str = str.substr(0,str.length - 1);
+			var div = "<span class='filter_item'><span>"+str+"</span><a herf='javascript:void(0);' class='delete'></a>";
+			div += "<input type='hidden' name='other_cat[]' value='"+cat_id+"'></span>";
+			thisObj.find(".filter").append(div);
+			
+			deal_extension_category(this, goods_id, cat_id, 'add'); //ajax添加扩展分类
+		}
+	});
+	
+	$(document).on("click","#extension_category .delete",function(){
+		var cat_id = $(this).siblings("input").val();
+		deal_extension_category(this, goods_id, cat_id, 'delete'); //ajax删除扩展分类
+		$(this).parent().remove();
+	});
+	/* 处理扩展分类 by wu end */
+	
+	/**********************************{商品分类选中} start*****************************/
+	//分类滚动轴
+	$(".category_list").perfectScrollbar();
+
+	//常用分类
+	$.divselect("#sortcommList","#sortcommValue",function(obj){
+		var cat_id = $(obj).data('value');
+		$.jqueryAjax('goods.php', 'act=set_common_category_pro&cat_id='+cat_id, function(data){
+			for(var i=1; i<=3; i++){
+				if(data.content[i]){
+					$("ul[ectype=category][data-cat_level="+i+"]").html(data.content[i]);
+				}
+			}
+			//设置商品分类
+			set_cat_nav();
+			$("input[name=cat_id]").val(cat_id);
+		})
+	});	
+	
+	$(document).on("click","ul[ectype='category'] li",function(){
+		var _this = $(this);
+		var cat_id = _this.data("cat_id");
+		var cat_level = _this.data("cat_level");
+		var goods_id = _this.data("goodsid");
+
+		get_select_category_pro(_this, cat_id, cat_level, goods_id);
+	});
+	/**********************************{商品分类选中} end*****************************/
+</script>
+</body>
+</html>

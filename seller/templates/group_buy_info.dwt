@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div class="search-form">
+                    <form action="javascript:searchGoods()" name="searchForm">
+                        <div class="fr">
+                              {if $select_category_html}{$select_category_html}{/if}
+                              <input type="hidden" name="cat_id" id="category">
+                              <select name="brand_id" class="select"><option value="0">{$lang.all_brand}</option>{html_options options=$brand_list}</select>
+                              <input type="text" name="keyword" size="20" class="text text_2 mr10" />
+                              <input type="hidden" name="ru_id" value="{$ru_id}" />
+                              <label class="submit-border"><input type="submit" class="submit" value="{$lang.button_search}"></label>
+                        </div>
+                    </form>   
+                </div>
+                <div class="ecsc-form-default">
+                    <form onsubmit="return validate()" name="theForm" action="group_buy.php?act=insert_update" method="post" enctype="multipart/form-data">
+                        <dl>
+                            <dt><i class="required">*</i>{$lang.label_goods_name}</dt>
+                            <dd>
+                                <select name="goods_id" class="select select_2" onchange="groupGoods(this.value);">
+                                  {if $group_buy.act_id}
+                                  <option value="{$group_buy.goods_id}">{$group_buy.goods_name}</option>
+                                  {else}
+                                  <option value="0">{$lang.notice_goods_name}</option>
+                                  {/if}
+                                </select>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt><i class="required">*</i>{$lang.label_start_date}</dt>
+                            <dd>
+                                <input id="start_time" name="start_time" type="text" class="text w130" readonly value="{$group_buy.start_time}" /><em class="add-on"><i class="icon-calendar"></i></em>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt><i class="required">*</i>{$lang.label_end_date}</dt>
+                            <dd>
+                                <input id="end_time" name="end_time" type="text" class="text w130" readonly value="{$group_buy.end_time}" /><em class="add-on"><i class="icon-calendar"></i></em>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt><i class="required">*</i>{$lang.label_deposit}</dt>
+                            <dd>
+                                <input class="w70 text" id="deposit" name="deposit" type="text" value="{$group_buy.deposit|default:0}"><em class="add-on"><i class="icon-renminbi"></i></em>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>{$lang.label_restrict_amount}</dt>
+                            <dd>
+                                <input class="w70 text" id="restrict_amount" name="restrict_amount" type="text" value="{$group_buy.restrict_amount|default:0}">
+                                <p class="hint">{$lang.notice_restrict_amount}</p>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>{$lang.label_gift_integral}</dt>
+                            <dd>
+                                <input class="w70 text" id="gift_integral" name="gift_integral" type="text" value="{$group_buy.gift_integral|default:0}">
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>{$lang.lab_market_price}</dt>
+                            <dd id="market_price">{$group_buy.market_price|default:0}</dd>
+                        </dl>
+                        <dl>
+                            <dt>{$lang.label_price_ladder}</dt>
+                            <dd>
+                            <div id="tbody-volume">
+                                {foreach from=$group_buy.price_ladder key=key item=item}
+                                  {if $key eq 0}    
+                                  <p>   
+                                    <label class="fl mr5">{$lang.notice_ladder_amount}</label><input type="text" name="ladder_amount[]" value="{$item.amount}" size="8" class="text_4 fl mr10" />
+                                    <label class="fl mr5">{$lang.notice_ladder_price}</label><input type="text" name="ladder_price[]" value="{$item.price}" size="8" class="text_4 fl" /><a href="javascript:;" onclick="addLadder(this)" class="button button_red ml10 lh28">添加</a>
+                                  </p>
+                                  {else}
+                                  <p class="mt10">
+                                  {$lang.notice_ladder_amount} <input type="text" name="ladder_amount[]" value="{$item.amount}" size="8" class="text_4" />
+                                  {$lang.notice_ladder_price} <input type="text" name="ladder_price[]" value="{$item.price}" size="8" class="text_4" />
+                                  <a href="javascript:;" class="removeV" onclick="removeLadder(this)"><img src="images/no.gif" title="{$lang.drop}"></a>
+                                  </p>
+                                  {/if}
+                                {/foreach}
+                            </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>{$lang.label_desc}</dt>
+                            <dd><textarea name="act_desc" cols="40" rows="3" class="textarea">{$group_buy.act_desc}</textarea></dd>
+                        </dl>
+                        <div class="bottom">
+                            <label class="button_info">
+                                <input name="act_id" type="hidden" id="act_id" value="{$group_buy.act_id}">
+                                <input type="submit" name="submit" value="{$lang.button_submit}" class="button" />
+                                <input type="reset" value="{$lang.button_reset}" class="button button_reset ml10" />
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+<!--
+{literal}
+
+// 检查新订单
+//startCheckOrder();
+
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+  validator = new Validator("theForm");
+  var eles = document.forms['theForm'].elements;
+
+  var goods_id = eles['goods_id'].value;
+  if (goods_id <= 0)
+  {
+    validator.addErrorMsg(error_goods_null);
+  }
+  validator.isNumber('deposit', error_deposit, false);
+  validator.isInt('restrict_amount', error_restrict_amount, false);
+  validator.isInt('gift_integral', error_gift_integral, false);
+  return validator.passed();
+}
+
+function groupGoods(val){
+	var filter = new Object;
+	filter.goods_id = val;
+	
+	Ajax.call('group_buy.php?is_ajax=1&act=group_goods', filter, groupGoodsResponse, 'GET', 'JSON');
+}
+
+function groupGoodsResponse(result){
+	$('#market_price').html(result.content.marketPrice);
+}
+
+/**
+ * 搜索商品
+ */
+function searchGoods()
+{
+  var filter = new Object;
+  filter.cat_id   = document.forms['searchForm'].elements['cat_id'].value;
+  filter.brand_id = document.forms['searchForm'].elements['brand_id'].value;
+  filter.keyword  = document.forms['searchForm'].elements['keyword'].value;
+  filter.ru_id = document.forms['searchForm'].elements['ru_id'].value;
+
+  Ajax.call('group_buy.php?is_ajax=1&act=search_goods', filter, searchGoodsResponse, 'GET', 'JSON');
+}
+
+function searchGoodsResponse(result)
+{
+  if (result.error == '1' && result.message != '')
+  {
+    alert(result.message);
+    return;
+  }
+
+  var sel = document.forms['theForm'].elements['goods_id'];
+
+  sel.length = 0;
+
+  /* 创建 options */
+  var goods = result.content;
+  if (goods)
+  {
+    for (i = 0; i < goods.length; i++)
+    {
+      var opt = document.createElement("OPTION");
+      opt.value = goods[i].goods_id;
+      opt.text  = goods[i].goods_name;
+      sel.options.add(opt);
+    }
+  }
+  else
+  {
+    var opt = document.createElement("OPTION");
+    opt.value = 0;
+    opt.text  = search_is_null;
+    sel.options.add(opt);
+  }
+
+  return;
+}
+/**
+ * 新增一个价格阶梯
+ */
+function addLadder(obj, amount, price)
+{
+    var obj = $(obj);
+    var tbl = obj.parents('#tbody-volume');
+    
+    var input = tbl.find('p:first').clone();
+    input.addClass("mt10");
+    input.find('.button').remove();
+    input.append("<a href='javascript:;' class='removeV' onclick='removeLadder(this)'><img src='images/no.gif' title='删除'></a>")
+    input.find(":input").each(function(i){
+        $(this).val('');
+    });
+    tbl.append(input);
+}
+
+/**
+ * 删除一个价格阶梯
+ */
+function removeLadder(obj)
+{
+    var obj = $(obj);
+    obj.parent('p').remove();
+}
+
+//日期选择插件调用start sunle
+var opts1 = {
+    'targetId':'start_time',//时间写入对象的id
+    'triggerId':['start_time'],//触发事件的对象id
+    'alignId':'start_time',//日历对齐对象
+    'format':'-'//时间格式 默认'YYYY-MM-DD HH:MM:SS'
+},opts2 = {
+    'targetId':'end_time',
+    'triggerId':['end_time'],
+    'alignId':'end_time',
+    'format':'-'
+}
+
+xvDate(opts1);
+xvDate(opts2);
+//日期选择插件调用end sunle
+//-->
+{/literal}
+</script>
+</body>
+</html>

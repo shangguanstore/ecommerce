@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <!--start-->
+				<div class="info_warp">
+				<form method="post" action="virtual_card.php" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
+				<table cellspacing="0" cellpadding="0" width="90%" class="table_item">
+				  <tr>
+					<td colspan="2">
+						<div class="alert-info">{$lang.use_help}</div>
+					</td>
+				  </tr>
+				  <tr>
+					<td class="label">{$lang.require_field}&nbsp;{$lang.separator}：</td>
+					<td><input type="text" name="separator" maxlength="60" size="6" value="," class="text text_2" /></td>
+				  </tr>
+				  <tr>
+					<td class="label">{$lang.uploadfile}：</td>
+					<td><input type="file" name="uploadfile" maxlength="60" size="40" class="file mt5" /></td>
+				  </tr>
+				  <tr>
+					<td>&nbsp;</td>
+					<td><a href="../data/virtual_goods_list.csv" class="blue">{$lang.download_file}</a></td>
+				  </tr>
+				  <tr>
+					<td class="label">&nbsp;</td>
+					<td class="pt10 pb20">
+					  <input type="submit" class="button" value="{$lang.button_submit}" />
+					  <input type="reset" class="button button_reset" value="{$lang.button_reset}" />
+					  <input type="hidden" name="act" value="batch_confirm" />
+					  <input type="hidden" name="goods_id" value="{$goods_id}" />
+					</td>
+				  </tr>
+				</table>
+				</form>
+				</div>
+                <!--end-->
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<!--start-->
+<script language="javascript" src="js/validator.js"></script>
+<script language="JavaScript">
+<!--
+{literal}
+
+onload = function()
+{
+  // 开始检查订单
+  startCheckOrder();
+}
+
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+  validator = new Validator("theForm");
+  validator.required("separator",  separator_not_null);
+  validator.required("uploadfile", uploadfile_not_null);
+  return validator.passed();
+}
+//-->
+{/literal}
+</script>
+<!--end-->
+</body>
+</html>

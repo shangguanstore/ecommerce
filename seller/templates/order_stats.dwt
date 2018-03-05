@@ -1,0 +1,218 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+            	{include file ='library/seller_menu_tab.lbi'}
+                <div class="table-list mt10">
+                	<div class="table-list-item">
+                        <div class="main-div">
+                            <p style="padding:10px;">
+                                {if $ru_id eq 0}
+                                <strong>{$lang.total_sales}：</strong><span class="blue mr10">{$order_total}</span>
+                                {/if}
+                                <strong>{$lang.overall_sum}：</strong><span class="blue mr10">{$total_turnover}</span>
+                                <strong>{$lang.overall_choose}：</strong><span class="blue mr10">{$click_count}</span>
+                                <strong>{$lang.kilo_buy_amount}：</strong><span class="blue mr10">{$click_ordernum}</span>
+                                <strong>{$lang.kilo_buy_sum}：</strong><span class="blue mr10">{$click_turnover}</span>
+                            </p>
+                        </div>
+                        <div class="form-div">
+                            <div class="screeItme">
+                                <form action="" method="post" id="selectForm" name="selectForm">
+                                    <label>{$lang.start_date}</label>
+                                    <div class="text_time" id="text_time1">
+                                        <input name="start_date" id="start_date" value="{$start_date}" class="text text_2"/>
+                                        <input name="selbtn1" type="button" id="selbtn1">
+                                    </div>
+                                    <label>{$lang.end_date}</label>
+                                    <div class="text_time" id="text_time2">
+                                        <input name="end_date" id="end_date" value="{$end_date}" class="text text_2"/>
+                                        <input name="selbtn2" type="button" id="selbtn2">
+                                    </div>
+                                    <input type="submit" name="submit" value="{$lang.query}" class="button" />
+                                </form>
+                            </div>
+                            <div class="screeItme mt10">
+                                <form action="" method="post" id="selectForm" name="selectForm">
+                                    <label>{$lang.select_year_month}</label>
+                                    <!--{foreach from=$start_date_arr item=start_date key=k}-->
+                                    {if $k > 0}
+                                    <label>+</label>
+                                    {/if}
+                                    <input name="year_month[]" value="{$start_date}" class="text text_5" id="year_month_{$k}"/>
+                                    <!--{/foreach}-->
+                                    <input type="hidden" name="is_multi" value="1" />
+                                    <input type="submit" name="submit" value="{$lang.query}" class="button" />
+                                </form>
+                            </div>
+                        </div>
+                        <div class="new_warp">
+                            <ul class="tabs">
+                                <li class="current" id="order_circs-tab" data-tab="order_circs">{$lang.order_circs}</li>
+                                <li id="shipping-tab" data-tab="shipping">{$lang.shipping_method}</li>
+                                <li id="pay-tab" data-tab="pay">{$lang.pay_method}</li>
+                            </ul>
+                            <div class="info_warp">
+                                <div class="info_top">
+                                    <table width="90%" cellspacing="0" cellpadding="3" id="order_circs-table" class="table_item" data-table="order_circs">
+                                        <tr>
+                                            <td class="tc">
+                                                {if $is_multi eq '0'}
+                                                <OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"  codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" WIDTH="650" HEIGHT="400" id="OrderGeneral" ALIGN="middle">
+                                                    <PARAM NAME="FlashVars" value="&dataXML={$order_general_xml}">
+                                                    <PARAM NAME="movie" VALUE="images/charts/pie3d.swf?chartWidth=650&chartHeight=400">
+                                                    <PARAM NAME="quality" VALUE="high">
+                                                    <PARAM NAME=bgcolor VALUE="#FFFFFF">
+                                                    <param name="wmode" value="opaque" />
+                                                    <EMBED src="images/charts/pie3d.swf?chartWidth=650&chartHeight=400" FlashVars="&dataXML={$order_general_xml}" quality="high" bgcolor="#FFFFFF" WIDTH="650" HEIGHT="400" wmode="opaque" NAME="OrderGeneral" ALIGN="middle" TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/go/getflashplayer"></EMBED>
+                                                </OBJECT>
+                                                {else}
+                                                <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+                                                        codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0"
+                                                        width="565" height="420" id="FCColumn2" align="middle">
+                                                    <PARAM NAME="FlashVars" value="&dataXML={$order_general_xml}">
+                                                    <PARAM NAME=movie VALUE="images/charts/MSColumn3D.swf?chartWidth=650&chartHeight=400">
+                                                    <param NAME="quality" VALUE="high">
+                                                    <param NAME="bgcolor" VALUE="#FFFFFF">
+                                                    <param name="wmode" value="opaque" />
+                                                    <embed src="images/charts/MSColumn3D.swf?chartWidth=650&chartHeight=400" FlashVars="&dataXML={$order_general_xml}" quality="high" bgcolor="#FFFFFF"  width="650" height="400" name="FCColumn2" wmode="opaque" align="middle" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">
+                                                </object>
+                                                {/if}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table width="90%" cellspacing="0" cellpadding="3" id="shipping-table" class="table_item" data-table="shipping" style="display:none">
+                                        <tr>
+                                            <td align="center">
+                                                {if $is_multi eq '0'}
+                                                <OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"  codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" WIDTH="650" HEIGHT="400" id="ShipType" ALIGN="middle">
+                                                    <PARAM NAME="FlashVars" value="&dataXML={$ship_xml}">
+                                                    <PARAM NAME="movie" VALUE="images/charts/pie3d.swf?chartWidth=650&chartHeight=400">
+                                                    <PARAM NAME="quality" VALUE="high">
+                                                    <param name="wmode" value="opaque" />
+                                                    <PARAM NAME="bgcolor" VALUE="#FFFFFF">
+                                                    <EMBED src="images/charts/pie3d.swf?chartWidth=650&chartHeight=400" FlashVars="&dataXML={$ship_xml}" quality="high" bgcolor="#FFFFFF" WIDTH="650" HEIGHT="400" NAME="ShipType" ALIGN="middle" TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/go/getflashplayer" wmode="opaque"></EMBED>
+                                                </OBJECT>
+                                                {else}
+                                                <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+                                                        codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0"
+                                                        width="565" height="420" id="FCColumn2" align="middle">
+                                                    <PARAM NAME="FlashVars" value="&dataXML={$ship_xml}">
+                                                    <PARAM NAME=movie VALUE="images/charts/MSColumn3D.swf?chartWidth=650&chartHeight=400">
+                                                    <param NAME="quality" VALUE="high">
+                                                    <param NAME="bgcolor" VALUE="#FFFFFF">
+                                                    <param name="wmode" value="opaque" />
+                                                    <embed src="images/charts/MSColumn3D.swf?chartWidth=650&chartHeight=400" FlashVars="&dataXML={$ship_xml}" quality="high" bgcolor="#FFFFFF"  width="650" height="400" name="FCColumn2" wmode="opaque" align="middle" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">
+                                                </object>
+                                                {/if}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table width="90%" cellspacing="0" cellpadding="3" id="pay-table" class="table_item" data-table="pay" style="display:none">
+                                        <tr>
+                                            <td align="center">
+                                                {if $is_multi eq '0'}
+                                                <OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"  codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" WIDTH="650" HEIGHT="400" id="PayMethod" ALIGN="middle">
+                                                    <PARAM NAME="FlashVars" value="&dataXML={$pay_xml}">
+                                                    <PARAM NAME="movie" VALUE="images/charts/pie3d.swf?chartWidth=650&chartHeight=400">
+                                                    <PARAM NAME="quality" VALUE="high">
+                                                    <PARAM NAME="bgcolor" VALUE="#FFFFFF">
+                                                    <param name="wmode" value="opaque" />
+                                                    <EMBED src="images/charts/pie3d.swf?chartWidth=650&chartHeight=400" FlashVars="&dataXML={$pay_xml}" quality="high" bgcolor="#FFFFFF" WIDTH="650" HEIGHT="400" NAME="PayMethod" wmode="opaque" ALIGN="middle" TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/go/getflashplayer"></EMBED>
+                                                </OBJECT>
+                                                {else}
+                                                <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0"
+                                                        width="565" height="420" id="FCColumn2" align="middle">
+                                                    <PARAM NAME="FlashVars" value="&dataXML={$pay_xml}">
+                                                    <PARAM NAME=movie VALUE="images/charts/MSColumn3D.swf?chartWidth=650&chartHeight=400">
+                                                    <param NAME="quality" VALUE="high">
+                                                    <param NAME="bgcolor" VALUE="#FFFFFF">
+                                                    <param name="wmode" value="opaque" />
+                                                    <embed src="images/charts/MSColumn3D.swf?chartWidth=650&chartHeight=400" FlashVars="&dataXML={$pay_xml}" quality="high" bgcolor="#FFFFFF"  width="650" height="400" name="FCColumn2" wmode="opaque" align="middle" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></object>
+                                                {/if}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    </embed>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{insert_scripts files="tab.js"}
+{include file ='library/seller_footer.lbi'}
+<script language="JavaScript">
+	onload = function()
+	{
+		// 开始检查订单
+		startCheckOrder();
+	}
+
+	//日期选择插件调用start sunle
+	var opts1 = {
+		'targetId':'start_date',//时间写入对象的id
+		'triggerId':['selbtn1'],//触发事件的对象id
+		'alignId':'text_time1',//日历对齐对象
+		'format':'-',//时间格式 默认'YYYY-MM-DD HH:MM:SS'
+		'hms':'off'
+	},opts2 = {
+		'targetId':'end_date',
+		'triggerId':['selbtn2'],
+		'alignId':'text_time2',
+		'format':'-',
+		'hms':'off'
+	},opts3 = {
+		'targetId':'year_month_0',
+		'triggerId':['year_month_0'],
+		'alignId':'year_month_0',
+		'format':'-',
+		'hms':'off'
+	},opts4 = {
+		'targetId':'year_month_1',
+		'triggerId':['year_month_1'],
+		'alignId':'year_month_1',
+		'format':'-',
+		'hms':'off'
+	},opts5 = {
+		'targetId':'year_month_2',
+		'triggerId':['year_month_2'],
+		'alignId':'year_month_2',
+		'format':'-',
+		'hms':'off'
+	},opts6 = {
+		'targetId':'year_month_3',
+		'triggerId':['year_month_3'],
+		'alignId':'year_month_3',
+		'format':'-',
+		'hms':'off'
+	},opts7 = {
+		'targetId':'year_month_4',
+		'triggerId':['year_month_4'],
+		'alignId':'year_month_4',
+		'format':'-',
+		'hms':'off'
+	}
+
+	xvDate(opts1);
+	xvDate(opts2);
+	xvDate(opts3);
+	xvDate(opts4);
+	xvDate(opts5);
+	xvDate(opts6);
+	xvDate(opts7);
+	//日期选择插件调用end sunle
+</script>
+</body>
+</html>

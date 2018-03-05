@@ -1,0 +1,123 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+				{include file ='library/seller_menu_tab.lbi'}
+                <div class="search-form">
+                    <form action="javascript:searchOrder()" name="searchForm">
+                        <label>{$lang.stores_user}</label>
+                        <input name="stores_user" type="text" id="stores_user" size="15" class="text text_2">
+                        <label>{$lang.stores_name|escape}</label>
+                        <input name="stores_name" type="text" id="stores_name" size="15" class="text text_2">
+                        <label>{$lang.is_confirm|escape}</label>
+                        <select name="is_confirm" class="select">
+                            <option value="-1">{$lang.select_please}</option>
+                            <option value="0">关闭</option>
+                            <option value="1">开启</option>
+                        </select>
+                        <input type="submit" value="{$lang.button_search}" class="button" />
+                    </form>
+                </div>
+                {/if}
+                <div class="list-div" id="listDiv">
+                    <form method="post" action="offline_store.php?act=batch_remove" name="listForm">
+                    <table class="ecsc-default-table">
+                    	<thead>
+                        <tr>
+                            <th width="8%"><input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox"/>{$lang.record_id}</th>
+                            <th width="6%">{$lang.stores_user}</th>
+                            <th width="6%">{$lang.shop_name}</th>
+                            <th width="6%">{$lang.stores_name}</th>
+                            <th width="18%">{$lang.area_info}</th>
+                            <th width="6%">{$lang.stores_tel}</th>
+                            <th width="24%">{$lang.stores_opening_hours}</th>
+                            <th width="6%">{$lang.stores_img}</th>
+                            <th width="6%">{$lang.is_confirm}</th>
+                            <th width="10%">{$lang.handler}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {foreach from=$offline_store item=list}
+                        <tr class="bd-line">
+                            <td align="center" class="first-cell"><input type="checkbox" name="checkboxes[]" value="{$list.id}" id="goods_{$list.id}" />
+                                {$list.id|escape:html}</td>
+                            <td align="center">{$list.stores_user|escape:html}</td>
+                            <td align="center" class="{if $list.ru_id > 0}red{else}blue3{/if}">{$list.shop_name|escape:html}</td>
+                            <td align="center">{$list.stores_name|escape:html}</td>
+                            <td align="center">[{$list.country}&nbsp;&nbsp;{$list.province}&nbsp;&nbsp;{$list.city}&nbsp;&nbsp;{$list.district}]{$list.stores_address|escape:html}</td>
+                            <td align="center"><span onclick="javascript:listTable.edit(this, 'edit_stores_tel', {$list.id})">{$list.stores_tel|escape:html}</span></td>
+                            <td align="center"><span><span onclick="javascript:listTable.edit(this, 'edit_stores_opening_hours', {$list.id})">{$list.stores_opening_hours|escape:html}</span></span></td>
+                            <td align="center">{if $list.stores_img}<a href="../{$list.stores_img}"  title="{$lang.see_img}" target="_blank"><img src="../{$list.stores_img}" width="50" height="50"></a>{/if}</td>
+                            <td align="center"><span><span><img src="images/{if $list.is_confirm eq 1}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_show', {$list.id})" /></span></span></td>
+                            <td align="center" nowrap="true"><span>
+                                <a href="offline_store.php?act=edit&id={$list.id}" title="{$lang.edit}"><i class="icon icon-edit"></i></a>&nbsp;
+                                <a href="order.php?act=list&store_id={$list.id}" title="门店订单"><i class="icon icon-search"></i></a>&nbsp;
+                                <a href="javascript:;" onclick="listTable.remove({$list.id}, '{$lang.drop_confirm}')" title="{$lang.remove}"><i class="icon icon-trash"></i></a></span>
+                            </td>
+                        </tr>
+                        {foreachelse}
+                        <tr><td class="no-records" colspan="10">{$lang.no_article}</td></tr>
+                        {/foreach}
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="10">
+                                <div class="shenhe">
+                                    <select class="select mr10" name="batch_handle">
+                                        <option>{$lang.select_please}</option>
+                                        <option value="drop_batch">{$lang.drop_batch}</option>
+                                        <option value="open_batch">{$lang.open_batch}</option>
+                                        <option value="off_batch">{$lang.off_batch}</option>
+                                    </select>
+                                    <input type="submit" name="drop" id="btnSubmit" value="{$lang.button_submit}" class="button btn_disabled" disabled="true" />
+                                </div>
+                            	{include file="page.dwt"}
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                    </form>
+                </div>
+                {if $full_page}
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript" language="JavaScript">
+    listTable.recordCount = {$record_count};
+    listTable.pageCount = {$page_count};
+
+    {foreach from=$filter item=item key=key}
+    listTable.filter.{$key} = '{$item}';
+    {/foreach}
+    onload = function()
+    {
+    // 开始检查订单
+    startCheckOrder();
+    }
+    
+    /**
+     * 搜索订单
+     */
+    function searchOrder()
+    {
+        listTable.filter['stores_user'] = Utils.trim(document.forms['searchForm'].elements['stores_user'].value);
+        listTable.filter['stores_name'] = Utils.trim(document.forms['searchForm'].elements['stores_name'].value);
+        listTable.filter['is_confirm'] = document.forms['searchForm'].elements['is_confirm'].value;
+        listTable.filter['page'] = 1;
+        listTable.loadList();
+    }
+</script>
+</body>
+</html>
+{/if}

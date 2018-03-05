@@ -1,0 +1,119 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+    	{include file ='library/seller_menu_left.lbi'}
+		<div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <form method="post" action="merchants_custom.php" name="listForm">
+                <div class="list-div" id="listDiv">
+                {/if}
+                  <table class="ecsc-default-table ecsc-table-seller mt20">
+                    <tr>
+                      <th width="8%"><div class="first_all">{$lang.record_id}</div></th>
+                      <th width="20%">{$lang.window_name}</th> 
+                      <th width="15%">{$lang.03_template_setup}</th>
+                      <th width="15%">{$lang.window_type}</th>
+                      <th width="15%">{$lang.window_color}</th>
+                      <th width="8%">{$lang.sort_order}</th>
+                      <th width="8%">{$lang.display}</th>
+                      <th width="14%">{$lang.handler}</th>
+                    </tr>
+                    {foreach from=$win_list item=window}
+                    <tr>
+                      <td class="first_td_checkbox"><div class="first_all"><label><input type="checkbox" name="checkboxes[]" value="{$window.id}" class="checkbox" />{$window.id}</label></div></td>
+                      <td align="center"><span onclick="javascript:listTable.edit(this, 'edit_win_name', {$window.id})">{$window.win_name|escape:html}</span>
+                      </td>
+                      <td align="center">{$window.seller_theme}</td>
+                      <td align="center">{$window.win_type_name}</td>
+                      <td align="center"><div style="width:50px; height:30px; background-color:{$window.win_color};"></div></td>
+                      <td align="center"><span onclick="javascript:listTable.edit(this, 'edit_sort_order', {$window.id})">{$window.win_order}</span></td>
+                      <td align="center"><img src="images/{if $window.is_show}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_show', {$window.id})" /></td>
+                      <td align="center">
+                        <a href="merchants_custom.php?act=edit&id={$window.id}" title="{$lang.edit}" class="blue">{$lang.edit}</a> |
+                        {if $window.win_type}
+                        <a href="merchants_custom.php?act=add_win_goods&id={$window.id}" title="{$lang.edit}" class="blue">{$lang.add_product}</a> |
+                        {/if}
+                        <a href="javascript:;" onclick="listTable.remove({$window.id}, '{$lang.drop_confirm}')" class="blue">{$lang.remove}</a> 
+                      </td>
+                    </tr>
+                    {foreachelse}
+                    <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+                    {/foreach}
+                    <tfoot>
+                    	<td class="td_border" colspan="10">
+                        	<div class="shenhe">
+                            <input type="hidden" name="act" value="batch"/>
+                            <select name="seltype"  onchange="selectAll(this.value);" class="select mr10">
+                                <option value="0" selected="selected">{$lang.please_select}</option>
+                                <option value="1">{$lang.check_all}</option>
+                                <option value="2">{$lang.check_back}</option>
+                            </select>
+                            <select name="type" id="controlAll" class="select mr10">
+                            <option value="1">{$lang.drop}</option>
+                            </select>
+                            <input type="submit" value="{$lang.button_submit}" id="btnSubmit" name="btnSubmit" class="button btn_disabled" disabled="true" /><br />
+                            </div>
+                        </td>
+                    </tfoot>
+                  </table>
+                  <table class="table_page" cellpadding="1" cellspacing="1">
+                    <tr>
+                        <td align="left">
+                            
+                        </td>
+                    </tr>
+                  </table>
+                {if $full_page}
+                </div>
+                </form>
+			</div>
+		</div>
+	</div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+	<!--
+	{literal}
+	onload = function()
+	{
+	  // 开始检查订单
+	  startCheckOrder();
+	}
+	{/literal}
+	//-->
+	function selectAll(val){
+		var checklist = document.getElementsByName ("checkboxes[]");
+		if(val == 1){
+			for(var i=0;i<checklist.length;i++)
+			{
+				checklist[i].checked = true;
+				document.getElementById("btnSubmit").className = "button";
+				document.getElementById("btnSubmit").disabled=false;
+			}
+		}else if(val == 2){
+			for(var i=0;i<checklist.length;i++)
+			{
+			  if(checklist[i].checked == false){
+				  checklist[i].checked = true;
+				  document.getElementById("btnSubmit").className = "button";
+				  document.getElementById("btnSubmit").disabled=false;
+			  }else{
+				  checklist[i].checked = false;
+				  document.getElementById("btnSubmit").className = "button btn_disabled";
+				  document.getElementById("btnSubmit").disabled=true;
+			  }
+			}
+		}
+	}
+</script>
+{/if}
+</body>
+</html>

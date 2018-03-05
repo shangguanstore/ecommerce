@@ -1,0 +1,138 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<div id="edit_invoice">
+    <div class="invoice-thickbox">
+        <div class="form">
+            <div class="item">
+                <span class="label">发票抬头：</span>
+                <div class="invoice-list">
+                    <div class="invoice-item selected">
+                    	<span>
+                            <input type="text" value="个人" name="inv_payee" class="inv_payee" readonly>
+                            <input name="invoice_id" type="radio" class="hide" value="0" checked>
+                            <b></b>
+                        </span>
+                    </div>
+                    <!-- {foreach from=$order_invoice item=invoice} -->
+                    <div class='invoice-item'>
+                        <span>
+                            <input type='text' name='inv_payee' class='inv_payee' value='{$invoice.inv_payee|escape:html}' readonly>
+                            <input name='invoice_id' type='radio' class='hide' value='{$invoice.invoice_id}'>
+                            <b></b>
+                        </span>
+                        <div class='btns'><a href='javascript:void(0);' class='ftx-05 edit-tit'>编辑</a><a href='javascript:void(0);' class='ftx-05 update-tit hide'>保存</a><a href='javascript:void(0);' class='ftx-05 ml10 del-tit'>删除</a></div>
+                    </div>
+                    <!-- {/foreach} -->
+                </div>
+                <div class="add-invoice"><a href="javascript:void(0);" class="ftx-05 add-invoice-btn">新增单位发票</a></div>
+            </div>
+            <!-- {if $inv_content_list} -->
+            <div class="item">
+                <span class="label">发票内容：</span>
+                <div class="radio-list">
+                    <ul>
+                    	<!-- {foreach from=$inv_content_list item=list key=key} -->
+                        <li {if $key eq 0}class="item-selected"{/if}><input type="radio" name="inv_content" value="{$list}" {if $key eq 0}checked{/if}>{$list}<b></b></li>
+                        <!-- {/foreach} -->
+                    </ul>
+                </div>
+            </div>
+            <!-- {/if} -->
+            <div class="item">
+                <div class="reminder">
+                    <span>温馨提示：发票的开票金额不包括消费卡、优惠券和支付部分</span>
+                    <a href="article_cat.php?id=19" target="_blank" class="ftx-05">发票信息相关问题>></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $.fn.invoiceList = function(opts){
+            var opt = $.extend({
+               'addBtn':  'add-invoice-btn', 
+               'editBtn' : 'edit-tit',
+               'updateBtn' : 'update-tit',
+               'delBtn' : 'del-tit'
+            }, opts || {});
+
+            return this.each(function(){
+                var f_item = 0;
+                var o = $(this);
+                var edit_invoice =$("#edit_invoice");
+				$(document).on('click',"#edit_invoice .invoice-item",function(){
+					$(this).addClass("selected").siblings().removeClass("selected");
+					$(this).find("input[name='invoice_id']").prop("checked", true);
+				});
+
+                o.find("."+ opt.addBtn).click(function(){
+					var $this = $(this);
+					$this.addClass("hide");
+					$(".invoice-item").removeClass("selected");
+                    var f_item = edit_invoice.find(".invoice-item").length;
+
+					if(f_item<4){
+						var div = "<div class='invoice-item selected'><span><input type='text' name='inv_payee' class='inv_payee'  placeholder='新增单位发票抬头' value=''><input name='invoice_id' type='radio' class='hide' value='" +0+ "'><b></b></span><div class='btns'><a href='javascript:void(0);' class='ftx-05 edit-tit hide'>编辑</a><a href='javascript:void(0);' class='ftx-05 update-tit'>保存</a><a href='javascript:void(0);' class='ftx-05 ml10 del-tit hide'>删除</a></div>";
+						$this.parent().prev().append(div);
+		
+						$(".invoice-item").eq(f_item).find("input.inv_payee").focus();
+					}else{
+						alert("您最多可以添加3个公司发票！");
+					}
+				});
+
+                $(document).on('click',"."+ opt.editBtn,function(){
+					$(this).parent().prev().find("input").removeAttr("readonly");
+					$(this).parent().prev().find("input").focus();
+					$(this).addClass("hide").next().removeClass("hide");
+                    var val = $(this).parent().prev().find("input[name='invoice_id']").val();
+				});
+
+				$(document).on('click',"."+ opt.updateBtn,function(){
+					var inv_payee = $(this).parent().prev().find("input[name=inv_payee]").val();
+					
+					var invoice_id = $(this).parent().prev().find("input[name=invoice_id]").val();
+					var $this =$(this);
+					if(inv_payee==""){
+						alert("输入内容不能为空！");return false;
+					}else{
+						Ajax.call('ajax_dialog.php?act=update_invoicename','inv_payee='+encodeURIComponent(inv_payee)+'&invoice_id='+invoice_id,function(result){
+							$this.parent().prev().find("input[name=invoice_id]").val(result.invoice_id);
+						}, 'POST', 'JSON');
+		
+						$(this).parent().prev().find("input").attr("readonly",true);
+						$(this).addClass("hide").siblings().removeClass("hide");
+						$(".add-invoice").find("a").removeClass("hide");
+					}
+				});
+
+				$(document).on('click',"." + opt.delBtn,function(){
+					var invoice_id = $(this).parent().prev().find("input[name=invoice_id]").val();
+					$this = $(this);
+					if(invoice_id == 0){
+						$(this).parents(".invoice-item").remove();
+						var length = edit_invoice.find(".invoice-item").length;
+						if(length == 1){
+											edit_invoice.find(".invoice-item").addClass("selected");
+						}
+					}else{
+						Ajax.call('ajax_dialog.php?act=del_invoicename','invoice_id='+invoice_id,function(result){
+							if(result.error == 1){
+								alert(result.msg);return false;
+							}else{
+								$this.parents(".invoice-item").remove();
+						   }
+						}, 'POST', 'JSON');
+					}
+				});
+
+                $("#edit_invoice .radio-list").find("li").click(function(){
+					$(this).addClass("item-selected").siblings().removeClass("item-selected");
+					$(this).find('input').prop("checked", true);
+				});
+            });
+        };
+        $("#edit_invoice").invoiceList();
+    </script>
+</div>
+

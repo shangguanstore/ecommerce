@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div class="items-info">
+                  <form enctype="multipart/form-data" action="goods.php" method="post" name="theForm" >
+                    <input type="hidden" name="MAX_FILE_SIZE" value="2097152" />
+                    <div class="wrapper-list" style="padding-top:0;">
+                        <table width="100%" class="table_item">
+                          <tr>
+                            <td colspan="3">
+                                <input type="hidden" name="cat_id1" id="cat_id1" value="0" />
+                                <select name="catList1" id="cat_list1" onchange="catList(this.value, 1)" class="select">
+                                	<option value="0">{$lang.goods_cat}</option>
+                                    {foreach from=$cat_list item=cat}
+                                    <option value="{$cat.cat_id}">{$cat.cat_name}</option>
+                                    {/foreach}
+                                </select>
+                                <select name="brand_id1" class="select"><option value="0">{$lang.all_brand}{html_options options=$brand_list}</select>
+                                <input type="text" name="keyword1" class="text text_2 mr10" />
+                                <input type="button" value="{$lang.button_search}"  class="button" onclick="searchGoods(sz1, 'cat_id1','brand_id1','keyword1')" />
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="tc pt10"><div class="th">{$lang.all_goods}</div></th>
+                            <th class="tc pt10"><div class="th">{$lang.handler}</div></th>
+                            <th class="tc pt10"><div class="th">{$lang.goods_desc_all}</div></th>
+                          </tr>
+                          <tr class="no-line">
+                            <td width="42%">
+                              <select name="source_select1" size="20" class="selectzoom" ondblclick="sz1.addItem(false, 'add_link_desc', descId)" multiple="true"></select>
+                            </td>
+                            <td class="tc">
+                                <div class="caozuo">
+                                    <p><input type="button" value=">>" onclick="sz1.addItem(true, 'add_link_desc', descId)" class="button" /></p>
+                                    <p><input type="button" value=">" onclick="sz1.addItem(false, 'add_link_desc', descId)" class="button" /></p>
+                                    <p><input type="button" value="<" onclick="sz1.dropItem(false, 'drop_link_desc', descId)" class="button" /></p>
+                                    <p><input type="button" value="<<" onclick="sz1.dropItem(true, 'drop_link_desc', descId)" class="button" /></p>
+                                </div>
+                            </td>
+                            <td width="42%">
+                              <select name="target_select1" size="20" class="selectzoom" multiple ondblclick="sz1.dropItem(false, 'drop_link_desc', descId)">
+                                {foreach from=$link_goods_list item=link_goods}
+                                <option value="{$link_goods.goods_id}">{$link_goods.goods_name}</option>
+                                {/foreach}
+                              </select>
+                            </td>
+                          </tr>
+                          <tr class="no-line">
+                            <td colspan="3"><label class="lh">{$lang.require_field}&nbsp;{$lang.goods_desc_name}：</label><input name="desc_name" type="text" value="{$goods.desc_name}" size="80" /></td>
+                          </tr>
+                          <tr class="no-line">
+                            <td colspan="3">{$goods_desc}</td>
+                          </tr>
+                        </table>
+                    </div>
+                    <div class="wrapper-list" style="display:none; padding-top:0;">
+                        {if $form_act neq 'update_link_desc'}
+                        <!--关联列表-->
+                        <table width="100%" class="table_item ecsc-default-table">
+                          <tr>
+                            <th class="tc" width="20%">{$lang.goods_xuhao}</th>
+                            <th class="tc" width="60%">{$lang.goods_desc_name}</th>
+                            <th class="tc" width="20%">{$lang.handler}</th>
+                          </tr>
+                          {foreach from=$desc_list item=list}
+                          <tr>
+                             <td>{$list.id}</td>
+                             <td>{$list.desc_name}</td>
+                             <td><a href="goods.php?act=edit_link_desc&id={$list.id}" class="blue">{$lang.modify}</a>&nbsp;&nbsp;<a href="javascript:get_del_desc({$list.id});" class="blue">{$lang.drop}</a></td>
+                          </tr>
+                          {foreachelse}
+                          <tr><td colspan="3" class="no-records">{$lang.no_records}</td></tr>
+                          {/foreach}
+                        </table>
+                        {/if}
+                    </div>
+                    <div class="bottom tc">
+                        <div class="button_info">
+                          <input type="hidden" name="id" value="{$goods.id|default:0}" />
+                          <input type="hidden" name="goods_id" value="0" />
+                          <input type="button" value="{$lang.button_submit}" class="button button_submit" onclick="validate()" />
+                          <input type="reset" value="{$lang.button_reset}" class="button button_reset" />
+                        </div>
+                    </div>
+                    <input type="hidden" name="act" value="{$form_act}" />
+                  </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+	<!--start-->
+	var elements = document.forms['theForm'].elements;
+	var descId = elements['id'].value;
+	
+	var sz1 = new SelectZone(1, elements['source_select1'], elements['target_select1']);
+	
+	{literal}
+	onload = function()
+	{
+		startCheckOrder();
+	}
+	
+	function validate(){
+		document.forms['theForm'].submit();
+	}
+	
+	/* 关联商品 */
+	function searchGoods(szObject, catId, brandId, keyword)
+	{
+	  var filters = new Object;
+	
+	  filters.cat_id = elements[catId].value;
+	  filters.brand_id = elements[brandId].value;
+	  filters.keyword = Utils.trim(elements[keyword].value);
+	  filters.exclude = document.forms['theForm'].elements['goods_id'].value;
+	
+	  szObject.loadOptions('get_goods_list', filters);
+	}
+	
+	function get_del_desc(id){
+		if (confirm('确实删除这条信息吗')){
+			location.href = 'goods.php?act=del_link_desc&id=' + id;
+		}
+	}
+	
+	{/literal}
+
+    // 分类分级 by qin
+	function catList(val, level)
+	{
+		var cat_id1 = val;
+		document.getElementById('cat_id1').value = cat_id1;
+		Ajax.call('goods.php?is_ajax=1&act=sel_cat', 'cat_id='+cat_id1+'&cat_level='+level, catListResponse, 'GET', 'JSON');
+	}
+	
+	function catListResponse(result)
+	{
+		if (result.error == '1' && result.message != '')
+		{
+		  alert(result.message);
+		  return;
+		}
+		var response = result.content;
+		var cat_level = result.cat_level; // 分类级别， 1为顶级分类
+		for(var i=cat_level;i<10;i++)
+		{
+		  $("#cat_list"+Number(i+1)).remove();
+		}
+		if(response)
+		{
+			$("#cat_list"+cat_level).after(response);
+		}
+	  return;
+	}
+	<!--end-->
+</script>
+</body>
+</html>

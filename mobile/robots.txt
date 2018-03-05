@@ -1,0 +1,14 @@
+#
+# robots.txt for ECTouch
+#
+
+User-agent: *
+Allow: /
+Disallow: /app
+Disallow: /bootstrap
+Disallow: /config
+Disallow: /database
+Disallow: /resources
+Disallow: /storage
+Disallow: /tests
+Disallow: /vendor

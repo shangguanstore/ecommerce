@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>{include file ='library/admin_html_head.lbi'}</head>
+
+<body class="iframe_body">
+	<div class="warpper">
+    	<div class="title"><a href="{$action_link.href}" class="s-back">{$lang.back}</a>商品 - {$ur_here}</div>
+        <div class="content">
+        	<div class="explanation" id="explanation">
+            	<div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span></div>
+                <ul>
+                	<li>标识“<em>*</em>”的选项为必填项，其余为选填项。</li>
+                    <li>请合理创建商品类型名称。</li>
+                </ul>
+            </div>
+            <div class="flexilist">
+                <div class="common-content">
+                    <div class="mian-info">
+                        <form action="goods_type.php" method="post" name="theForm" enctype="multipart/form-data" id="goods_type_form">
+                            <div class="switch_info">
+                                <div class="item">
+                                    <div class="label">{$lang.require_field}&nbsp;{$lang.goods_type_name}：</div>
+                                    <div class="label_value">
+										<input type="text" name="cat_name" value="{$goods_type.cat_name|escape}" size="40" class="text" autocomplete="off" />
+                                    	<div class="form_prompt"></div>
+                                    </div>
+                                </div>
+                                <div class="item" style="display:none">
+                                    <div class="label">{$lang.goods_type_status}:</div>
+                                    <div class="label_value">
+										{html_radios name="enabled" options=$lang.arr_goods_status checked=$goods_type.enabled}
+                                    </div>
+                                </div>								
+                                <div class="item">
+                                    <div class="label">{$lang.attr_groups}：</div>
+                                    <div class="label_value">
+										<textarea name="attr_group" rows="5" cols="40" class="textarea">{$goods_type.attr_group|escape}</textarea>
+										<p class="fl bf100"><label class="blue_label ml0" id="noticeAttrGroups">{$lang.notice_attr_groups}</label></p>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="label">&nbsp;</div>
+                                    <div class="label_value info_btn">
+										<input type="hidden" name="cat_id" value="{$goods_type.cat_id}" />
+										<input type="submit" value="{$lang.button_submit}" class="button" id="submitBtn" />
+										<input type="reset" value="{$lang.button_reset}" class="button button_reset" />
+										<input type="hidden" name="act" value="{$form_act}" />
+                                    </div>
+                                </div>								
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+		</div>
+    </div>
+ {include file ='library/pagefooter.lbi'}
+	<script type="text/javascript">
+	$(function(){
+		//表单验证
+		$("#submitBtn").click(function(){
+			if($("#goods_type_form").valid()){
+				$("#goods_type_form").submit();
+			}
+		});
+	
+		$('#goods_type_form').validate({
+			errorPlacement:function(error, element){
+				var error_div = element.parents('div.label_value').find('div.form_prompt');
+				element.parents('div.label_value').find(".notic").hide();
+				error_div.append(error);
+			},
+			rules:{
+				cat_name:{
+					required : true
+				}
+			},
+			messages:{
+				cat_name:{
+					required : '<i class="icon icon-exclamation-sign"></i>'+type_name_empty
+				}
+			}			
+		});
+	});	
+	</script>
+</body>
+</html>

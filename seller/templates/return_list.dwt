@@ -1,0 +1,158 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+               <form action="javascript:searchReturnOrder()" name="searchForm">
+                    <table class="search-form">
+                        <tbody>
+                        <tr>
+                            <td>&nbsp;</td>
+                            
+                            <th>{$lang.return_sn}</th><td><input name="return_sn" type="text" id="return_sn" size="15" class="text text_2" /></td>
+                           <th>{$lang.order_sn}</th><td><input name="order_sn" type="text" id="order_sn" size="15" class="text text_2" /></td>
+                           <th>{$lang.consignee}</th><td><input name="consignee" type="text" id="consignee" size="15" class="text text_2" /></td>
+                            
+                            <th>{$lang.all_status}</th>
+                            <td>
+                                <select name="return_type" id="return_type" class="select">
+                                  <option value="-1">{$lang.select_please}</option>
+                                  <option value="0">{$lang.already_repair}</option>
+                                  <option value="1">{$lang.refunded}</option>
+                                  <option value="2">{$lang.already_change}</option>
+                                </select>
+                            </td>
+                            <td class="w70 tr"><label class="submit-border"><input type="submit" class="submit" value="{$lang.button_search}"></label></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+                {/if}
+                <div class="table_list" id="listDiv">
+                    <table class="ecsc-default-table order">
+                        <thead>
+                            <tr>
+                                <th colspan="4" width="12%">
+                                    <a href="javascript:listTable.sort('order_sn', 'DESC'); ">{$lang.order_sn}</a><div class="img">{$sort_order_sn}</div>
+                                </th>
+                                <th width="10%">{$lang.return_change_sn}</th>
+                                <th width="4%">{$lang.return_change_type}</th>
+                                <th width="8%">{$lang.apply_time}</th>
+                                <th width="7%">{$lang.y_amount}</th>
+                                <th width="7%">{$lang.s_amount}</th>
+                                <th width="4%">{$lang.return_change_num}</th>
+                                <th width="10%">{$lang.consignee}</th>
+                                <th width="8%">{$lang.receipt_time}</th>
+                                <th width="10%">{$lang.all_status}</th>
+                                <th width="7%">{$lang.applicant}</th>
+                                <th width="7%">{$lang.handler}</th>
+                            </tr>
+                        </thead>
+                        {foreach from=$order_list item=order key=okey}
+                        <tbody>
+                            <tr><td colspan="20" class="sep-row"></td></tr>
+                            <tr>
+                                <td><a href="order.php?act=info&order_id={$order.order_id}" id="order_{$okey}">{$order.order_sn}{if $order.extension_code eq "group_buy"}<br /><div align="center">{$lang.group_buy}</div>{elseif $order.extension_code eq "exchange_goods"}<br /><div align="center">{$lang.exchange_goods}</div>{/if}</a></td>
+                                <td colspan="4" class="bdl">
+                                    {$order.return_sn}
+                                </td>
+                                <td align="center">{if $order.return_type eq 0}{$lang.repair}{elseif $order.return_type eq 1}{$lang.return_goods}{elseif $order.return_type eq 2}{$lang.change}{/if}</td>
+                                <td align="center">{$order.apply_time}</td>
+                                <td align="center"><a href="mailto:{$order.email}">{$order.should_return}</a></td>
+                                <td align="center">{$order.actual_return}</td>
+                                <td align="center">{$order.return_number}</td>
+                                <td class="bdl" rowspan="1">
+                                    <div class="buyer">
+                                        {$order.addressee|escape}<p member_id="1"></p>
+                                        <div class="buyer-info"><em></em>
+                                            <div class="con">
+                                                <h3><i></i><span>联系信息</span></h3>
+                                                <dl>
+                                                    <dt>姓名：</dt>
+                                                    <dd>{$order.consignee}</dd>
+                                                </dl>
+                                                <dl>
+                                                    <dt>电话：</dt>
+                                                    <dd>{if $order.phone}{$order.phone}{else}{$order.mobile}{/if}</dd>
+                                                </dl>
+                                                <dl>
+                                                    <dt>地址：</dt>
+                                                    <dd>[{$order.address_detail}]&nbsp;{$order.address}</dd>
+                                                </dl>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td align="center">{$order.sign_time}</td>
+                                <td align="center">
+                                    {$lang.rf[$order.return_status]}<br /><font style="color:#F00">{$lang.ff[$order.refound_status]}</font>
+                                </td> 
+                                <td align="center">{$order.consignee}</td>
+                                <td align="center">
+                                    <a href="order.php?act=return_info&ret_id={$order.ret_id}&rec_id={$order.rec_id}" class="blue">{$lang.detail}</a><br />
+                                </td>
+                            </tr>
+                        </tbody>
+                    {foreachelse}
+                    <tr><td class="no-records" colspan="20">{$lang.no_records}</td></tr>
+                    {/foreach}
+                    <tfoot>
+                        <tr>
+                            <td colspan="20">
+                                {include file="page.dwt"}
+                            </td>
+                        </tr>
+                    </tfoot>
+                    </table>
+                </div>
+                {if $full_page}
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+    listTable.query = "return_list_query";
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+$(function(){
+	
+	//导航栏鼠标移上左右弹性滑动
+	huadong();
+})
+
+ /**
+     * 搜索订单
+     */
+    function searchReturnOrder()
+    {
+		{if $priv_ru eq 1}
+		listTable.filter['store_search'] = Utils.trim(document.forms['searchForm'].elements['store_search'].value);
+		listTable.filter['merchant_id'] = Utils.trim(document.forms['searchForm'].elements['merchant_id'].value);
+		listTable.filter['store_keyword'] = Utils.trim(document.forms['searchForm'].elements['store_keyword'].value);
+		listTable.filter['store_type'] = Utils.trim(document.forms['searchForm'].elements['store_type'].value);
+		{/if}
+		
+        listTable.filter['order_sn'] = Utils.trim(document.forms['searchForm'].elements['order_sn'].value);
+		listTable.filter['return_sn'] = Utils.trim(document.forms['searchForm'].elements['return_sn'].value);
+        listTable.filter['consignee'] = Utils.trim(document.forms['searchForm'].elements['consignee'].value);
+        listTable.filter['return_type'] = document.forms['searchForm'].elements['return_type'].value;
+        listTable.filter['page'] = 1;
+        listTable.loadList();
+    }
+</script>
+</body>
+</html>
+{/if}

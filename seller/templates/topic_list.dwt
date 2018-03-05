@@ -1,0 +1,114 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <form method="POST" action="" name="listForm">
+                  <!-- start user_bonus list -->
+                  <div class="list-div" id="listDiv">
+                  {/if}
+                    <table class="ecsc-default-table">
+                        <thead>
+                            <tr>
+                                <th width="5%">编号</th>
+                                <th width="45%">专题名称</th>
+                                <th width="10%">开始时间</th>
+                                <th width="10%">结束时间</th>
+                                <th width="30%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {foreach from=$topic_list item=topic}
+                            <tr class="bd-line">
+                              <td class="first_td_checkbox">
+                                <div class="first_all">
+                                <label><input value="{$topic.topic_id}" name="checkboxes[]" type="checkbox" class="checkbox">{$topic.topic_id}</label>
+                                </div>
+                              </td>
+                              <td><span class="activity_name w440" title="{$topic.start_time}">{$topic.title}</span></td>
+                              <td align="center">{$topic.start_time}</td>
+                              <td align="center">{$topic.end_time}</td>
+                              <td align="center">
+                                  <a href="../topic.php?topic_id={$topic.topic_id}" title="{$lang.view}" target="_blank" class="blue">{$lang.view}</a>&nbsp;
+                                  <a href="topic.php?act=edit&topic_id={$topic.topic_id}" title="{$lang.edit}" class="blue">{$lang.edit}</a>&nbsp;
+                                  <a href="javascript:;" on title="{$lang.drop}" onclick="listTable.remove({$topic.topic_id},delete_topic_confirm,'delete');" class="blue">{$lang.drop}</a>&nbsp;
+                                  <a href="ads.php?act=add&ad_name={$topic.title}&ad_link={$topic.url}" class="blue">{$lang.publish_to_ads}</a>&nbsp;
+                                  <a href="flashplay.php?act=add&ad_link={$topic.url}" title="{$lang.publish_to_player}" class="blue">{$lang.publish_to_player}</a>
+                              </td>
+                            </tr>
+                            {foreachelse}
+                            <tr><td class="no-records" colspan="11">{$lang.no_records}</td></tr>
+                            {/foreach}
+                        </tbody>
+                        <tfoot>
+                        	<tr>
+                            	<td colspan="11" class="td_border">
+                                	<div class="shenhe">
+                                        <input type="submit" name="drop" id="btnSubmit" value="{$lang.drop}" class="button btn_disabled" disabled="true" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="20">
+                                {include file="page.dwt"}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+    
+                    {if $full_page}
+                    
+                    </div>
+                    <!-- end user_bonus list -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+<!--
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+  listTable.query = "query";
+
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+
+  {literal}
+  onload = function()
+  {
+    // 开始检查订单
+    startCheckOrder();
+    document.forms['listForm'].reset();
+  }
+  
+  document.getElementById("btnSubmit").onclick = function()
+  {
+    if (confirm(delete_topic_confirm))
+    {
+      document.forms["listForm"].action = "topic.php?act=delete";
+      return;
+    }
+    else
+    {
+      return false;
+    }
+  }
+  {/literal}
+//-->
+</script>
+</body>
+</html>
+
+{/if}

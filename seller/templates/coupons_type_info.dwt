@@ -1,0 +1,542 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+<script type="text/javascript" src="../js/jquery.validation.min.js"></script>
+<style type="text/css">
+    .error{
+        color: #ec2c12;
+        padding-left:10px;
+    }
+    .text_time .error{
+        padding-right: 30px;
+    }
+</style>
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div class="ecsc-form-default">
+                    <form action="coupons.php?act={$form_act}" id="myForm" method="post" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
+                        <table width="100%" class="table_item">
+                            {if $type eq 'register'}
+                            {include file="coupons_register.dwt"}
+                            {elseif $type eq 'buy'}
+                            {include file="coupons_buy.dwt"}
+                            {elseif $type eq 'all'}
+                            {include file="coupons_all.dwt"}
+                            {elseif $type eq 'member'}
+                            {include file="coupons_member.dwt"}
+                            {/if}
+                            <tr class="no-line">
+                                <td></td>
+                                <td class="pt20 pb20">
+                                    <input type="submit" value="{$lang.button_submit}" class="button" />
+                                    <input type="reset" value="{$lang.button_reset}" class="button button_reset" />
+                                    <input type="hidden" name="act" value="{$form_act}" />
+                                    <input type="hidden" name="cou_id" value="{$cou.cou_id}" />
+                                </td>
+                            </tr>
+
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<div id="content" class="hide">
+    <div class="ysc-coupon-dialog">
+        <h2>{$lang.coupons_add_title}</h2>
+        <ul class="ysc-coupon-list">
+            <li>
+                <a href="coupons.php?act=add&type=register" class="clearfix">
+                    <div class="ysc-ticket ysc-ticket-red">
+                        <i class="qIcon zhuce"></i>
+                        <span>{$lang.coupons_type_01}</span>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="coupons.php?act=add&type=buy" class="clearfix">
+                    <div class="ysc-ticket ysc-ticket-blue">
+                        <i class="qIcon gouwuche"></i>
+                        <span>{$lang.coupons_type_02}</span>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="coupons.php?act=add&type=all" class="clearfix">
+                    <div class="ysc-ticket ysc-ticket-green">
+                        <i class="qIcon house"></i>
+                        <span>{$lang.coupons_type_03}</span>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="coupons.php?act=add&type=member" class="clearfix">
+                    <div class="ysc-ticket ysc-ticket-yellow">
+                        <i class="qIcon renzhengyonghu"></i>
+                        <span>{$lang.coupons_type_04}</span>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript" src="../seller/js/jquery.purebox.js"></script>
+<script type="text/javascript">
+
+    $(function(){
+        $("#actionSpan").click(function(){
+            var content = $("#content").dwtl();
+            pb({
+                id:"dialog",
+                title:"添加优惠券",
+                content:content,
+                width:600,
+                height:360,
+                drag:false,
+                foot:false
+            });
+        });
+    });
+
+
+<!--
+
+
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+
+  {literal}
+  onload = function()
+  {
+     // 开始检查订单
+     startCheckOrder();
+  }
+
+
+    if($("input[name='usableCouponGoods']:checked,input[name='buyableCouponGoods']:checked,input[name='obtainCouponGoods']:checked").val() == 2)
+        $("#gift-div").show();
+    if($("input[name='buyableCouponGoods2']:checked").val() == 2)
+        $("#gift-div2").show();
+
+    $("input[name='usableCouponGoods']").click(function(){
+        var val = $(this).val();
+        if(val == 1){
+            $("#range_search").hide();
+            $("#gift-div").hide();
+        }else{
+            $("#range_search").show();
+            $("#gift-div").show();
+        }
+    });
+    $("input[name='buyableCouponGoods']").click(function(){
+        var val = $(this).val();
+        if(val == 1){
+            $("#range_search").hide();
+            $("#gift-div").hide();
+        }else{
+            $("#range_search").show();
+            $("#gift-div").show();
+        }
+    });
+    $("input[name='buyableCouponGoods2']").click(function(){
+        var val = $(this).val();
+        if(val == 1){
+            $("#range_search2").hide();
+            $("#gift-div2").hide();
+        }else{
+            $("#range_search2").show();
+            $("#gift-div2").show();
+        }
+    });
+    $("input[name='obtainCouponGoods']").click(function(){
+        var val = $(this).val();
+        if(val == 1){
+            $("#range_search2").hide();
+            $("#gift-div").hide();
+        }else{
+            $("#range_search2").show();
+            $("#gift-div").show();
+        }
+    });
+
+    function searchItem()
+    {
+        var filter = new Object;
+        filter.keyword  = document.forms['theForm'].elements['keyword'].value;
+        filter.act_range = document.forms['theForm'].elements['act_range'].value;
+        filter.ru_id = {$ru_id}; //商家id 平台,商家 只能各自搜索各自的商品设置优惠券 bylu
+        if (filter.act_range != 0)
+        {
+            alert(123);
+            return;
+        }
+
+        Ajax.call('coupons.php?is_ajax=1&act=search', filter, searchResponse, 'GET', 'JSON');
+    }
+
+    /**
+     * 改变优惠范围
+     * @param int rangeId
+     */
+    function changeRange(rangeId)
+    {
+        document.getElementById('range-div').innerHTML = '';
+        document.getElementById('result').length = 0;
+        var row = document.getElementById('range_search');
+        if (rangeId <= 0)
+        {
+            row.style.display = 'none';
+        }
+        else
+        {
+            row.style.display = '';
+        }
+    }
+
+
+    /**
+     * 搜索赠品
+     */
+    function searchItem1()
+    {
+        /*if (document.forms['theForm'].elements['act_type'].value == 1)
+         {
+         alert(price_need_not_search);
+         return;
+         }*/
+        var filter = new Object;
+        filter.keyword  = document.forms['theForm'].elements['keyword1'].value;
+        filter.act_range = 3;
+        filter.ru_id = {$ru_id}; //商家id 平台,商家 只能各自搜索各自的商品设置优惠券 bylu
+        Ajax.call('favourable.php?is_ajax=1&act=search', filter, searchResponse1, 'GET', 'JSON');
+    }
+
+    function searchItem2()
+    {
+        var filter = new Object;
+        filter.keyword  = document.forms['theForm'].elements['keyword2'].value;
+        filter.act_range = 3;
+        filter.ru_id = {$ru_id}; //商家id 平台,商家 只能各自搜索各自的商品设置优惠券 bylu
+        Ajax.call('favourable.php?is_ajax=1&act=search', filter, searchResponse2, 'GET', 'JSON');
+    }
+
+    function searchResponse1(result)
+    {
+        if (result.error == '1' && result.message != '')
+        {
+            alert(result.message);
+            return;
+        }
+
+        var sel = document.forms['theForm'].elements['result1'];
+
+        sel.length = 0;
+
+        /* 创建 options */
+        var goods = result.content;
+        if (goods)
+        {
+            for (i = 0; i < goods.length; i++)
+            {
+                var opt = document.createElement("OPTION");
+                opt.value = goods[i].id;
+                opt.text  = goods[i].name;
+                sel.options.add(opt);
+            }
+        }
+
+        return;
+    }
+    function searchResponse2(result)
+    {
+        if (result.error == '1' && result.message != '')
+        {
+            alert(result.message);
+            return;
+        }
+
+        var sel = document.forms['theForm'].elements['result2'];
+
+        sel.length = 0;
+
+        /* 创建 options */
+        var goods = result.content;
+        if (goods)
+        {
+            for (i = 0; i < goods.length; i++)
+            {
+                var opt = document.createElement("OPTION");
+                opt.value = goods[i].id;
+                opt.text  = goods[i].name;
+                sel.options.add(opt);
+            }
+        }
+
+        return;
+    }
+
+    function addGift()
+    {
+        var selType = document.forms['theForm'].elements['act_type'];
+
+        /*if (selType.value == 1)
+         {
+         alert(price_need_not_search);
+         return;
+         }*/
+        var selResult = document.getElementById('result1');
+        if (selResult.value == 0)
+        {
+            alert(pls_search);
+            return;
+        }
+        var id = selResult.options[selResult.selectedIndex].value;
+        var name = selResult.options[selResult.selectedIndex].text;
+
+        // 检查是否已经存在
+        var exists = false;
+        var eles = document.forms['theForm'].elements;
+        for (var i = 0; i < eles.length; i++)
+        {
+            if (eles[i].type=="checkbox" && eles[i].name.substr(0, 7) == 'gift_id')
+            {
+                if (eles[i].value == id)
+                {
+                    exists = true;
+                    alert(range_exists);
+                    break;
+                }
+            }
+        }
+
+        // 创建checkbox
+        if (!exists)
+        {
+            var table = document.getElementById('gift-table');
+            if (table.rows.length == 0)
+            {
+                var row = table.insertRow(-1);
+                var cell = row.insertCell(-1);
+                cell.align = 'center';
+//      cell.innerHTML = '<strong>' + gift + '</strong>';
+                var cell = row.insertCell(-1);
+                cell.align = 'center';
+//      cell.innerHTML = '<strong>' + price + '</strong>';
+            }
+            var row = table.insertRow(-1);
+            var cell = row.insertCell(-1);
+
+            cell.innerHTML = '<input name="cou_goods[]" id="goods_id" type="checkbox" class="checkbox" value="' + id + '" checked="checked" /><label for="goods_id">' + name+'</label>';
+        }
+    }
+    function addGift2()
+    {
+        var selType = document.forms['theForm'].elements['act_type'];
+
+        /*if (selType.value == 1)
+         {
+         alert(price_need_not_search);
+         return;
+         }*/
+        var selResult = document.getElementById('result2');
+        if (selResult.value == 0)
+        {
+            alert(pls_search);
+            return;
+        }
+        var id = selResult.options[selResult.selectedIndex].value;
+        var name = selResult.options[selResult.selectedIndex].text;
+
+        // 检查是否已经存在
+        var exists = false;
+        var eles = document.forms['theForm'].elements;
+        for (var i = 0; i < eles.length; i++)
+        {
+            if (eles[i].type=="checkbox" && eles[i].name.substr(0, 7) == 'gift_id')
+            {
+                if (eles[i].value == id)
+                {
+                    exists = true;
+                    alert(range_exists);
+                    break;
+                }
+            }
+        }
+
+        // 创建checkbox
+        if (!exists)
+        {
+            var table = document.getElementById('gift-table2');
+
+            if (table.rows.length == 0)
+            {
+                var row = table.insertRow(-1);
+                var cell = row.insertCell(-1);
+                cell.align = 'center';
+                cell.innerHTML = '<strong>' + gift + '</strong>';
+                var cell = row.insertCell(-1);
+                cell.align = 'center';
+                cell.innerHTML = '<strong>' + price + '</strong>';
+            }
+            var row = table.insertRow(-1);
+            var cell = row.insertCell(-1);
+
+            cell.innerHTML = '<input name="cou_ok_goods[]" id="goods_id" type="checkbox" class="checkbox" value="' + id + '" checked="checked" /><label for="goods_id">' + name+'</label>';
+        }
+    }
+
+    function changeType(typeId)
+    {
+        document.getElementById('gift-div').innerHTML = '<table id="gift-table"></table>';
+        document.getElementById('result1').length = 0;
+        var row = document.getElementById('type_search');
+        if (typeId <= 0)
+        {
+            row.style.display = '';
+        }
+        else
+        {
+            row.style.display = 'none';
+        }
+    }
+
+
+  {/literal}
+//-->
+
+/*  @author-bylu 优惠券删除 start  */
+    function coupons_del(cou_id){
+    if(confirm('确定删除吗?'))
+        $.get('coupons.php?act=remove_coupons', { cou_id:cou_id }, function (data) { if(data=='ok')location.href=location.href;else alert('删除失败!') });
+}
+
+    //会员全选
+    $('#select_all').click(function(){
+        if($('#select_all').is(':checked')) {
+            $('.checkbox_items input[type=checkbox]').prop('checked',true);
+        }else{
+            $('.checkbox_items input[type=checkbox]').prop('checked',false);
+
+        }
+        /*$('#select_all').click(function(){
+         alert(this.checked)
+         $('.checkbox_items input[name=cou_ok_user]').not(this).attr("checked",this.checked);
+         });*/
+    })
+/*表单验证 */
+    $("#myForm").validate({
+        rules:{
+            cou_name:'required',
+            cou_title:{
+                required:true,
+                minlength:2,
+            },
+            cou_total:{
+                required:true,
+                digits:true
+            },
+            cou_money:{
+                required:true,
+                digits:true,
+            },
+            cou_man:{
+                required:true,
+                digits:true,
+            },
+            cou_user_num:{
+                required:true,
+                digits:true,
+            },
+            cou_start_time:{
+                required:true,
+                date:true,
+            },
+            cou_end_time:{
+                required:true,
+                date:true,
+            },
+            cou_get_man:{
+                required:true,
+                digits:true,
+            },
+        },
+        messages:{
+            cou_name:'名称不能为空!',
+            cou_title:{
+                required:'标题不能为空!',
+                minlength:'标题不能少于2个字!',
+            },
+            cou_total:{
+                required:'优惠劵总张数不能为空!',
+                digits:'必须是一个整数!',
+            },
+            cou_money:{
+                required:'优惠券面值不能为空!',
+                digits:'必须是一个整数!',
+            },
+            cou_man:{
+                required:'使用的门槛金额不能为空!',
+                digits:'必须是一个整数!',
+            },
+            cou_user_num:{
+                required:'每人限领取数量不能为空!',
+                digits:'必须是一个整数!',
+            },
+            cou_start_time:{
+                required:'开始时间不能为空!',
+                date:'必须是个有效时间!',
+            },
+            cou_end_time:{
+                required:'结束时间不能为空!',
+                date:'必须是个有效时间!',
+            },
+            cou_get_man:{
+                required:'购物券的获取门槛不能为空!',
+                digits:'必须是一个整数!',
+            },
+        },
+        submitHandler:function(form){
+            if($('.checkbox_items input:checked').val() ==1)
+                $('#gift-table').remove();
+            if($('.checkbox_items2 input:checked').val() ==1)
+                $('#gift-table2').remove();
+
+            form.submit();
+        }
+    });
+
+/*  @author-bylu  end  */
+
+
+    //日期选择插件调用start sunle
+    var opts1 = {
+        'targetId':'start_time',//时间写入对象的id
+        'triggerId':['selbtn1'],//触发事件的对象id
+        'alignId':'text_time1',//日历对齐对象
+        'hms':'off', //关闭时分秒
+        'format':'-'//时间格式 默认'YYYY-MM-DD HH:MM:SS'
+    },opts2 = {
+        'targetId':'end_time',
+        'triggerId':['selbtn2'],
+        'alignId':'text_time2',
+        'hms':'off',
+        'format':'-'
+    }
+
+    xvDate(opts1);
+    xvDate(opts2);
+    //日期选择插件调用end sunle
+
+</script>
+</body>
+</html>

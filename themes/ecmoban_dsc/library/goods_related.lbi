@@ -1,0 +1,25 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!-- {if $related_goods} -->
+<div id="browse-browse-pop" class="m goods_related">
+    <div class="mt"><h2>{$lang.releate_goods}</h2></div>
+    <div class="mc">
+        <ul>
+        	<!--{foreach from=$related_goods item=goods name=related}-->
+            <li {if $smarty.foreach.related.last} class="last"{/if}>
+                <div class="p-img"><a href="{$goods.url}" target="_blank"><img src="themes/ecmoban_dsc/images/loadGoods.gif" width="172" height="172" class="lazy" data-original="{$goods.goods_thumb}"></a></div>
+                <div class="p-name"><a href="{$goods.url}" title="{$goods.goods_name|escape:html}" target="_blank">{$goods.short_name}</a></div>
+                <div class="p-price">
+                	<!-- {if $goods.promote_price neq ''} -->
+                        {$goods.formated_promote_price}
+                    <!-- {else} -->
+                        {$goods.shop_price}
+                    <!-- {/if} -->
+                </div>
+                <a href="javascript:addToCartShowDiv({$goods.goods_id});" class="btn">加入购物车</a>
+            </li>
+            <!-- {/foreach} -->
+        </ul>
+    </div>
+</div>
+<!-- {/if} -->

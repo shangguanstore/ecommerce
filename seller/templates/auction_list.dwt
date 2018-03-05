@@ -1,0 +1,161 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/seller_menu_tab.lbi'}
+                <div class="search-form">
+                  <form action="javascript:searchActivity()" name="searchForm">
+                  	<div class="fr">
+                    <label>{$lang.goods_name}</label>
+                    <input type="text" name="keyword" size="30" class="text text_2 mr10"/>
+                    <div class="fl">
+                        <label>
+                            <input name="is_going" type="checkbox" id="is_going" value="1" class="checkbox" />{$lang.act_is_going}
+                        </label>
+                    </div>
+                    <label class="submit-border"><input type="submit" value="{$lang.button_search}" class="button" /></label>
+                    </div>
+                  </form>
+                </div>
+
+                <form method="post" action="auction.php" name="listForm" onsubmit="return confirm(batch_drop_confirm);">
+                <!-- start auction list -->
+                <div class="list-div" id="listDiv">
+                {/if}
+                  <table class="ecsc-default-table">
+                      <thead>
+                          <tr>
+                          	<th width="8%">编号</th>
+                              <th width="30%">拍卖活动名称</th>
+                              <th width="15%">开始时间</th>
+                              <th width="15%">结束时间</th>
+                              <th width="8%">起拍价</th>
+                              <th width="8%">一口价</th>
+                              <th width="7%">是否热销</th>
+                              <th width="15%">操作</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                        {foreach from=$auction_list item=auction}
+                        <tr class="bd-line">
+                          <td class="first_td_checkbox"><div class="first_all"><label><input value="{$auction.act_id}" name="checkboxes[]" type="checkbox" class="checkbox">{$auction.act_id}</label></div></td>
+                          <td class="tl"><span class="activity_name w295" title="{$auction.act_name|escape:html}">{$auction.act_name|escape:html}</span></td>
+                          <td align="center">{$auction.start_time}</td>
+                          <td align="center">{$auction.end_time}</td>
+                          <td align="center">{$auction.start_price}</td>
+                          <td align="center">{if $auction.no_top}{$lang.label_no_top}{else}{$auction.end_price}{/if}</td>
+                          <td align="center"><img src="images/{if $auction.is_hot eq 1}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_hot', {$auction.act_id})" /></td>
+                          <td align="center" class="handler_icon">
+                            <a href="auction.php?act=view_log&id={$auction.act_id}"><i class="icon icon-search"></i></a>
+                            <a href="auction.php?act=edit&amp;id={$auction.act_id}" title="{$lang.edit}"><i class="icon icon-edit"></i></a>
+                            <a href="javascript:;" onclick="listTable.remove({$auction.act_id},'{$lang.drop_confirm}')" title="{$lang.remove}"><i class="icon icon icon-trash"></i></a>
+                          </td>
+                        </tr>
+                        {foreachelse}
+                        <tr><td class="no-records" colspan="12">{$lang.no_records}</td></tr>
+                        {/foreach}
+                        </tbody>
+                      <tfoot>
+                          <tr>
+                          	<td colspan="12" class="td_border">
+                                <div class="shenhe">
+                                    <input type="submit" name="drop" id="btnSubmit" value="{$lang.drop}" class="button btn_disabled" disabled="true" />
+                                    <input type="hidden" name="act" value="batch" />
+                                </div>
+                            </td>
+                          </tr>
+                          <tr>
+                              <td colspan="20">
+                              {include file="page.dwt"}
+                              </td>
+                          </tr>
+                      </tfoot>
+                  </table>
+                  {if $full_page}
+                  </div>
+                  <!-- end auction list -->
+                  </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+<!--
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+
+  {literal}
+  onload = function()
+  {
+    startCheckOrder();
+  }
+  
+  {if $priv_ru eq 1}
+  function get_store_search(val){
+    if(val == 1){
+      document.forms['searchForm'].elements['merchant_id'].style.display = '';
+      document.forms['searchForm'].elements['store_keyword'].style.display = 'none';
+      document.forms['searchForm'].elements['store_type'].style.display = 'none';
+    }else if(val == 2){
+      document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+      document.forms['searchForm'].elements['store_keyword'].style.display = '';
+      document.forms['searchForm'].elements['store_type'].style.display = 'none';
+    }else if(val == 3){
+      document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+      document.forms['searchForm'].elements['store_keyword'].style.display = '';
+      document.forms['searchForm'].elements['store_type'].style.display = '';
+    }else{
+      document.forms['searchForm'].elements['merchant_id'].style.display = 'none';
+      document.forms['searchForm'].elements['store_keyword'].style.display = 'none';
+      document.forms['searchForm'].elements['store_type'].style.display = 'none';
+    }
+  }
+  {/if}
+
+  /**
+   * 搜索团购活动
+   */
+  function searchActivity()
+  {
+    
+    {if $priv_ru eq 1}
+    listTable.filter['store_search'] = Utils.trim(document.forms['searchForm'].elements['store_search'].value);
+    listTable.filter['merchant_id'] = Utils.trim(document.forms['searchForm'].elements['merchant_id'].value);
+    listTable.filter['store_keyword'] = Utils.trim(document.forms['searchForm'].elements['store_keyword'].value);
+    listTable.filter['store_type'] = Utils.trim(document.forms['searchForm'].elements['store_type'].value);
+    {/if}
+
+    var keyword = Utils.trim(document.forms['searchForm'].elements['keyword'].value);
+    listTable.filter['keyword'] = keyword;
+    if (document.forms['searchForm'].elements['is_going'].checked)
+    {
+      listTable.filter['is_going'] = 1;
+    }
+    else
+    {
+      listTable.filter['is_going'] = 0;
+    }
+    listTable.filter['page'] = 1;
+    listTable.loadList("auction_list");
+  }
+  {/literal}
+//-->
+</script>
+</body>
+</html>
+{/if}

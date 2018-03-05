@@ -1,0 +1,28 @@
+{insert_scripts files="jquery.purebox.js"}
+<script type="text/javascript">
+$(function(){
+	$(document).on("mouseenter",".list-div tbody td",function(){
+		$(this).parents("tr").addClass("tr_bg_blue");
+	});
+	
+	$(document).on("mouseleave",".list-div tbody td",function(){
+		$(this).parents("tr").removeClass("tr_bg_blue");
+	});
+	
+	//底部悬浮在浏览器底部
+	$(document).ready(function(e){
+    	var wheight = $(window).height();
+		var height = $(".header").height() + $(".content").height() + $(".footer").height();
+		if(wheight > height){
+			$(".footer").css({"position":"absolute","bottom":0});
+		}else{
+			$(".footer").css({"position":"static","bottom":0});
+		}
+    });
+});
+</script>
+<div class="footer">
+	<p>版权所有 © 2005-2016 上海商创网络科技有限公司，并保留所有权利。</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!doctype html>
+<html>
+<head>{include file ='library/admin_html_head.lbi'}</head>
+
+<body class="iframe_body">
+	<div class="warpper">
+    	<div class="title"><a href="wholesale.php?act=list" class="s-back">{$lang.back}</a>促销 - {$ur_here}</div>
+        <div class="content">
+        	<div class="explanation" id="explanation">
+            	<div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span></div>
+                <ul>
+                	<li>标识“<em>*</em>”的选项为必填项，其余为选填项。</li>
+                    <li>注意勾选合适的会员等级，只有达到该等级的会员才能参加批发方案活动。</li>
+                    <li>添加的批发方案可在前台促销管理中的批发市场看到。</li>
+					<li>批发不走普通购买流程。</li>
+                </ul>
+            </div>
+            <div class="flexilist">
+                <div class="common-content">
+                    <div class="mian-info">
+						<form method="post" action="wholesale.php" name="theForm" enctype="multipart/form-data" id="wholesale_form">
+                            <div class="switch_info">
+                                <div class="goods_search_div bor_bt_das">
+                                    <div class="search_select">
+                                        <div class="categorySelect">
+                                            <div class="selection">
+                                                <input type="text" name="category_name" id="category_name" class="text w250 valid" value="请选择分类" autocomplete="off" readonly data-filter="cat_name" />
+                                                <input type="hidden" name="category_id" id="category_id" value="0" data-filter="cat_id" />
+                                            </div>
+                                            <div class="select-container" style="display:none;">
+                                                {include file="library/filter_category.lbi"}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="search_select">
+                                        <div class="brandSelect">
+                                            <div class="selection">
+                                                <input type="text" name="brand_name" id="brand_name" class="text w120 valid" value="请选择品牌" autocomplete="off" readonly data-filter="brand_name" />
+                                                <input type="hidden" name="brand_id" id="brand_id" value="0" data-filter="brand_id" />
+                                            </div>
+                                            <div class="brand-select-container" style="display:none;">
+                                                {include file="library/filter_brand.lbi"}
+                                            </div>
+                                        </div>                            
+                                    </div>
+                                    <input type="hidden" name="ru_id" value="{$ru_id}" />
+                                    <input type="text" name="keyword" class="text w150" placeholder="请输入关键字" data-filter="keyword" autocomplete="off" />
+                                    <a href="javascript:void(0);" class="btn btn30" ectype="search" onclick="searchGoods()" ><i class="icon icon-search"></i>搜索</a>
+                                </div>
+                                <div class="items">
+                                    <div class="item mt10">
+                                        <div class="label">{$lang.require_field}{$lang.label_goods_name}</div>
+                                        <div class="label_value">
+                                       		<div id="goods_name" class="imitate_select select_w320">
+                                              <div class="cite">{$wholesale.goods_name}</div>
+                                              <ul>
+                                              	<li class="li_not">请先搜索商品</li>
+                                              </ul>
+                                              <input name="goods_id" id="goods_id" type="hidden" value="{$wholesale.goods_id}">
+                                            </div>
+                                            <div class="form_prompt"></div>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="label">{$lang.require_field}{$lang.label_rank_name}</div>
+                                        <div class="label_value">
+										  <div class="checkbox_items" style="width:auto;">
+										  {foreach from=$user_rank_list item=rank}
+                                          	<div class="checkbox_item">
+                                              <input name="rank_id[]" type="checkbox" class="ui-checkbox" id="rank_id_{$rank.rank_id}" value="{$rank.rank_id}" {if $rank.checked}checked="checked"{/if} />
+                                              <label for="rank_id_{$rank.rank_id}" class="ui-label">{$rank.rank_name}</label>
+                                          	</div>    
+										  {/foreach}
+										  </div>
+                                          <div class="form_prompt"></div>
+                                        </div>
+                                    </div>
+                                    <div class="item mb20">
+                                        <div class="label">{$lang.label_enabled}</div>
+                                        <div class="label_value">
+											<div class="checkbox_items">
+												<div class="checkbox_item"> 
+													<input name="enabled" type="radio" class="ui-radio" value="0" id="enabled_0"{if $wholesale.enabled eq 0||$wholesale.enabled eq ''}checked="checked"{/if} />
+													<label for="enabled_0" class="ui-radio-label">否</label>
+												</div>
+												<div class="checkbox_item"> 
+													<input name="enabled" type="radio" class="ui-radio" value="1" id="enabled_1" {if $wholesale.enabled}checked="checked"{/if} />
+													<label for="enabled_1" class="ui-radio-label">是</label>
+												</div>
+											</div>
+                                        </div>
+                                    </div>
+									<div class="item bor_top_das pt20">
+									<div class="label">{$lang.select_attr}：</div>
+                                    <div id="price-div" class="label_value">
+									{foreach from=$wholesale.price_list key=key item=attr_price}
+                                        <table class="table_item">
+                                            <tbody>
+                                                <!-- {if $attr_list} 该商品的属性 -->
+                                                <tr>
+                                                    <td>
+                                                        {foreach from=$attr_list item=attr}
+                                                            <label class="fl lh">{$attr.attr_name}：</label>
+                                                        	<div class="imitate_select select_w120">
+                                                              <div class="cite">请选择...</div>
+                                                              <ul>
+                                                                 {foreach from=$attr.goods_attr_list item=item key=k}
+                                                                 <li><a href="javascript:;" data-value="{$k}" class="ftx-01">{$item}</a></li>
+                                                                 {/foreach}
+                                                              </ul>
+                                                              <input name="attr_{$attr.attr_id}[{$key}]" type="hidden" value="$attr_price.attr[$attr.attr_id]">
+                                                            </div>
+                                                        {/foreach}
+                                                        {if $key eq 0}<input type="button" class="btn btn30 blue_btn_2" value="添加" onclick="addAttr(this)" />{else}<input type="button" class="btn btn30 red_btn" value="删除" onclick="dropAttr(this)" />{/if}
+                                                    </td>
+                                                </tr>
+                                                <!-- {/if} -->
+                                            
+                                                {foreach from=$attr_price.qp_list key=index item=qp}
+                                                    <tr>
+                                                        <td>
+                                                            <label class="fl lh">{$lang.quantity}：</label><input name="quantity[{$key}][]" type="text" class="text text_2 mr10 w100" value="{$qp.quantity}" autocomplete="off" />
+                                                            <label class="fl lh">{$lang.price}：</label><input name="price[{$key}][]" type="text" class="text text_2 mr10 w100" value="{$qp.price}" autocomplete="off" />
+                                                            {if $index eq 0}<input type="button" class="button" value="添加" onclick="addQuantityPrice(this, '{$key}')" />{else}<input type="button" class="button red_button" value="删除" onclick="dropQuantityPrice(this)" />{/if}
+                                                        </td>
+                                                    </tr>
+                                                {/foreach}
+                                            </tbody>
+                                        </table>
+									{/foreach}
+									</div>
+									</div>
+                                    <div class="item">
+                                        <div class="label">&nbsp;</div>
+                                        <div class="label_value info_btn">
+										  <input type="submit" class="button" value="{$lang.button_submit}" id="submitBtn" />
+										  <input type="reset" class="button button_reset" value="{$lang.button_reset}" />
+										  <input type="hidden" name="act" value="{$form_action}" />
+										  <input type="hidden" name="id" value="{$wholesale.act_id}" />
+										  <input type="hidden" name="seed" id="seed" value="{$key}" />
+                                        </div>
+                                    </div>
+								</div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+		</div>
+	</div>
+ {include file ='library/pagefooter.lbi'}
+	<script type="text/javascript">
+        //活动商品下拉
+        $.divselect("#goods_name","#goods_id",function(){
+            document.getElementById('price-div').innerHTML = '';
+            var goodsId = document.getElementById('goods_id').value;
+            getGoodsInfo(goodsId);
+        });
+		
+		//表单验证
+		$(function(){
+			$("#submitBtn").click(function(){
+				if($("#wholesale_form").valid()){
+					$("#wholesale_form").submit();
+				}
+			});
+			
+			/*jQuery.validator.addMethod("checkbox", function(value, element) {      
+					if($(element).is(':checked').length>0){
+						return
+					}       
+				}, "请选择会员等级"); */ 
+			
+			$('#wholesale_form').validate({
+				errorPlacement: function(error, element){
+					var error_div = element.parents('div.label_value').find('div.form_prompt');
+					element.parents('div.label_value').find(".notic").hide();
+					error_div.append(error);
+				},
+				rules : {
+					'goods_id' : {
+						min : 1
+					}
+				},
+				messages : {
+					goods_id : {
+						min : '<i class="icon icon-exclamation-sign"></i>请选择批发商品'
+					}
+				}
+			});
+		});
+    
+    /**
+     * 取得某商品信息
+     * @param int goodsId 商品id
+     */
+    function getGoodsInfo(goodsId)
+    {
+      if (goodsId > 0)
+      {
+        Ajax.call('wholesale.php?is_ajax=1&act=get_goods_info', 'goods_id=' + goodsId, getGoodsInfoResponse, 'get', 'json');
+      }
+      else
+      {
+        var divObj = document.getElementById('price-div');
+        divObj.innerHTML = '';
+      }
+    }
+    
+    function getGoodsInfoResponse(result)
+    {
+      var divObj = document.getElementById('price-div');
+      var tableObj = divObj.appendChild(document.createElement('TABLE'));
+      tableObj.className="table_item";
+      var key = getKey();
+      if (result.length > 0)
+      {
+        var row1 = tableObj.insertRow(-1);
+        //var cell1 = row1.insertCell(-1);
+        var cell2 = row1.insertCell(-1);
+        //cell2.colSpan = 2;
+        var html = '';
+        //cell1.innerHTML = '&nbsp;';
+        //cell1.className="label";
+        //var cell4 = row1.insertCell(-1);
+        for (var i = 0; i < result.length; i++)
+        {
+          var attr = result[i];
+          var re;
+          html += '<label class="fl lh">' + attr.attr_name + '：</label><div class="select_w120 imitate_select" ><div class="cite">{$lang.select_please}</div><ul>';
+          for (var goodsAttrId in attr.goods_attr_list)
+          {
+            if (goodsAttrId != 'toJSONString')
+            {
+                        // 去掉 goodsAttrId 中的字符 c
+                        re = /c/g;
+                        _goodsAttrId = goodsAttrId.replace(re, "");
+    
+              html += '<li><a href="javascript:;" data-value="' + _goodsAttrId + '" class="ftx-01">' + attr.goods_attr_list[goodsAttrId] + '</a></li>';
+            }
+          }
+          html += '</ul><input  name="attr_' + attr.attr_id + '[' + key + ']" type="hidden" value=""></div> ';
+        }
+        //cell2.innerHTML = html;
+        
+        if (divObj.childNodes.length == 1)
+        {
+          cell2.innerHTML = html+'<input type="button" class="btn btn30 blue_btn_2" value="添加" onclick="addAttr(this)" />';
+        }
+        else
+        {
+           cell2.innerHTML = html+'<input type="button" class="btn btn30 red_btn" value="删除" onclick="dropAttr(this)" />';
+        }
+        
+        //var cell5 = row1.insertCell(-1);
+      
+        //var row2 = tableObj.insertRow(-1);
+        //var cell1 = row2.insertCell(-1);
+        //var cell2 = row2.insertCell(-1);
+        //cell2.style.borderBottom = '1px #000 dashed';
+        //cell2.colSpan = 3;
+        //var cell5 = row2.insertCell(-1);
+      }
+    
+      var row3 = tableObj.insertRow(-1);
+      //var cell1 = row3.insertCell(-1);
+      //cell1.innerHTML = '&nbsp;';
+      //cell1.className="label";
+      var cell2 = row3.insertCell(-1);
+      cell2.innerHTML = getQuantityHtml(key)+getPriceHtml(key)+getButtonHtml(key);
+      //var cell3 = row3.insertCell(-1);
+      //cell3.innerHTML = getPriceHtml(key);
+      //var cell4 = row3.insertCell(-1);
+      //cell4.innerHTML = getButtonHtml(key);
+      //var cell5 = row3.insertCell(-1);
+      //cell5.width = '10%';
+    }	
+    
+    function getKey()
+    {
+      var seedObj = document.getElementById('seed');
+      seedObj.value = parseInt(seedObj.value) + 1;
+      return seedObj.value;
+    }
+    
+    /**
+     * @param object buttonObj
+     */
+    function addAttr(buttonObj)
+    {
+      getGoodsInfo(document.getElementById('goods_id').value);
+    }
+    
+    /**
+     * @param object buttonObj
+     */
+    function dropAttr(buttonObj)
+    {
+      var divObj = document.getElementById('price-div');
+      var tableObj = buttonObj.parentNode.parentNode.parentNode.parentNode;
+      divObj.removeChild(tableObj);
+    }	
+        
+    function searchGoods()
+    {
+        var filter = new Object;
+        filter.keyword  = document.forms['theForm'].elements['keyword'].value;
+        filter.cat_id  = document.forms['theForm'].elements['category_id'].value;
+        filter.brand_id  = document.forms['theForm'].elements['brand_id'].value;
+        filter.ru_id = document.forms['theForm'].elements['ru_id'].value;
+    
+        Ajax.call('wholesale.php?is_ajax=1&act=search_goods', filter, searchGoodsResponse, 'GET', 'JSON');
+    }
+    
+    /**
+     * @param object buttonObj
+     * @param int    tableIndex
+     */
+    function addQuantityPrice(buttonObj, tableIndex)
+    {
+      var tableObj = buttonObj.parentNode.parentNode.parentNode.parentNode;
+      var newRow = tableObj.insertRow(-1);
+      var cell2 = newRow.insertCell(-1);
+      cell2.innerHTML = '<label class="fl lh">{$lang.quantity}：</label><input name="quantity[' + tableIndex + '][]" type="text" class="text text_2 mr10 w100" value="0" autocomplete="off" /><label class="fl lh">{$lang.price}：</label><input name="price[' + tableIndex + '][]" type="text" class="text text_2 mr10 w100" value="0" autocomplete="off" /><input type="button" class="button red_button" value="删除" onclick="dropQuantityPrice(this)" />';
+    }
+    
+    /**
+     * @param object buttonObj
+     */
+    function dropQuantityPrice(buttonObj)
+    {
+      var trObj = buttonObj.parentNode.parentNode;
+      var tableObj = trObj.parentNode.parentNode;
+      tableObj.deleteRow(trObj.rowIndex);
+    }
+    
+    function searchGoodsResponse(result)
+    {
+        $("#goods_name").children("ul").find("li").remove();
+        
+        var goods = result.content;
+        if (goods)
+        {
+          for (i = 0; i < goods.length; i++)
+          {
+            $("#goods_name").children("ul").append("<li><a href='javascript:;' data-value='"+goods[i].goods_id+"' class='ftx-01'>"+goods[i].goods_name+"</a></li>")
+          }
+        }
+    }
+    
+    function getQuantityHtml(key)
+    {
+      {/literal}
+      var html = '<label class="fl lh">{$lang.quantity}：</label><input name="quantity[#][]" type="text" value="" class="text text_2 mr10 w100" autocomplete="off" />';
+      {literal}
+    
+      return html.replace('[#]', '[' + key + ']');
+    }
+    
+    function getPriceHtml(key)
+    {
+      {/literal}
+      var html = '<label class="fl lh">{$lang.price}：</label><input name="price[#][]" type="text" value="" class="text text_2 mr10 w100" autocomplete="off" />';
+      {literal}
+    
+      return html.replace('[#]', '[' + key + ']');
+    }
+    
+    function getButtonHtml(key)
+    {
+      {/literal}
+      var html = '<input type="button" class="button" value="添加" onclick="addQuantityPrice(this, [#])" />';
+      {literal}
+    
+      return html.replace('[#]', key);
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,317 @@
+{if $temp eq 'addCategory'}
+<div class="dialog_addCategory">
+	<dl>
+    	<dt>{$lang.category_name}：</dt>
+        <dd><input type="text" class="text text_2" name="addedCategoryName" id="addedCategoryName" value=""></dd>
+    </dl>
+</div>
+{/if}
+
+{if $temp eq 'addBrand'}
+<div class="dialog_addBrand">
+	<dl>
+    	<dt>{$lang.brand_name}：</dt>
+        <dd><input type="text" class="text text_2" name="addBrandName" id="addBrandName" value=""></dd>
+    </dl>
+</div>
+{/if}
+
+{if $temp eq 'addWarehouse'}
+<div class="addWarehouse">
+    <dl>
+        <dt>{$lang.warehouse_name}：</dt>
+        <dd>
+            <select name="warehouse_name" class="select select_4" id="warehouse_name">
+                <option value="0" selected>{$lang.select_please}</option>
+                {foreach from=$warehouse_list item=warehouse name=nowarehouse}
+                <option value="{$warehouse.region_id}">{$warehouse.region_name}</option>
+                {/foreach}
+            </select>
+        </dd>
+    </dl>    
+    <dl>
+        <dt>{$lang.warehouse_number}：</dt>
+        <dd><input name="warehouse_number" id="warehouse_number" value="0" type="text" size="10" class="text text_2" /></dd>
+    </dl>
+    <dl>
+        <dt>{$lang.warehouse_price}：</dt>
+        <dd><input name="warehouse_price" id="warehouse_price" value="0" type="text" size="10" class="text text_2"/></dd>
+    </dl>
+    <dl>
+        <dt>{$lang.warehouse_promote_price}：</dt>
+        <dd><input name="warehouse_promote_price" id="warehouse_promote_price" value="0" type="text" size="10" class="text text_2"/></dd>
+    </dl>
+    
+    <dl>
+        <dt>{$lang.lab_give_integral}</dt>
+        <dd><input name="give_integral" id="warehouse_give_integral" value="0" type="text" size="10" class="text text_2" rev="give" />&nbsp;<span class="color999" id="give_html">可设置<em id="give">0</em>消费积分</span></dd>
+    </dl>
+    <dl>
+        <dt>{$lang.lab_rank_integral}</dt>
+        <dd><input name="rank_integral" id="warehouse_rank_integral" value="0" type="text" size="10" class="text text_2" rev="rank" />&nbsp;<span class="color999" id="rank_html">可设置<em id="rank">0</em>等级积分</span></dd>
+    </dl>
+    <dl>
+        <dt>{$lang.lab_integral}</dt>
+        <dd><input name="pay_integral" id="warehouse_pay_integral" value="0" type="text" size="10" class="text text_2" rev="pay" />&nbsp;<span class="color999" id="pay_html">可设置积分购买<em id="pay">0</em>金额</span></dd>
+    </dl>
+</div>
+<script type="text/javascript">
+$(function(){
+	
+	$('#warehouse_price, #warehouse_promote_price').blur(function(){
+		var warehouse_price = Number($("#warehouse_price").val());
+		var warehouse_promote_price = Number($("#warehouse_promote_price").val());
+		var shop_price;
+		
+		if(warehouse_price > warehouse_promote_price && warehouse_promote_price == 0){
+			shop_price = warehouse_price;
+		}else if(warehouse_price < warehouse_promote_price && warehouse_promote_price != 0){
+			shop_price = warehouse_price;
+		}else{
+			shop_price = warehouse_promote_price;
+		}
+		
+		var give_integral = Math.floor(shop_price * {$grade_rank.give_integral});
+
+		$("#give").html(give_integral);
+		
+		var rank_integral = Math.floor(shop_price * {$grade_rank.rank_integral});
+		$("#rank").html(rank_integral);
+		
+		var pay_integral = Math.floor(shop_price / 100 * {$integral_scale} * {$grade_rank.pay_integral});
+		$("#pay").html(pay_integral);
+		
+		$("#warehouse_give_integral").val('');
+		$("#warehouse_rank_integral").val('');
+		$("#warehouse_pay_integral").val('');
+	});
+	
+	$('#warehouse_give_integral, #warehouse_rank_integral, #warehouse_pay_integral').blur(function(){
+		var give = $('#give').html();
+		var rank = $('#rank').html();
+		var pay = $('#pay').html();
+		var val = $(this).val();
+		var rev = $(this).attr('rev');
+		var integral = $("#" + rev).html();
+		if(val > integral){
+			if(rev == 'give'){
+				alert("可设置" + integral + "消费积分");
+			}else if(rev == 'rank'){
+				alert("可设置" + integral + "等级积分");
+			}else{
+				alert("可设置积分购买" + integral + "金额");
+			}
+			$(this).val(integral);
+		}
+	});
+	
+});
+</script>
+{/if}
+{if $temp eq 'addBatchWarehouse'}
+<div class="warehouse_warpper" id="batchWarehouelist">
+    <div class="warehouse_item">
+        <a href="javascript:;" onclick="addImg_warehouse(this)" class="up"></a>
+        {$lang.warehouse_name}：
+        <select name="warehouse_name" style=" margin:0 10px 0 0;">
+        <option value="0" selected>{$lang.select_please}</option>
+        {foreach from=$warehouse_list item=warehouse name=nowarehouse}
+        <option value="{$warehouse.region_id}">{$warehouse.region_name}</option>
+        {/foreach}
+        </select>
+        {$lang.warehouse_number}：<input name="warehouse_number" value="0" type="text" size="10" class="text_5 mr10" />
+        {$lang.warehouse_price}：<input name="warehouse_price" value="0" type="text" size="10" class="text_5 mr10"/>
+        {$lang.warehouse_promote_price}：<input name="warehouse_promote_price" value="0" type="text" size="10" class="text_5 mr10"/>
+    </div>
+    
+    <div class="hide">
+    	{$lang.lab_give_integral}<input name="give_integral" value="0" type="text" size="10" class="text_5 mr10"/>
+        {$lang.lab_rank_integral}<input name="rank_integral" value="0" type="text" size="10" class="text_5 mr10"/>
+        {$lang.lab_integral}<input name="pay_integral" value="0" type="text" size="10" class="text_5 mr10"/>
+    </div>
+</div>
+{/if}
+{if $temp eq 'addRegion'}
+<div class="addWarehouse">
+    <dl>
+        <dt>{$lang.warehouse_region_name}：</dt>
+        <dd>
+            <select name="warehouse_area_name" onchange="get_warehouse_area_name(this.value, this.id, {$goods_id}, {$user_id})" id="1" class="select" style=" margin:0 10px 0 0;">
+                <option value="0" selected>{$lang.select_please}</option>
+                {foreach from=$warehouse_list item=warehouse name=nowarehouse}
+                <option value="{$warehouse.region_id}">{$warehouse.region_name}</option>
+                {/foreach}
+            </select>
+            <font style="font-size:12px; float:left;" id="warehouse_area_list_1" name="warehouse_area_list"></font>
+        </dd>
+    </dl>    
+    <dl>
+        <dt>{$lang.region_number}：</dt>
+        <dd><input name="region_number" id="region_number" value="0" type="text" size="10" class="text text_2" /></dd>
+    </dl>
+    <dl>
+        <dt>{$lang.region_price}：</dt>
+        <dd><input name="region_price" id="region_price" value="0" type="text" size="10" class="text text_2"/></dd>
+    </dl>
+    <dl>
+        <dt>{$lang.region_promote_price}：</dt>
+        <dd><input name="region_promote_price" id="region_promote_price" value="0" type="text" size="10" class="text text_2"/></dd>
+    </dl>
+    
+    <dl>
+        <dt>{$lang.lab_give_integral}</dt>
+        <dd><input name="give_integral" id="region_give_integral" value="0" type="text" size="10" class="text text_2" rev="give" />&nbsp;<span class="color999" id="give_html">可设置<em id="give">0</em>消费积分</span></dd>
+    </dl>
+    <dl>
+        <dt>{$lang.lab_rank_integral}</dt>
+        <dd><input name="rank_integral" id="region_rank_integral" value="0" type="text" size="10" class="text text_2" rev="rank" />&nbsp;<span class="color999" id="rank_html">可设置<em id="rank">0</em>等级积分</span></dd>
+    </dl>
+    <dl>
+        <dt>{$lang.lab_integral}</dt>
+        <dd><input name="pay_integral" id="region_pay_integral" value="0" type="text" size="10" class="text text_2" rev="pay" />&nbsp;<span class="color999" id="pay_html">可设置积分购买<em id="pay">0</em>金额</span></dd>
+    </dl>
+</div>
+
+<script type="text/javascript">
+$(function(){
+	
+	$('#region_price, #region_promote_price').blur(function(){
+		var region_price = Number($('#region_price').val());
+		var region_promote_price = Number($('#region_promote_price').val());
+		var shop_price;
+		
+		if(region_price > region_promote_price && region_promote_price == 0){
+			shop_price = region_price;
+		}else if(region_price < region_promote_price && region_promote_price != 0){
+			shop_price = region_price;
+		}else{
+			shop_price = region_promote_price;
+		}
+		
+		var give_integral = Math.floor(shop_price * {$grade_rank.give_integral});
+
+		$("#give").html(give_integral);
+		
+		var rank_integral = Math.floor(shop_price * {$grade_rank.rank_integral});
+		$("#rank").html(rank_integral);
+		
+		var pay_integral = Math.floor(shop_price / 100 * {$integral_scale} * {$grade_rank.pay_integral});
+		$("#pay").html(pay_integral);
+		
+		$("#warehouse_give_integral").val('');
+		$("#warehouse_rank_integral").val('');
+		$("#warehouse_pay_integral").val('');
+	});
+	
+	$('#region_give_integral, #region_rank_integral, #region_pay_integral').blur(function(){
+		var give = $('#give').html();
+		var rank = $('#rank').html();
+		var pay = $('#pay').html();
+		var val = $(this).val();
+		var rev = $(this).attr('rev');
+		var integral = $("#" + rev).html();
+		if(val > integral){
+			if(rev == 'give'){
+				alert("可设置" + integral + "消费积分");
+			}else if(rev == 'rank'){
+				alert("可设置" + integral + "等级积分");
+			}else{
+				alert("可设置积分购买" + integral + "金额");
+			}
+			$(this).val(integral);
+		}
+	});
+	
+});
+</script>
+{/if}
+{if $temp eq 'addBatchRegion'}
+<div class="warehouse_warpper" id="batchRegionlist">
+	<div class="warehouse_item" id="area_1">
+        <a href="javascript:;" onclick="addImg_area_warehouse(this)" class="up"></a>
+        {$lang.warehouse_region_name}：
+        <select name="warehouse_area_name" onchange="get_warehouse_area_name(this.value, this.id, {$goods_id}, {$user_id})" id="1" style=" margin:0 10px 0 0;">
+        <option value="0" selected>{$lang.select_please}</option>
+        {foreach from=$warehouse_list item=warehouse name=nowarehouse}
+        <option value="{$warehouse.region_id}">{$warehouse.region_name}</option>
+        {/foreach}
+        </select>
+        <font style="font-size:12px;" id="warehouse_area_list_1" name="warehouse_area_list"></font>
+        {$lang.region_number}：<input name="region_number" value="0" type="text" size="10" class="text_5 mr10"/>
+        {$lang.region_price}：<input name="region_price" value="0" type="text" size="10" class="text_5 mr10"/>
+        {$lang.region_promote_price}：<input name="region_promote_price" value="0" type="text" size="10" class="text_5 mr10"/>
+    </div>
+    
+    <div class="hide">
+    	{$lang.lab_give_integral}<input name="give_integral" value="0" type="text" size="10" class="text_5 mr10"/>
+        {$lang.lab_rank_integral}<input name="rank_integral" value="0" type="text" size="10" class="text_5 mr10"/>
+        {$lang.lab_integral}<input name="pay_integral" value="0" type="text" size="10" class="text_5 mr10"/>
+    </div>
+</div>
+{/if}
+{if $temp eq 'addImg'}
+<form  action="goods.php?act=addImg" id="fileForm" method="post"  enctype="multipart/form-data"  runat="server" >
+<div class="addImg" id="addImg">
+	<dl>
+        <dt>{$lang.img_count}：</dt>
+        <dd><input type="text" class="text_3 mr10"  name="img_desc[]" size="20" /></dd>
+    </dl>
+    <dl>
+        <dt>{$lang.img_url}：</dt>
+        <dd><input type="file" name="img_url[]" id="img_url"  class="file mr10 mt5" /></dd>
+    </dl>
+    <dl>
+        <dt>{$lang.img_file}：</dt>
+        <dd><input type="text" size="40" value="{$lang.img_file}" style="color:#aaa; width:250px;" onfocus="if (this.value == '{$lang.img_file}'){this.value='http://';this.style.color='#000';}" name="img_file[]"/></dd>
+    </dl>
+    <input type="hidden"   value="{$goods_id}" name="goods_id_img"/>
+</div>
+</form>
+{/if}
+{if $temp eq 'addBatchImg'}
+<form  action="goods.php?act=addBatchImg" id="addBatchImg_from" method="post"  enctype="multipart/form-data"  runat="server" >
+	<div class="img_item"  >
+		<span class="red">{$lang.remind}</span>
+	</div>
+	<div class="img_item">
+    <a href="javascript:;" onclick="addImg(this)" class="up"></a>
+    {$lang.img_count}：<input type="text" class="text_2 mr10" name="img_desc[]" size="20" />
+    {$lang.img_url}：<input type="file" name="img_url[]" id="Batch_img_url" class="mr10" />
+    <input type="text" size="40" value="{$lang.img_file}" style="color:#aaa;" onfocus="if (this.value == '{$lang.img_file}'){this.value='http://';this.style.color='#000';}" name="img_file[]"/>
+    <input type="hidden"   value="{$goods_id}" name="goods_id_img"/>
+    </div>
+
+</form>
+{/if}
+{if $temp eq 'privilege'}
+<div class="dialog_privilege" id="dialog_privilege">
+	<dl>
+    	<dt>{$lang.label_region}：</dt>
+        <dd>
+        	<select name="country" id="selCountries" onChange="region.changed(this, 1, 'selProvinces')" class="select">
+              {foreach from=$countries item=country name=fe_country}
+                <option value="{$country.region_id}" {if $smarty.foreach.fe_country.first}selected{/if}>{$country.region_name|escape:html}</option>
+              {/foreach}
+            </select>
+            <select name="province" id="selProvinces" onChange="region.changed(this, 2, 'selCities')" class="select mr10">
+              <option value="">{$lang.select_please}</option>
+            </select>
+            <select name="city" id="selCities" onChange="region.changed(this, 3, 'selDistricts')" class="select mr10">
+              <option value="">{$lang.select_please}</option>
+            </select>
+            <select name="district" id="selDistricts" class="select mr10">
+              <option value="">{$lang.select_please}</option>
+            </select>
+        </dd>
+    </dl>
+</div>
+<script type="text/javascript">
+	var selCountry = document.getElementById("selCountries");
+	if (selCountry.selectedIndex >= 0)
+	{
+		region.loadProvinces(selCountry.options[selCountry.selectedIndex].value);
+	}
+</script>
+{/if} 
+
+

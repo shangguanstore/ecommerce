@@ -1,0 +1,118 @@
+{if $full_page}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+<body>
+{include file ='library/seller_header.lbi'}
+{include file ='library/url_here.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        <div class="site wrapper">
+            {include file ='library/seller_menu_left.lbi'}
+            <div class="ecsc-layout-right">
+                <div class="main-content" id="mainContent">
+					{include file ='library/seller_menu_tab.lbi'}
+                    <form method="post" action="javascript:searchOrder()" target="_self">
+                        <table class="search-form">
+                            <tbody>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <th>{$lang.label_delivery_sn}</th>
+                                <td class="w100"><input type="text" class="text w80" name="delivery_sn" id="delivery_sn" value=""></td>
+                                <th>{$lang.order_sn}</th>
+                                <td class="w100"><input type="text" class="text w80" name="order_sn" id="order_sn" value=""></td>
+                                <th>{$lang.consignee|escape}</th>
+                                <td class="w160"><input type="text" class="text w150" name="consignee" id="consignee" value=""></td>
+                                <td class="w70 tr"><label class="submit-border"><input type="submit" class="submit" value="{$lang.button_search}"></label></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                    {/if}
+                    <form method="post" action="order.php?act=operate" name="listForm" onsubmit="return check()">
+                    <div class="table_list" id="listDiv">
+                    	<table class="ecsc-default-table order">
+                            <thead>
+                                <tr>
+                                    <th colspan="4" >
+                                    	<div class="first_all" style="margin-left:5%;">
+                                                <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox"/><a href="javascript:listTable.sort('delivery_sn', 'DESC'); ">{$lang.label_delivery_sn}</a><div class="img">{$sort_delivery_sn}</div>
+                                        </div>
+                                    </th>
+                                    <th ><a href="javascript:listTable.sort('order_sn', 'DESC'); ">{$lang.order_sn}</a><div class="img">{$sort_order_sn}</div></th>
+                                    <th ><a href="javascript:listTable.sort('add_time', 'DESC'); ">{$lang.label_add_time}</a><div class="img">{$sort_add_time}</div></th>
+                                    <th ><a href="javascript:listTable.sort('consignee', 'DESC'); ">{$lang.consignee}</a><div class="img">{$sort_consignee}</div></th>
+                                    <th ><a href="javascript:listTable.sort('update_time', 'DESC'); ">{$lang.label_update_time}</a><div class="img">{$sort_update_time}</div></th>
+                                    <th width="10%">{$lang.label_return_time}</th>
+                                    <th width="5%">{$lang.operator}</th>
+                                    <th width="10%">{$lang.handler}</th>
+                                </tr>
+                            </thead>
+                            {foreach from=$back_list item=back key=dkey}
+                            <tbody>
+                                <tr><td colspan="20" class="sep-row"></td></tr>
+                                <tr>
+                                    <td colspan="4" class="bdl">
+                                      <div class="first_all" style="margin-left:5%;"><input type="checkbox" name="checkboxes[]" value="{$back.back_id}" id="back_{$back.back_id}" /><label for="back_{$back.back_id}">{$back.delivery_sn}</label></div>
+                                    </td>
+                                    <td class="bdl" rowspan="1">
+                                       {$back.order_sn}
+                                    </td>
+                                    
+                                    <td align="center" valign="top" nowrap="nowrap">{$back.add_time}</td>
+                                    <td align="center" valign="top"> {$back.consignee|escape}</td>
+                                    <td align="center" valign="top" nowrap="nowrap">{$back.update_time}</td>
+                                    <td align="center" valign="top" nowrap="nowrap">{$back.return_time}</td>
+                                    <td align="center" valign="top" nowrap="nowrap">{$back.action_user}</td>
+                                    <td align="center" valign="top"  nowrap="nowrap">
+                                    <a href="order.php?act=back_info&back_id={$back.back_id}" class="blue">{$lang.detail}</a>
+                                    <a onclick="{if(confirm('{$lang.confirm_delete}')){return true;}return false;}" href="order.php?act=operate&remove_back=1&back_id={$back.back_id}" class="blue">{$lang.remove}</a>
+                                   </td>
+                                </tr>
+                            </tbody>
+                        {foreachelse}
+                        <tr><td class="no-records" colspan="11">{$lang.no_records}</td></tr>
+                        {/foreach}
+                              <tfoot>
+                                <tr>
+                                    <td colspan="20">
+                                        <div class="shenhe">
+                                            <input name="remove_back" type="submit" id="btnSubmit3" value="{$lang.remove}" class="button btn_disabled" disabled="true" onclick="{if(confirm('{$lang.confirm_delete}')){return true;}return false;}" />
+                                        </div>
+                                        {include file="page.dwt"}
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    </form>
+                    {if $full_page}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script type="text/javascript">
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+  listTable.query = "back_query";
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+    /**
+     * 搜索订单
+     */
+    function searchOrder()
+    {
+        listTable.filter['order_sn'] = Utils.trim(document.forms['searchForm'].elements['order_sn'].value);
+        listTable.filter['consignee'] = Utils.trim(document.forms['searchForm'].elements['consignee'].value);
+        listTable.filter['delivery_sn'] = document.forms['searchForm'].elements['delivery_sn'].value;
+        listTable.filter['page'] = 1;
+        listTable.query = "back_query";
+        listTable.loadList();
+    }
+</script>
+</body>
+</html>
+{/if}

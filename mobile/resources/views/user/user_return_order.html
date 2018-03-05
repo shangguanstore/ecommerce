@@ -1,0 +1,78 @@
+{include file="page_header"}
+<body>
+<div class="con m-b7">
+    <!--<section class="product-list j-product-list product-list-small" data="2">
+        <ul>
+            <div class="store_info">
+                <script id="j-product" type="text/html">
+                    <%each goods_list as goods%>
+                    <li>
+                        <div class="product-div">
+                            <a href="<%goods.url%>"><img class="product-list-img" src="<%goods.goods_thumb%>"></a>
+                            <div class="product-text">
+                                <a href="<%goods.url%>"><h4>
+                                    <%goods.goods_name%></h4></a>
+                                <p class="dis-box p-t-remark" style="padding-top:0"><span class="box-flex"><%#goods.goods_attr%></span><span
+                                        class="box-flex text-right">×<%goods.goods_number%></span></p>
+                                <p class="dis-box">
+                                            <span class="p-price t-first box-flex">
+                                                <%#goods.goods_price%>
+                                            </span>
+                                    <a <%if goods.is_refound == 0%>href="<%goods.order_url%>"<%/if%> class="box-flex n-return-btn"><em class="btn-default">
+                                        <%if goods.is_refound == 0%>申请<%else%>已申请<%/if%>
+                                    </em></a>
+                                </p>
+                            </div>
+                        </div>
+
+                     </li>
+                    <%/each%>
+                </script>
+            </div>
+        </ul>
+
+    </section>-->
+    <section class="flow-checkout-pro m-top08">
+        <div class="product-list j-product-list product-list-small b-color-f">
+            <ul>
+                <div class="store_info">
+                <script id="j-product" type="text/html">
+                    <%each goods_list as goods%>
+                    <li>
+                        <div class="product-div">
+                            <a href="<%goods.url%>"><img class="product-list-img" src="<%goods.goods_thumb%>"></a>
+                            <div class="product-text">
+                                <a href="<%goods.url%>"><h4><%goods.goods_name%></h4></a>
+                                <p class="dis-box p-t-remark"><span class="box-flex "><%#goods.goods_attr%></span><span
+                                        class="box-flex text-right">×<%goods.goods_number%></span></p>
+                            </div>
+                        </div>
+                    </li>
+                    <footer class="padding-all b-color-f m-top1px of-hidden dis-box">
+                        <h4 class="t-remark2 box-flex">
+                            <label class="t-remark">合计：</label><span class="t-first"><em>¥</em>59.00</span>
+                        </h4>
+                        <p class="ect-button-more ">
+                            <a <%if goods.is_refound == 0%>href="<%goods.order_url%>"<%/if%> class="box-flex n-return-btn"><em class="btn-default">
+                            <%if goods.is_refound == 0%>申请<%else%>已申请<%/if%>
+                        </em></a>
+                        </p>
+                    </footer>
+                    <%/each%>
+                </script>
+                </div>
+            </ul>
+        </div>
+
+    </section>
+
+
+
+</div>
+<!--引用js-->
+<script>
+    $('.store_info').infinite({url: "{U('user/order/goodsorder')}", template: 'j-product'});
+</script>
+</body>
+
+</html>

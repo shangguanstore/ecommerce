@@ -1,0 +1,93 @@
+{include file="page_header-nav"}
+<body class="flow-body">
+<div class="con">
+    <!-- {if $goods_list } -->
+    <div class="main flow-main">
+        <ul class="flow-cart-show">
+
+            <!-- {foreach $goods_list as $k => $goods} -->
+            <li class="cart-show-h2">
+                <!-- {if $goods.fitting == 1} -->
+                <div class="flow-cart-others">
+                    <a class="fr" href="{U('cart/Fittings/index',array('id'=>$this->_var['goods']['goods_id']))}">相关配件</a>
+                </div>
+                <!-- {/if} -->
+                <img class="fl" src="{$goods.goods_thumb}" alt="{$goods.goods_name}" />
+                <h2>
+                    <a href="{U('goods/index/index',array('id'=>$this->_var['goods']['goods_id']))}"><p class="fl part-message-title">
+                        <!-- {if $goods.parent_id > 0} 配件 -->
+                        {$lang.accessories}
+                        <!-- {/if} -->
+                        <!-- {if $goods.is_gift > 0} 赠品 -->
+                        {$lang.largess}
+                        <!-- {/if} -->
+                    </p>{$goods.goods_name}
+                    </a>
+                </h2>
+                <span>{$goods.goods_price}</span>
+                <div class="goods-category-num fl">
+                    <!-- {if $goods.goods_id gt 0 && $goods.is_gift == 0 && $goods.parent_id == 0} 普通商品可修改数量 -->
+                    <input type="hidden" id="back_number{$goods.rec_id}" value="{$goods.goods_number}" />
+                    <button type="button" class="btn-minus fl" onClick="change_goods_number('1',{$goods.rec_id})">-</button>
+                    <input type="text"  name="{$goods.rec_id}" id="goods_number{$goods.rec_id}" autocomplete="off" value="{$goods.goods_number}" onFocus="back_goods_number({$goods.rec_id})"  onblur="change_goods_number('2',{$goods.rec_id})" maxlength="1" class="fl" />
+                    <button type="button" class="btn-add fl"  onClick="change_goods_number('3',{$goods.rec_id})">+</button>
+                    <!-- {else}-->
+                    <input type="text" class="fl" readonly value="{$goods.goods_number}"/>
+                    <!-- {/if}-->
+                </div>
+
+                <i class="iconfont fr delete" onclick="javascript:if (confirm('{L('drop_goods_confirm')}')) location.href='{U('cart/index/drop_goods',array('id'=>$this->_var['goods']['rec_id']))}';">&#xe610;</i>
+            </li>
+            <!-- {/foreach} -->
+        </ul>
+    </div>
+
+    <!-- {/if} -->
+
+    <footer class="cart-footer">
+        <a href="javascript:void(0)">
+            <!--<i class="iconfont">&#xe63a;</i>-->
+            <span>{:L('total')}：<span id="goods_subtotal">{$total.goods_price}</span></span>
+        </a>
+        <button class="fr btn btn-default" type="button" onclick="location.href='{U('flow/index/index')}'">去结算</button>
+    </footer>
+
+</div>
+<script>
+    function back_goods_number(id){
+        var goods_number = document.getElementById('goods_number'+id).value;
+        document.getElementById('back_number'+id).value = goods_number;
+    }
+    function change_goods_number(type, id)
+    {
+        var goods_number = document.getElementById('goods_number'+id).value;
+        if(type != 2){  back_goods_number(id) }
+        if(type == 1){  goods_number--;  }
+        if(type == 3){  goods_number++;  }
+        if(goods_number <=0 ){ goods_number=1; }
+        if(!/^[0-9]*$/.test(goods_number)){ goods_number = document.getElementById('back_number'+id).value; }
+        document.getElementById('goods_number'+id).value = goods_number;
+        $.post('{U("cart/index/update_cart")}', {
+            rec_id : id,goods_number : goods_number
+        }, function(data) {
+            change_goods_number_response(data,id);
+        }, 'json');
+    }
+    // 处理返回信息并显示
+    function change_goods_number_response(result,id)
+    {
+        if (result.error == 0){
+            var rec_id = result.rec_id;
+            $("#goods_number_"+rec_id).val(result.goods_number);
+            document.getElementById('goods_subtotal').innerHTML = result.total_desc;//更新小计
+        }else if (result.message != ''){
+            alert(result.message);
+            var goods_number = document.getElementById('back_number'+id).value;
+            document.getElementById('goods_number'+id).value = goods_number;
+        }
+    }
+
+</script>
+</body>
+
+</html>

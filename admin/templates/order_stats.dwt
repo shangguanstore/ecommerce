@@ -1,0 +1,217 @@
+<!doctype html>
+<html>
+<head>{include file ='library/admin_html_head.lbi'}</head>
+
+<body class="iframe_body">
+<div class="warpper">
+    <div class="title">报表 - 订单统计</div>
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span></div>
+            <ul>
+                <li>统计商城所有的订单，销售总额、有效金额、总点击数、每日点击数、每日点击购买额。</li>
+                <li>选择不同月份统计出现几个月的订单概括、配送方式、支付方式统计图。</li>
+            </ul>
+        </div>
+        <div class="flexilist mt30">
+            <div class="common-head">
+                <div class="fl">
+                    <div class="fbutton"><div class="csv" title="导出数据"><span><i class="icon icon-download-alt"></i>导出列表</span></div></div>
+                </div>
+                <div class="total_items">
+                    <ul>
+                        <li>销售总额：<b>￥{$order_total}</b></li>
+                        <li>有效订单总额：<b>{$total_turnover}</b></li>
+                        <li>总点击数：<b>{$click_count}</b></li>
+                        <li>每天点击订单数：<b>{$click_ordernum}</b></li>
+                        <li>每天点击购物数：<b>{$click_turnover}</b></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="common-content">
+                <div class="mian-info">
+                    <div class="switch_info">
+                        <div class="stat_order_search">
+                            <div class="search_item">
+                                <form action="" method="post" id="selectForm" name="selectForm">
+                                    <strong>起止日期：</strong>
+                                    <div class="text_time" id="text_time_start">
+                                        <input type="text" class="text" name="start_date" value="{$start_date}" id="start_date" value="" autocomplete="off" readonly>
+                                    </div>
+                                    <span class="bolang">&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+                                    <div class="text_time" id="text_time_end">
+                                        <input type="text" class="text" name="end_date" value="{$end_date}" id="end_date" value="" autocomplete="off" readonly>
+                                    </div>
+                                    <a href="javascript:void(0);" onclick="$('#selectForm').submit()" class="btn btn30 blue_btn" ectype="query"><i class="icon icon-search"></i>查询</a>
+                                </form>
+                            </div>   
+                            <div class="search_item">
+                                <strong>查询年月：</strong>
+                                <form method="post" id="selectForm" name="selectForm">
+                                    <!--{foreach from=$start_date_arr item=start_date key=k}-->
+                                    {if $k > 0}
+                                    <span class="bolang">&nbsp;&nbsp;+&nbsp;&nbsp;</span>
+                                    {/if}
+                                    <div class="text_time" id="text_time_start">
+                                        <input type="text" class="text" name="year_month[]" id="year_month_{$k}" value="{$start_date}" autocomplete="off" readonly>
+                                    </div>
+                                    <!--{/foreach}-->
+                                    <input type="hidden" name="is_multi" value="1" />
+                                <a href="javascript:;" onclick="$('#selectForm').submit()" class="btn btn30 blue_btn" ectype="query"><i class="icon icon-search"></i>查询</a>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="stat_order_tabs">
+                            <ul>
+                                <li class="current">订单概况</li>
+                                <li>配送方式</li>
+                                <li>支付方式</li>
+                            </ul>
+                        </div>
+                        <div class="stat_order_table">
+                            <div class="stat_order_table_info">
+                                {if $is_multi eq '0'}
+                                <OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"  codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" WIDTH="650" HEIGHT="400" id="OrderGeneral" ALIGN="middle">
+                                    <PARAM NAME="FlashVars" value="&dataXML={$order_general_xml}">
+                                    <PARAM NAME="movie" VALUE="images/charts/pie3d.swf?chartWidth=650&chartHeight=400">
+                                    <PARAM NAME="quality" VALUE="high">
+                                    <PARAM NAME=bgcolor VALUE="#FFFFFF">
+                                    <param name="wmode" value="opaque" />
+                                    <EMBED src="images/charts/pie3d.swf?chartWidth=650&chartHeight=400" FlashVars="&dataXML={$order_general_xml}" quality="high" bgcolor="#FFFFFF" WIDTH="650" HEIGHT="400" wmode="opaque" NAME="OrderGeneral" ALIGN="middle" TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/go/getflashplayer"></EMBED>
+                                </OBJECT>
+                                {else}
+                                <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+                                        codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0"
+                                        width="565" height="420" id="FCColumn2" align="middle">
+                                    <PARAM NAME="FlashVars" value="&dataXML={$order_general_xml}">
+                                    <PARAM NAME=movie VALUE="images/charts/MSColumn3D.swf?chartWidth=650&chartHeight=400">
+                                    <param NAME="quality" VALUE="high">
+                                    <param NAME="bgcolor" VALUE="#FFFFFF">
+                                    <param name="wmode" value="opaque" />
+                                    <embed src="images/charts/MSColumn3D.swf?chartWidth=650&chartHeight=400" FlashVars="&dataXML={$order_general_xml}" quality="high" bgcolor="#FFFFFF"  width="650" height="400" name="FCColumn2" wmode="opaque" align="middle" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">
+                                </object>
+                                {/if}
+                            </div>
+                            <div class="stat_order_table_info" style="display:none;">
+                                {if $is_multi eq '0'}
+                                <OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"  codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" WIDTH="650" HEIGHT="400" id="ShipType" ALIGN="middle">
+                                    <PARAM NAME="FlashVars" value="&dataXML={$ship_xml}">
+                                    <PARAM NAME="movie" VALUE="images/charts/pie3d.swf?chartWidth=650&chartHeight=400">
+                                    <PARAM NAME="quality" VALUE="high">
+                                    <param name="wmode" value="opaque" />
+                                    <PARAM NAME="bgcolor" VALUE="#FFFFFF">
+                                    <EMBED src="images/charts/pie3d.swf?chartWidth=650&chartHeight=400" FlashVars="&dataXML={$ship_xml}" quality="high" bgcolor="#FFFFFF" WIDTH="650" HEIGHT="400" NAME="ShipType" ALIGN="middle" TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/go/getflashplayer" wmode="opaque"></EMBED>
+                                </OBJECT>
+                                {else}
+                                <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+                                        codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0"
+                                        width="565" height="420" id="FCColumn2" align="middle">
+                                    <PARAM NAME="FlashVars" value="&dataXML={$ship_xml}">
+                                    <PARAM NAME=movie VALUE="images/charts/MSColumn3D.swf?chartWidth=650&chartHeight=400">
+                                    <param NAME="quality" VALUE="high">
+                                    <param NAME="bgcolor" VALUE="#FFFFFF">
+                                    <param name="wmode" value="opaque" />
+                                    <embed src="images/charts/MSColumn3D.swf?chartWidth=650&chartHeight=400" FlashVars="&dataXML={$ship_xml}" quality="high" bgcolor="#FFFFFF"  width="650" height="400" name="FCColumn2" wmode="opaque" align="middle" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">
+                                </object>
+                                {/if}
+                            </div>
+                            <div class="stat_order_table_info" style="display:none;">
+                                {if $is_multi eq '0'}
+                                <OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"  codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" WIDTH="650" HEIGHT="400" id="PayMethod" ALIGN="middle">
+                                    <PARAM NAME="FlashVars" value="&dataXML={$pay_xml}">
+                                    <PARAM NAME="movie" VALUE="images/charts/pie3d.swf?chartWidth=650&chartHeight=400">
+                                    <PARAM NAME="quality" VALUE="high">
+                                    <PARAM NAME="bgcolor" VALUE="#FFFFFF">
+                                    <param name="wmode" value="opaque" />
+                                    <EMBED src="images/charts/pie3d.swf?chartWidth=650&chartHeight=400" FlashVars="&dataXML={$pay_xml}" quality="high" bgcolor="#FFFFFF" WIDTH="650" HEIGHT="400" NAME="PayMethod" wmode="opaque" ALIGN="middle" TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/go/getflashplayer"></EMBED>
+                                </OBJECT>
+                                {else}
+                                <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0"
+                                        width="565" height="420" id="FCColumn2" align="middle">
+                                    <PARAM NAME="FlashVars" value="&dataXML={$pay_xml}">
+                                    <PARAM NAME=movie VALUE="images/charts/MSColumn3D.swf?chartWidth=650&chartHeight=400">
+                                    <param NAME="quality" VALUE="high">
+                                    <param NAME="bgcolor" VALUE="#FFFFFF">
+                                    <param name="wmode" value="opaque" />
+                                    <embed src="images/charts/MSColumn3D.swf?chartWidth=650&chartHeight=400" FlashVars="&dataXML={$pay_xml}" quality="high" bgcolor="#FFFFFF"  width="650" height="400" name="FCColumn2" wmode="opaque" align="middle" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></object>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ {include file ='library/pagefooter.lbi'}
+</body>
+<script type="text/javascript">
+    //时间选择1
+    var opts1 = {
+        'targetId':'start_date',
+        'triggerId':['start_date'],
+        'alignId':'text_time_start',
+        'format':'-',
+		'hms':'off'
+    },opts2 = {
+        'targetId':'end_date',
+        'triggerId':['end_date'],
+        'alignId':'text_time_end',
+        'format':'-',
+		'hms':'off'
+    },
+    opts3 = {
+        'targetId':'year_month_0',
+        'triggerId':['year_month_0'],
+        'alignId':'year_month_0',
+        'format':'-',
+        'hms':'off'
+    },opts4 = {
+        'targetId':'year_month_1',
+        'triggerId':['year_month_1'],
+        'alignId':'year_month_1',
+        'format':'-',
+        'hms':'off'
+    },opts5 = {
+        'targetId':'year_month_2',
+        'triggerId':['year_month_2'],
+        'alignId':'year_month_2',
+        'format':'-',
+        'hms':'off'
+    },opts6 = {
+        'targetId':'year_month_3',
+        'triggerId':['year_month_3'],
+        'alignId':'year_month_3',
+        'format':'-',
+        'hms':'off'
+    },opts7 = {
+        'targetId':'year_month_4',
+        'triggerId':['year_month_4'],
+        'alignId':'year_month_4',
+        'format':'-',
+        'hms':'off'
+    }
+
+    xvDate(opts3);
+    xvDate(opts4);
+    xvDate(opts5);
+    xvDate(opts6);
+    xvDate(opts7);
+    xvDate(opts1);
+    xvDate(opts2);
+
+    //导出报表
+    $('.fbutton').click(function(){
+        var start_date=get_unix_time($('input[name=start_date]').val());
+        var end_date=get_unix_time($('input[name=end_date]').val());
+        location.href='order_stats.php?act=download&start_date='+start_date+'&end_date='+end_date+'&filename='+start_date+'_'+end_date;
+    });
+    function get_unix_time(dateStr)
+    {
+        var newstr = dateStr.replace(/-/g,'/');
+        var date =  new Date(newstr);
+        var time_str = date.getTime().toString();
+        return time_str.substr(0, 10);
+    }
+</script>
+</html>

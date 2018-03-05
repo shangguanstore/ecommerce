@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+<head>{include file ='library/admin_html_head.lbi'}</head>
+
+<body class="iframe_body">
+	<div class="warpper">
+    	<div class="title"><a href="gift_gard.php?act=list" class="s-back">{$lang.back}</a>促销 - {$ur_here}</div>
+        <div class="content">
+        	<div class="explanation" id="explanation">
+            	<div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span></div>
+                <ul>
+                	<li>标识“<em>*</em>”的选项为必填项，其余为选填项。</li>
+					<li>请正确添加礼品卡信息。</li>
+                </ul>
+            </div>
+            <div class="flexilist">
+                <div class="common-content">
+                    <div class="mian-info">
+						<form action="gift_gard.php" method="post" name="theForm" enctype="multipart/form-data" id="gift_gard_form">
+                            <div class="switch_info">
+                                <div class="items">
+                                    <div class="item">
+                                        <div class="label">{$lang.require_field}{$lang.gift_gard_name}：</div>
+                                        <div class="label_value">
+                                        	<input type="text" name="type_name" id="type_name" class="text" value="{$bonus_arr.gift_name}" autocomplete="off" />
+                                            <div class="form_prompt"></div>
+                                        </div>
+                                    </div>
+								    <!-- {if $form_act neq 'update'} -->
+                                    <div class="item">
+                                        <div class="label">{$lang.gift_number}：</div>
+                                        <div class="label_value">
+                                        	<input type="text" name="gift_number" id="gift_number" class="text" value="{$bonus_arr.gift_number}" autocomplete="off" />
+											<div class="notic">{$lang.notice_min_goods_amount}</div>
+                                            <div class="form_prompt"></div>
+                                        </div>
+                                    </div>
+									<!-- {else} -->
+                                    <div class="item">
+                                        <div class="label">{$lang.require_field}{$lang.add_gift_number}：</div>
+                                        <div class="label_value">
+                                        	<input type="text" name="gift_number" id="gift_number" class="text w50" value="0" autocomplete="off" />
+                                            <div class="form_prompt"></div>
+                                        </div>
+                                    </div>
+									<!--{/if}-->									
+                                    <div class="item">
+                                        <div class="label">{$lang.gift_gard_start_date}：</div>
+                                        <div class="label_value">
+										  <div class="text_time" id="text_time_start">
+											  <input type="text" name="use_start_date" value="{$bonus_arr.use_start_date}" id="use_start_date" class="text" readonly autocomplete="off" />
+										  </div>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="label">{$lang.gift_gard_end_date}：</div>
+                                        <div class="label_value">
+										  <div class="text_time" id="text_time_end">
+											  <input type="text" name="use_end_date" value="{$bonus_arr.use_end_date}" id="use_end_date" class="text" readonly autocomplete="off" />
+										  </div>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="label">&nbsp;</div>
+                                        <div class="label_value info_btn">
+										  <input type="submit" value="{$lang.button_submit}" class="button" id="" />
+										  <input type="hidden" name="act" value="{$form_act}" />
+										  <input type="hidden" name="type_id" value="{$bonus_arr.gift_id}" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+		</div>
+	</div>
+ {include file ='library/pagefooter.lbi'}
+    <script type="text/javascript">
+		//时间选择
+		var opts1 = {
+			'targetId':'use_start_date',//时间写入对象的id
+			'triggerId':['use_start_date'],//触发事件的对象id
+			'alignId':'text_time_start',//日历对齐对象
+			'format':'-',//时间格式 默认'YYYY-MM-DD HH:MM:SS'
+			'min':'' //最小时间
+		},opts2 = {
+			'targetId':'use_end_date',
+			'triggerId':['use_end_date'],
+			'alignId':'text_time_end',
+			'format':'-',
+			'min':''
+		}
+		xvDate(opts1);
+		xvDate(opts2);
+
+		
+		//表单验证
+		$(function(){
+			$("#submitBtn").click(function(){
+				if($("#gift_gard_form").valid()){
+					$("#gift_gard_form").submit();
+				}
+			});
+			
+			$('#gift_gard_form').validate({
+				errorPlacement:function(error, element){
+					var error_div = element.parents('div.label_value').find('div.form_prompt');
+					element.parents('div.label_value').find(".notic").hide();
+					error_div.append(error);
+				},
+				rules : {
+					type_name : {
+						required : true
+					},
+					gift_number : {
+						min : 1
+					}
+				},
+				messages : {
+					type_name : {
+						required : '<i class="icon icon-exclamation-sign"></i>请输入礼品卡名称'
+					},
+					gift_number : {
+						min : '<i class="icon icon-exclamation-sign"></i>请输入发放数量'
+					}
+				}
+			});
+		});
+    </script>
+</body>
+</html>
